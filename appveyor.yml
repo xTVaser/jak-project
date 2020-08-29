@@ -19,7 +19,7 @@ init:
 
 install:
   - git submodule update --init --recursive
-  - iwr -useb get.scoop.sh | iex
+  - ps: iwr -useb get.scoop.sh | iex
   - scoop install llvm nasm
 
 build_script:
