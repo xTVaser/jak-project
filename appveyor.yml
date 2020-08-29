@@ -27,7 +27,7 @@ build_script:
   - cd ./build && cmake ..
 
 after_build:
-  - ls ./build/test/
+  - ls ./test
   - ps: "& './build/test/goalc-test.exe'"
 
 test: off
