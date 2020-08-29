@@ -19,13 +19,14 @@ init:
 
 install:
   - git submodule update --init --recursive
-
-before_build:
-  - iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+  - iwr -useb get.scoop.sh | iex
   - scoop install llvm nasm
 
 build_script:
   - cmake --version
   - cmake .
+
+after_build:
+  - echo "woo"
 
 test: off
