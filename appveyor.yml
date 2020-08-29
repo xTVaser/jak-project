@@ -24,8 +24,8 @@ install:
 
 build_script:
   - cmake --version
-  - mkdir ./build
-  - cmake ..
+  - mkdir build
+  - cd ./build && cmake ..
 
 after_build:
   - NEXT_DIR=$PWD ./build/test/goalc-test "$@"
