@@ -28,6 +28,8 @@ build_script:
 
 after_build:
   - ls ./test
+  - ls ./
+  - ls ./bin
   - ps: "& './build/test/goalc-test.exe'"
 
 test: off
