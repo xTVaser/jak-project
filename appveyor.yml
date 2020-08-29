@@ -24,7 +24,7 @@ install:
 build_script:
   - cmake --version
   - mkdir build
-  - cd ./build && cmake ..
+  - cd ./build && cmake .. && make -j
 
 after_build:
   - ls ./

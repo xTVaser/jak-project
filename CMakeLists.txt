@@ -10,9 +10,9 @@ set(CMAKE_CXX_FLAGS "-O3 -ggdb /EHsc")
 # Set default compile flags for GCC
 if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "GCC detected, adding compile flags")
-    set(CMAKE_CXX_FLAGS 
-        "${CMAKE_CXX_FLAGS} 
-        -Wall-Winit-self 
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS}
+        -Wall-Winit-self
         -Wextra
         -Wcast-align
         -Wcast-qual
@@ -26,10 +26,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 IF (WIN32)
+  message("definitely windows!")
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ENDIF()
 
 # includes relative to top level jak-project folder
