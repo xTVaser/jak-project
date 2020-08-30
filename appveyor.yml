@@ -26,10 +26,8 @@ install:
 build_script:
   - cmake --version
   - mkdir build && cd ./build
-  - ps: |
-      & cmake -G "$env:generator" ..
-  - ps: |
-      & cmake --build .
+  - cmake -G "Visual Studio 16 2019" ..
+  - cmake --build .
 
 after_build:
   - ls ..
