@@ -27,7 +27,7 @@ build_script:
   - cmake --version
   - mkdir build && cd ./build
   - cmake -G "Visual Studio 16 2019" ..
-  - cmake --build .
+  - cmake --build . -- /m
 
 after_build:
   - ls ..

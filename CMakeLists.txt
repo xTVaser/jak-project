@@ -5,13 +5,13 @@ project(jak)
 set(CMAKE_CXX_STANDARD 14)
 
 # optimization level can be set here. Note that game/ overwrites this for building game C++ code.
-set(CMAKE_CXX_FLAGS "-O3 -ggdb /EHsc")
 
 # Set default compile flags for GCC
 if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS
-        "${CMAKE_CXX_FLAGS}
+        "-O3
+        -ggdb
         -Wall-Winit-self
         -Wextra
         -Wcast-align
@@ -27,6 +27,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 IF (WIN32)
   message("definitely windows!")
+  set(CMAKE_CXX_FLAGS "/EHsc")
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
