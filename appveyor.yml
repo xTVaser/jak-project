@@ -23,7 +23,7 @@ init:
 install:
   - git submodule update --init --recursive
   - ps: iwr -useb get.scoop.sh | iex
-  - scoop install llvm nasm nmake
+  - scoop install llvm nasm
 
 build_script:
   - cmake --version
