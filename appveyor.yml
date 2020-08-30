@@ -27,6 +27,8 @@ build_script:
   - cmake -G "Ninja" -DCMAKE_INSTALL_PREFIX:PATH="%cd%\out\install\x64-Debug" -DINSTALL_GTEST:BOOL="True" ..
 
 after_build:
+  - ls ..
+  - ls ../bin
   - ls -R ./
   - ls ./bin
   - ls ./bin/out
