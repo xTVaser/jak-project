@@ -13,6 +13,8 @@
 
 #include "goalc/util/file_io.h"
 
+#include <algorithm>
+
 #include "TextDB.h"
 
 namespace goos {

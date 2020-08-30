@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include <cassert>
 #include <third-party/fmt/core.h>
 #include "Type.h"
