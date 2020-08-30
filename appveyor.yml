@@ -26,7 +26,7 @@ install:
 build_script:
   - cmake --version
   - mkdir build && cd ./build
-  - cmake -G "$env:generator ..
+  - cmake -G "$env:generator" ..
   - cmake --build .
 
 after_build:
