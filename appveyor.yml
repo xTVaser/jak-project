@@ -27,10 +27,9 @@ build_script:
   - cmake -G "Ninja" -DCMAKE_INSTALL_PREFIX:PATH="%cd%\out\install\x64-Debug" -DINSTALL_GTEST:BOOL="True" ..
 
 after_build:
-  - ls ./
+  - ls -R ./
   - ls ./bin
-  - ls ./test
-  - ls ./test/goalc-test
+  - ls ./bin/out
   - ps: "& './build/test/goalc-test.exe'"
 
 test: off
