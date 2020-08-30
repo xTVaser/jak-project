@@ -23,13 +23,13 @@ init:
 install:
   - git submodule update --init --recursive
   - ps: iwr -useb get.scoop.sh | iex
-  - scoop install llvm nasm
+  - scoop install llvm nasm nmake
 
 build_script:
   - cmake --version
-  - cmake --build .
-  # - mkdir build && cd ./build
-  # - cmake -G "Visual Studio 16 2019" -DCMAKE_CONFIGURATION_TYPES=Debug ..
+  - mkdir build && cd ./build
+  - cmake -G "Visual Studio 16 2019" -DCMAKE_CONFIGURATION_TYPES=Debug ..
+  - nmake
   # - cmake --build . --config Debug -- /m
 
 after_build:
