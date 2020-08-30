@@ -28,8 +28,8 @@ install:
 build_script:
   - cmake --version
   - mkdir build && cd ./build
-  - cmake -G "Visual Studio 16 2019" ..
-  - cmake --build . -- /m
+  - cmake -G "Visual Studio 16 2019" -DCMAKE_CONFIGURATION_TYPES=Debug ..
+  - cmake --build . --config Debug -- /m
 
 after_build:
   - ls ..
