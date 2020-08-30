@@ -19,8 +19,7 @@ matrix:
 init:
   # Use CRLF line endings on Windows so users can just use Notepad.
   - git config --global core.autocrlf true
-  - ls 'C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\'
-  - call 'C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat' amd64
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 install:
   - git submodule update --init --recursive
