@@ -17,7 +17,7 @@
 
 #include "common/util/Timer.h"
 
-constexpr int MAX_SYSTEM_THREADS = 16;
+constexpr int MAX_SYSTEM_THREADS = 16; // nothing
 
 class SystemThreadInterface;
 class SystemThreadManager;
