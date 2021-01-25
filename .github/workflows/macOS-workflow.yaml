@@ -74,7 +74,7 @@ jobs:
           echo "##[set-output name=artifact-metadata;]${ARTIFACT_NAME}"
 
       - name: Get Package Dependencies
-        run: brew install build-essential cmake ccache clang gcc g++ lcov make nasm
+        run: brew install cmake ccache clang gcc g++ lcov make nasm
         
 
       - name:  CMake Generation
