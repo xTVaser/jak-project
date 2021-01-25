@@ -63,7 +63,7 @@ bool Deci2Server::init() {
   int server_socket_opt = SO_REUSEADDR | SO_REUSEPORT;
 #elif _WIN32
   int server_socket_opt = SO_EXCLUSIVEADDRUSE;
-#elif __APPLE__ 
+#elif __APPLE__
   int server_socket_opt = SO_REUSEADDR | SO_REUSEPORT;
 #endif
 
