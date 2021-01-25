@@ -74,9 +74,7 @@ jobs:
           echo "##[set-output name=artifact-metadata;]${ARTIFACT_NAME}"
 
       - name: Get Package Dependencies
-        run: |
-          export HOMEBREW_NO_INSTALL_CLEANUP=1
-          brew install build-essential cmake ccache clang gcc g++ lcov make nasm
+        run: brew install build-essential cmake ccache clang gcc g++ lcov make nasm
         
 
       # # -- SETUP CCACHE - https://cristianadam.eu/20200113/speeding-up-c-plus-plus-github-actions-using-ccache/
