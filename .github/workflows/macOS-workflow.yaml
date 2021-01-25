@@ -77,22 +77,6 @@ jobs:
         run: brew install build-essential cmake ccache clang gcc g++ lcov make nasm
         
 
-      # # -- SETUP CCACHE - https://cristianadam.eu/20200113/speeding-up-c-plus-plus-github-actions-using-ccache/
-      # - name: Prepare ccache timestamp
-      #   id: ccache_cache_timestamp
-      #   shell: cmake -P {0}
-      #   run: |
-      #     string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-      #     message("::set-output name=timestamp::${current_date}")
-
-      # - name: ccache cache files
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: .ccache
-      #     key: ${{ matrix.config }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
-      #     restore-keys: |
-      #       ${{ matrix.config }}-ccache-
-
       - name:  CMake Generation
         # run: cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -B build -DCODE_COVERAGE=ON
         run: |
