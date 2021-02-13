@@ -491,9 +491,9 @@ dynamic scope of its parent function `srefactor--lisp-format-one-or-multi-lines'
       (insert "\n"))
      (t)))
    ;; TODO / NOTE - commas are omitted from the symbol formatter it seems, this breaks quasiquotes with the format of `,@`
-   ;; this isn't the best workaround, but it is the smallest. Alternatives include a two-pass format or a larger refactor here.
-   ;; Hopefully this doesn't result in new edge-cases! be warned!
-   ((member token-str '("@" "~@" "?")) "") 
+   ;; To work around this, we do a two-pass format, the first pass substituting any quasiquotes with `___`, for example `,@` -> `___@`
+   ;; Then the code is formatted, then we swap back to commas
+   ((member token-str '("___" "___@" "___(" "~@" "?")) "") 
    ((string-equal token-str ".") (insert " "))
    ((eq format-type 'one-line)
     (srefactor--lisp-oneline-formatter))

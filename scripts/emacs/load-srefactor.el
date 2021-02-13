@@ -30,31 +30,34 @@
 (defun format-file (file)
   ;; Insert file into current buffer
   (find-file file)
+  ;; Swap Quasiquote Instances, Swap any commas not followed by whitespace
+  (while (re-search-forward "\\(,\\)\\([^[:space:]]+\\)" nil t)
+    (replace-match "___" nil nil nil 1))
   ;; Format with srefactor
   (srefactor-lisp-format-buffer)
+  ;; Swap comma placeholders back to commas
+  (goto-char 0)
+  (while (re-search-forward "\\(___\\)\\([^[:space:]]+\\)" nil t)
+    (replace-match "," nil nil nil 1))
   ;; Save current buffer to file
   (save-buffer)
   (kill-buffer)
-  ;; (message (format "Formatted - %s" file)
+  (message (format "Formatted - %s" file))
   )
 
 ;; ---- TEST
-;; (defvar test "./scripts/emacs/load-srefactor.el")
-;; (pp (format "Formatting Took - %.2f seconds"
-;; 	    (benchmark-elapse (format-file test))))
+(defvar test "./goal_src/goal-lib.gc")
+(pp (format "Formatting Took - %.2f seconds"
+	    (benchmark-elapse (format-file test))))
 ;; ----
 
-;; TODO - make this faster by working through the files in batches in multiple emacs processes
-;; srefactor only works on the current buffer, so it's pointless to open multiple files at a time in a single process
-;; Iterate through all of them!
+;; (defvar files-to-format (batch-files goal-files total-processes process-index))
 
-(defvar files-to-format (batch-files goal-files total-processes process-index))
+;; (message (format "[EMACS-%d] Formatting %d goal files (*.gs, *.gc, *.gd)"
+;; 		 process-index
+;; 		 (length files-to-format)))
 
-(message (format "[EMACS-%d] Formatting %d goal files (*.gs, *.gc, *.gd)"
-		 process-index
-		 (length files-to-format)))
-
-(pp (format "[EMACS-%d] Formatting Took - %.2f seconds"
-	    process-index
-	    (benchmark-elapse (mapc 'format-file files-to-format))))
+;; (pp (format "[EMACS-%d] Formatting Took - %.2f seconds"
+;; 	    process-index
+;; 	    (benchmark-elapse (mapc 'format-file files-to-format))))
 
