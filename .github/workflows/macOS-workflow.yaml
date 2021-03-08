@@ -1,18 +1,12 @@
 name: macOS Build
 
-
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-
-# events but only for the master branch
-
 on:
   push:
     branches:
-      - master
+      - "*"
   pull_request:
     branches:
-      - master
+      - "*"
 
 jobs:
   build:
@@ -75,7 +69,6 @@ jobs:
 
       - name: Get Package Dependencies
         run: brew install cmake ccache clang-format gcc lcov make nasm
-        
 
       - name:  CMake Generation
         # run: cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -B build -DCODE_COVERAGE=ON
