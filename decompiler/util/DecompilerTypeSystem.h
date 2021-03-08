@@ -42,7 +42,10 @@ class DecompilerTypeSystem {
   bool tp_lca(TypeState* combined, const TypeState& add);
   int get_format_arg_count(const std::string& str) const;
   int get_format_arg_count(const TP_Type& type) const;
+  TypeSpec lookup_symbol_type(const std::string& name) const;
+
   struct {
+    bool locked = false;
     bool allow_pair;
     std::string current_method_type;
     void reset() {

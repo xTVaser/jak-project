@@ -42,6 +42,7 @@ class LinkedObjectFile {
                         LinkedWord::Kind kind);
   void symbol_link_offset(int source_segment, int source_offset, const char* name);
   Function& get_function_at_label(int label_id);
+  const Function* try_get_function_at_label(int label_id) const;
   std::string get_label_name(int label_id) const;
   uint32_t set_ordered_label_names();
   void find_code();
@@ -51,7 +52,6 @@ class LinkedObjectFile {
   void process_fp_relative_links();
   std::string print_scripts();
   std::string print_disassembly();
-  std::string print_type_analysis_debug();
   bool has_any_functions();
   void append_word_to_string(std::string& dest, const LinkedWord& word) const;
   std::string to_asm_json(const std::string& obj_file_name);
@@ -62,6 +62,7 @@ class LinkedObjectFile {
   std::string print_asm_function_disassembly(const std::string& my_name);
 
   u32 read_data_word(const DecompilerLabel& label);
+  const DecompilerLabel& get_label_by_name(const std::string& name) const;
   std::string get_goal_string_by_label(const DecompilerLabel& label) const;
   std::string get_goal_string(int seg, int word_idx, bool with_quotes = true) const;
   bool is_string(int seg, int byte_idx) const;

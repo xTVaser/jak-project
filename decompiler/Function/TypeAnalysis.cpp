@@ -44,112 +44,40 @@ void try_apply_hints(int idx,
 }
 }  // namespace
 
-bool Function::run_type_analysis(const TypeSpec& my_type,
-                                 DecompilerTypeSystem& dts,
-                                 LinkedObjectFile& file,
-                                 const std::unordered_map<int, std::vector<TypeHint>>& hints) {
-  // STEP 0 - setup settings
-  dts.type_prop_settings.reset();
-  if (get_config().pair_functions_by_name.find(guessed_name.to_string()) !=
-      get_config().pair_functions_by_name.end()) {
-    dts.type_prop_settings.allow_pair = true;
-  }
-
-  if (guessed_name.kind == FunctionName::FunctionKind::METHOD) {
-    dts.type_prop_settings.current_method_type = guessed_name.type_name;
-  }
-
-  // STEP 1 - get the topo sort.
-  auto order = bb_topo_sort();
-  //  fmt::print("blocks: {}\n  ", basic_blocks.size());
-  //  for (auto x : order.vist_order) {
-  //    fmt::print("{} ", x);
-  //  }
-  //  fmt::print("\n");
-
-  // STEP 2 - establish visit order
-  assert(!order.vist_order.empty());
-  assert(order.vist_order.front() == 0);
-
-  // STEP 3 - initialize type state.
-  basic_blocks.at(0).init_types = construct_initial_typestate(my_type);
-  // and add hints:
-  try_apply_hints(0, hints, &basic_blocks.at(0).init_types, dts);
-
-  // STEP 2 - loop while types are changing
-  bool run_again = true;
-  while (run_again) {
-    run_again = false;
-    // each block in order now.
-    for (auto block_id : order.vist_order) {
-      auto& block = basic_blocks.at(block_id);
-      TypeState* init_types = &block.init_types;
-      for (int op_id = block.start_basic_op; op_id < block.end_basic_op; op_id++) {
-        auto& op = basic_ops.at(op_id);
-
-        // apply type hints only if we are not the first op.
-        if (op_id != block.start_basic_op) {
-          try_apply_hints(op_id, hints, init_types, dts);
-        }
-
-        // while the implementation of propagate_types_internal is in progress, it may throw
-        // for unimplemented cases.  Eventually this try/catch should be removed.
-        try {
-          op->propagate_types(*init_types, file, dts);
-        } catch (std::runtime_error& e) {
-          fmt::print("Type prop fail on {}: {}\n", guessed_name.to_string(), e.what());
-          warnings += ";; Type prop attempted and failed.\n";
-          return false;
-        }
-
-        // todo, set run again??
-
-        // for the next op...
-        init_types = &op->end_types;
-      }
-
-      // propagate the types: for each possible succ
-      for (auto succ_block_id : {block.succ_ft, block.succ_branch}) {
-        if (succ_block_id != -1) {
-          auto& succ_block = basic_blocks.at(succ_block_id);
-          // apply hint
-          try_apply_hints(succ_block.start_basic_op, hints, init_types, dts);
-
-          // set types to LCA (current, new)
-          if (dts.tp_lca(&succ_block.init_types, *init_types)) {
-            // if something changed, run again!
-            run_again = true;
-          }
-        }
-      }
+bool Function::run_type_analysis_ir2(
+    const TypeSpec& my_type,
+    DecompilerTypeSystem& dts,
+    LinkedObjectFile& file,
+    const std::unordered_map<int, std::vector<TypeHint>>& hints,
+    const std::unordered_map<std::string, LabelType>& label_types) {
+  (void)file;
+  ir2.env.set_type_hints(hints);
+  ir2.env.set_label_types(label_types);
+  // STEP 0 - set decompiler type system settings for this function. In config we can manually
+  // specify some settings for type propagation to reduce the strictness of type propagation.
+  // TODO - this is kinda hacky so that it works in both unit tests and actual decompilation.
+  // it would be better if this setting came 100% from the IR2 env.
+  if (!dts.type_prop_settings.locked) {
+    dts.type_prop_settings.reset();
+    if (get_config().pair_functions_by_name.find(guessed_name.to_string()) !=
+        get_config().pair_functions_by_name.end()) {
+      dts.type_prop_settings.allow_pair = true;
+      ir2.env.set_sloppy_pair_typing();
+    }
+  } else {
+    if (dts.type_prop_settings.allow_pair) {
+      ir2.env.set_sloppy_pair_typing();
     }
   }
 
-  auto last_op = basic_ops.back();
-  auto last_type = last_op->end_types.get(Register(Reg::GPR, Reg::V0)).typespec();
-  if (last_type != my_type.last_arg()) {
-    warnings += fmt::format(";; return type mismatch {} vs {}.  ", last_type.print(),
-                            my_type.last_arg().print());
-  }
-
-  return true;
-}
-
-bool Function::run_type_analysis_ir2(const TypeSpec& my_type,
-                                     DecompilerTypeSystem& dts,
-                                     LinkedObjectFile& file,
-                                     const std::unordered_map<int, std::vector<TypeHint>>& hints) {
-  (void)file;
-  // STEP 0 - set decompiler type system settings for this function. In config we can manually
-  // specify some settings for type propagation to reduce the strictness of type propagation.
-  dts.type_prop_settings.reset();
-  if (get_config().pair_functions_by_name.find(guessed_name.to_string()) !=
-      get_config().pair_functions_by_name.end()) {
-    dts.type_prop_settings.allow_pair = true;
-  }
-
   if (guessed_name.kind == FunctionName::FunctionKind::METHOD) {
     dts.type_prop_settings.current_method_type = guessed_name.type_name;
+  }
+
+  if (my_type.last_arg() == TypeSpec("none")) {
+    auto as_end = dynamic_cast<FunctionEndOp*>(ir2.atomic_ops->ops.back().get());
+    assert(as_end);
+    as_end->mark_function_as_no_return_value();
   }
 
   std::vector<TypeState> block_init_types, op_types;
@@ -191,9 +119,9 @@ bool Function::run_type_analysis_ir2(const TypeSpec& my_type,
         try {
           op_types.at(op_id) = op->propagate_types(*init_types, ir2.env, dts);
         } catch (std::runtime_error& e) {
-          fmt::print("Type prop fail on {}: {}\n", guessed_name.to_string(), e.what());
-          warnings += ";; Type prop attempted and failed.\n";
-          ir2.env.set_types(block_init_types, op_types);
+          lg::warn("Function {} failed type prop: {}", guessed_name.to_string(), e.what());
+          warnings.type_prop_warning("{}", e.what());
+          ir2.env.set_types(block_init_types, op_types, *ir2.atomic_ops);
           return false;
         }
 
@@ -222,11 +150,10 @@ bool Function::run_type_analysis_ir2(const TypeSpec& my_type,
 
   auto last_type = op_types.back().get(Register(Reg::GPR, Reg::V0)).typespec();
   if (last_type != my_type.last_arg()) {
-    warnings += fmt::format(";; return type mismatch {} vs {}.  ", last_type.print(),
-                            my_type.last_arg().print());
+    warnings.info("Return type mismatch {} vs {}.", last_type.print(), my_type.last_arg().print());
   }
 
-  ir2.env.set_types(block_init_types, op_types);
+  ir2.env.set_types(block_init_types, op_types, *ir2.atomic_ops);
 
   return true;
 }

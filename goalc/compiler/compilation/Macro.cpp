@@ -9,13 +9,9 @@ using namespace goos;
 bool Compiler::try_getting_macro_from_goos(const goos::Object& macro_name, goos::Object* dest) {
   Object macro_obj;
   bool got_macro = false;
-  try {
-    macro_obj = m_goos.eval_symbol(macro_name, m_goos.goal_env.as_env());
-    if (macro_obj.is_macro()) {
-      got_macro = true;
-    }
-  } catch (std::runtime_error& e) {
-    got_macro = false;
+  if (m_goos.eval_symbol(macro_name, m_goos.goal_env.as_env(), &macro_obj) &&
+      macro_obj.is_macro()) {
+    got_macro = true;
   }
 
   if (got_macro) {
@@ -40,6 +36,8 @@ Val* Compiler::compile_goos_macro(const goos::Object& o,
   m_goos.goal_to_goos.enclosing_method_type =
       get_parent_env_of_type<FunctionEnv>(env)->method_of_type_name;
   auto goos_result = m_goos.eval_list_return_last(macro->body, macro->body, mac_env);
+  // make the macro expanded form point to the source where the macro was used for error messages.
+  m_goos.reader.db.inherit_info(o, goos_result);
   m_goos.goal_to_goos.reset();
   return compile_error_guard(goos_result, env);
 }
@@ -149,6 +147,8 @@ Val* Compiler::compile_define_constant(const goos::Object& form,
   if (goos) {
     m_goos.global_environment.as_env()->vars[sym] = value;
   }
+
+  m_symbol_info.add_constant(sym->name, form);
 
   return get_none();
 }

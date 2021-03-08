@@ -51,8 +51,10 @@ Field::Field(std::string name, TypeSpec ts, int offset)
  */
 std::string Field::print() const {
   return fmt::format(
-      "Field: ({} {} :offset {}) inline: {:5}, dynamic: {:5}, array: {:5}, array size {:3}", m_name,
-      m_type.print(), m_offset, m_inline, m_dynamic, m_array, m_array_size);
+      "Field: ({} {} :offset {}) inline: {:5}, dynamic: {:5}, array: {:5}, array size {:3}, align "
+      "{:2}, skip {}",
+      m_name, m_type.print(), m_offset, m_inline, m_dynamic, m_array, m_array_size, m_alignment,
+      m_skip_in_static_decomp);
 }
 
 /*!
@@ -90,7 +92,8 @@ bool Field::operator==(const Field& other) const {
          m_dynamic == other.m_dynamic &&
          m_array == other.m_array &&
          m_array_size == other.m_array_size &&
-         m_alignment == other.m_alignment;
+         m_alignment == other.m_alignment &&
+         m_skip_in_static_decomp == other.m_skip_in_static_decomp;
   // clang-format on
 }
 
@@ -280,8 +283,12 @@ int NullType::get_in_memory_alignment() const {
   throw std::runtime_error("get_in_memory_alignment called on NullType");
 }
 
-int NullType::get_inline_array_alignment() const {
-  throw std::runtime_error("get_inline_array_alignment called on NullType");
+int NullType::get_inline_array_start_alignment() const {
+  throw std::runtime_error("get_inline_array_start_alignment called on NullType");
+}
+
+int NullType::get_inline_array_stride_alignment() const {
+  throw std::runtime_error("get_inline_array_stride_alignment called on NullType");
 }
 
 std::string NullType::print() const {
@@ -372,7 +379,11 @@ int ValueType::get_in_memory_alignment() const {
   return m_size;
 }
 
-int ValueType::get_inline_array_alignment() const {
+int ValueType::get_inline_array_stride_alignment() const {
+  return m_size;
+}
+
+int ValueType::get_inline_array_start_alignment() const {
   return m_size;
 }
 
@@ -472,8 +483,9 @@ StructureType::StructureType(std::string parent,
 
 std::string StructureType::print() const {
   std::string result = fmt::format(
-      "[StructureType] {}\n parent: {}\n boxed: {}\n dynamic: {}\n size: {}\n pack: {}\n fields:\n",
-      m_name, m_parent, m_is_boxed, m_dynamic, m_size_in_mem, m_pack);
+      "[StructureType] {}\n parent: {}\n boxed: {}\n dynamic: {}\n size: {}\n pack: {}\n misalign: "
+      "{}\n fields:\n",
+      m_name, m_parent, m_is_boxed, m_dynamic, m_size_in_mem, m_pack, m_allow_misalign);
   for (auto& x : m_fields) {
     result += "   " + x.print() + "\n";
   }
@@ -485,6 +497,7 @@ void StructureType::inherit(StructureType* parent) {
   m_fields = parent->m_fields;
   m_dynamic = parent->m_dynamic;
   m_size_in_mem = parent->m_size_in_mem;
+  m_idx_of_first_unique_field = m_fields.size();
 }
 
 bool StructureType::operator==(const Type& other) const {
@@ -498,7 +511,8 @@ bool StructureType::operator==(const Type& other) const {
          m_fields == p_other->m_fields &&
          m_dynamic == p_other->m_dynamic &&
          m_size_in_mem == p_other->m_size_in_mem &&
-         m_pack == p_other->m_pack;
+         m_pack == p_other->m_pack &&
+         m_allow_misalign == p_other->m_allow_misalign;
   // clang-format on
 }
 
@@ -527,8 +541,30 @@ int StructureType::get_in_memory_alignment() const {
   return STRUCTURE_ALIGNMENT;
 }
 
-int StructureType::get_inline_array_alignment() const {
+// So the GOAL compiler was weird here.
+// It seems like there were two states:
+// - don't care about alignment of both the first element and the later
+// - don't care about the alignment, but pad the stride.
+// so you end up with a misaligned array of padded structures which seems very stupid.
+
+int StructureType::get_inline_array_stride_alignment() const {
   if (m_pack) {
+    // make elements of inline array the minimum allowable alignment.
+    int alignment = 1;
+    // TODO - I don't know if GOAL actually did this check, maybe packed inline arrays could
+    // violate these?
+    for (const auto& field : m_fields) {
+      alignment = std::max(alignment, field.alignment());
+    }
+    return alignment;
+  } else {
+    // make elements of inline array properly aligned structures
+    return STRUCTURE_ALIGNMENT;
+  }
+}
+
+int StructureType::get_inline_array_start_alignment() const {
+  if (m_pack || m_allow_misalign) {
     // make elements of inline array the minimum allowable alignment.
     int alignment = 1;
     // TODO - I don't know if GOAL actually did this check, maybe packed inline arrays could
@@ -577,6 +613,22 @@ std::string BasicType::print() const {
 
 int BasicType::get_offset() const {
   return BASIC_OFFSET;
+}
+
+int BasicType::get_inline_array_start_alignment() const {
+  if (m_pack) {
+    // make elements of inline array the minimum allowable alignment.
+    int alignment = 8;
+    // TODO - I don't know if GOAL actually did this check, maybe packed inline arrays could
+    // violate these?
+    for (const auto& field : m_fields) {
+      alignment = std::max(alignment, field.alignment());
+    }
+    return alignment;
+  } else {
+    // make elements of inline array properly aligned structures
+    return STRUCTURE_ALIGNMENT;
+  }
 }
 
 /////////////////

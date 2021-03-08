@@ -52,14 +52,14 @@ enum X86_REG : s8 {
   XMM5,
   XMM6,
   XMM7,
-  XMM8,
-  XMM9,
-  XMM10,
-  XMM11,
-  XMM12,
-  XMM13,
-  XMM14,
-  XMM15,
+  XMM8,   // saved
+  XMM9,   // saved
+  XMM10,  // saved
+  XMM11,  // saved
+  XMM12,  // saved
+  XMM13,  // saved
+  XMM14,  // saved
+  XMM15,  // saved
 };
 
 class Register {
@@ -95,6 +95,13 @@ class Register {
   bool operator!=(const Register& x) const { return m_id != x.m_id; }
 
   std::string print() const;
+
+  /*
+    Our XMM Registers are 4 packed single-precision floating points
+    In the order (from left->right a.k.a most significant to least significant):
+    W | Z | Y | X
+  */
+  enum class VF_ELEMENT { X, Y, Z, W, NONE };
 
  private:
   s8 m_id = -1;

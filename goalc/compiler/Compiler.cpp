@@ -9,37 +9,51 @@
 
 using namespace goos;
 
-Compiler::Compiler() : m_debugger(&m_listener) {
+Compiler::Compiler(std::unique_ptr<ReplWrapper> repl)
+    : m_debugger(&m_listener), m_repl(std::move(repl)) {
   m_listener.add_debugger(&m_debugger);
   m_ts.add_builtin_types();
   m_global_env = std::make_unique<GlobalEnv>();
   m_none = std::make_unique<None>(m_ts.make_typespec("none"));
 
-  // todo - compile library
+  // compile GOAL library
   Object library_code = m_goos.reader.read_from_file({"goal_src", "goal-lib.gc"});
   compile_object_file("goal-lib", library_code, false);
+
+  // add built-in forms to symbol info
+  for (auto& builtin : g_goal_forms) {
+    m_symbol_info.add_builtin(builtin.first);
+  }
 }
 
-void Compiler::execute_repl() {
-  while (!m_want_exit) {
+ReplStatus Compiler::execute_repl() {
+  // init repl
+  m_repl.get()->print_welcome_message();
+  auto examples = m_repl.get()->examples;
+  auto regex_colors = m_repl.get()->regex_colors;
+  m_repl.get()->init_default_settings();
+  using namespace std::placeholders;
+  m_repl.get()->get_repl().set_completion_callback(
+      std::bind(&Compiler::find_symbols_by_prefix, this, _1, _2, std::cref(examples)));
+  m_repl.get()->get_repl().set_hint_callback(
+      std::bind(&Compiler::find_hints_by_prefix, this, _1, _2, _3, std::cref(examples)));
+  m_repl.get()->get_repl().set_highlighter_callback(
+      std::bind(&Compiler::repl_coloring, this, _1, _2, std::cref(regex_colors)));
+
+  while (!m_want_exit && !m_want_reload) {
     try {
       // 1). get a line from the user (READ)
-      std::string prompt = "g";
+      std::string prompt = fmt::format(fmt::emphasis::bold | fg(fmt::color::cyan), "g > ");
       if (m_listener.is_connected()) {
-        prompt += "c";
-      } else {
-        prompt += " ";
+        prompt = fmt::format(fmt::emphasis::bold | fg(fmt::color::lime_green), "gc> ");
       }
-
       if (m_debugger.is_halted()) {
-        prompt += "s";
+        prompt = fmt::format(fmt::emphasis::bold | fg(fmt::color::magenta), "gs> ");
       } else if (m_debugger.is_attached()) {
-        prompt += "r";
-      } else {
-        prompt += " ";
+        prompt = fmt::format(fmt::emphasis::bold | fg(fmt::color::red), "gr> ");
       }
 
-      Object code = m_goos.reader.read_from_stdin(prompt);
+      Object code = m_goos.reader.read_from_stdin(prompt, *m_repl.get());
 
       // 2). compile
       auto obj_file = compile_object_file("repl", code, m_listener.is_connected());
@@ -69,6 +83,16 @@ void Compiler::execute_repl() {
   }
 
   m_listener.disconnect();
+
+  if (m_want_exit) {
+    return ReplStatus::WANT_EXIT;
+  }
+
+  if (m_want_reload) {
+    return ReplStatus::WANT_RELOAD;
+  }
+
+  return ReplStatus::OK;
 }
 
 FileEnv* Compiler::compile_object_file(const std::string& name,
@@ -179,7 +203,7 @@ std::vector<u8> Compiler::codegen_object_file(FileEnv* env) {
     debug_info->clear();
     CodeGenerator gen(env, debug_info);
     bool ok = true;
-    auto result = gen.run();
+    auto result = gen.run(&m_ts);
     for (auto& f : env->functions()) {
       if (f->settings.print_asm) {
         fmt::print("{}\n", debug_info->disassemble_function_by_name(f->name(), &ok));
@@ -198,7 +222,7 @@ bool Compiler::codegen_and_disassemble_object_file(FileEnv* env,
   auto debug_info = &m_debugger.get_debug_info_for_object(env->name());
   debug_info->clear();
   CodeGenerator gen(env, debug_info);
-  *data_out = gen.run();
+  *data_out = gen.run(&m_ts);
   bool ok = true;
   *asm_out = debug_info->disassemble_all_functions(&ok);
   return ok;
@@ -288,9 +312,24 @@ bool Compiler::connect_to_target() {
   return true;
 }
 
+/*!
+ * Just run the front end on a string. Will not do register allocation or code generation.
+ * Useful for typechecking or running strings that invoke the compiler again.
+ */
 void Compiler::run_front_end_on_string(const std::string& src) {
   auto code = m_goos.reader.read_from_string({src});
   compile_object_file("run-on-string", code, true);
+}
+
+/*!
+ * Run the entire compilation process on the input source code. Will generate an object file, but
+ * won't save it anywhere.
+ */
+void Compiler::run_full_compiler_on_string_no_save(const std::string& src) {
+  auto code = m_goos.reader.read_from_string({src});
+  auto compiled = compile_object_file("run-on-string", code, true);
+  color_object_file(compiled);
+  codegen_object_file(compiled);
 }
 
 std::vector<std::string> Compiler::run_test_no_load(const std::string& source_code) {
@@ -314,8 +353,9 @@ void Compiler::typecheck(const goos::Object& form,
                          const TypeSpec& actual,
                          const std::string& error_message) {
   (void)form;
-  if (!m_ts.typecheck(expected, actual, error_message, true, false)) {
-    throw_compiler_error(form, "Typecheck failed");
+  if (!m_ts.typecheck_and_throw(expected, actual, error_message, false, false)) {
+    throw_compiler_error(form, "Typecheck failed. For {}, got a \"{}\" when expecting a \"{}\"",
+                         error_message, actual.print(), expected.print());
   }
 }
 
@@ -327,7 +367,7 @@ void Compiler::typecheck_reg_type_allow_false(const goos::Object& form,
                                               const TypeSpec& expected,
                                               const Val* actual,
                                               const std::string& error_message) {
-  if (!m_ts.typecheck(m_ts.make_typespec("number"), expected, "", false, false)) {
+  if (!m_ts.typecheck_and_throw(m_ts.make_typespec("number"), expected, "", false, false)) {
     auto as_sym_val = dynamic_cast<const SymbolVal*>(actual);
     if (as_sym_val && as_sym_val->name() == "#f") {
       return;

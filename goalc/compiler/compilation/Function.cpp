@@ -64,6 +64,44 @@ Val* Compiler::compile_inline(const goos::Object& form, const goos::Object& rest
   return fe->alloc_val<InlinedLambdaVal>(kv->second->type(), kv->second);
 }
 
+Val* Compiler::compile_local_vars(const goos::Object& form, const goos::Object& rest, Env* env) {
+  auto fe = get_parent_env_of_type<FunctionEnv>(env);
+
+  for_each_in_list(rest, [&](const goos::Object& o) {
+    if (o.is_symbol()) {
+      // if it has no type, assume object.
+      auto name = symbol_string(o);
+      if (fe->params.find(name) != fe->params.end()) {
+        throw_compiler_error(form, "Cannot declare a local named {}, this already exists.", name);
+      }
+      auto ireg = fe->make_ireg(m_ts.make_typespec("object"), RegClass::GPR_64);
+      ireg->mark_as_settable();
+      fe->params[name] = ireg;
+    } else {
+      auto param_args = get_va(o, o);
+      va_check(o, param_args, {goos::ObjectType::SYMBOL, {}}, {});
+      auto name = symbol_string(param_args.unnamed.at(0));
+      auto type = parse_typespec(param_args.unnamed.at(1));
+
+      if (fe->params.find(name) != fe->params.end()) {
+        throw_compiler_error(form, "Cannot declare a local named {}, this already exists.", name);
+      }
+
+      if (type == TypeSpec("float")) {
+        auto ireg = fe->make_ireg(type, RegClass::FLOAT);
+        ireg->mark_as_settable();
+        fe->params[name] = ireg;
+      } else {
+        auto ireg = fe->make_ireg(type, RegClass::GPR_64);
+        ireg->mark_as_settable();
+        fe->params[name] = ireg;
+      }
+    }
+  });
+
+  return get_none();
+}
+
 /*!
  * Compile a lambda. This is used for real lambdas, lets, and defuns. So there are a million
  * confusing special cases...
@@ -77,7 +115,11 @@ Val* Compiler::compile_lambda(const goos::Object& form, const goos::Object& rest
     throw_compiler_error(form, "Invalid lambda form");
   }
 
-  auto place = fe->alloc_val<LambdaVal>(get_none()->type());
+  // allocate this lambda from the object file environment. This makes it safe for this to hold
+  // on to references to this as an inlineable function even if the enclosing function fails.
+  // for example, the top-level may (define some-func (lambda...)) and even if top-level fails,
+  // we keep around a reference to some-func to be possibly inlined.
+  auto place = obj_env->alloc_val<LambdaVal>(get_none()->type());
   auto& lambda = place->lambda;
   auto lambda_ts = m_ts.make_typespec("function");
 
@@ -256,15 +298,21 @@ Val* Compiler::compile_function_or_method_call(const goos::Object& form, Env* en
   if (!auto_inline) {
     // if auto-inlining failed, we must get the thing to call in a different way.
     if (uneval_head.is_symbol()) {
-      if (is_local_symbol(uneval_head, env) ||
-          m_symbol_types.find(symbol_string(uneval_head)) != m_symbol_types.end()) {
-        // the local environment (mlets, lexicals, constants, globals) defines this symbol.
-        // this will "win" over a method name lookup, so we should compile as normal
-        head = compile_error_guard(args.unnamed.front(), env);
-      } else {
-        // we don't think compiling the head give us a function, so it's either a method or an error
+      if (uneval_head.as_symbol()->name == "inspect" || uneval_head.as_symbol()->name == "print") {
         is_method_call = true;
+      } else {
+        if (is_local_symbol(uneval_head, env) ||
+            m_symbol_types.find(symbol_string(uneval_head)) != m_symbol_types.end()) {
+          // the local environment (mlets, lexicals, constants, globals) defines this symbol.
+          // this will "win" over a method name lookup, so we should compile as normal
+          head = compile_error_guard(args.unnamed.front(), env);
+        } else {
+          // we don't think compiling the head give us a function, so it's either a method or an
+          // error
+          is_method_call = true;
+        }
       }
+
     } else {
       // the head is some expression. Could be something like (inline my-func) or (-> obj
       // func-ptr-field) in either case, compile it - and it can't be a method call.

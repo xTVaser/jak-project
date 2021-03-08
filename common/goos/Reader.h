@@ -19,6 +19,8 @@
 #include "common/goos/Object.h"
 #include "common/goos/TextDB.h"
 
+#include "ReplUtils.h"
+
 namespace goos {
 
 /*!
@@ -67,8 +69,8 @@ struct Token {
 class Reader {
  public:
   Reader();
-  Object read_from_string(const std::string& str);
-  Object read_from_stdin(const std::string& prompt_name);
+  Object read_from_string(const std::string& str, bool add_top_level = true);
+  Object read_from_stdin(const std::string& prompt, ReplWrapper& repl);
   Object read_from_file(const std::vector<std::string>& file_path);
 
   std::string get_source_dir();
@@ -77,7 +79,7 @@ class Reader {
   TextDb db;
 
  private:
-  Object internal_read(std::shared_ptr<SourceText> text);
+  Object internal_read(std::shared_ptr<SourceText> text, bool add_top_level = true);
   Object read_list(TextStream& stream, bool expect_close_paren = true);
   bool read_object(Token& tok, TextStream& ts, Object& obj);
   bool read_array(TextStream& stream, Object& o);

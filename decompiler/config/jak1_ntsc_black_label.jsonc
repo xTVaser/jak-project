@@ -51,17 +51,21 @@
       "STR/GRSOBBB.STR","STR/SA3INTRO.STR"
   ],
   "str_file_names_":[],
+  "allowed_objects":["gcommon"],
 
   "type_hints_file":"decompiler/config/jak1_ntsc_black_label/type_hints.jsonc",
   "anonymous_function_types_file":"decompiler/config/jak1_ntsc_black_label/anonymous_function_types.jsonc",
+  "var_names_file":"decompiler/config/jak1_ntsc_black_label/var_names.jsonc",
+  "label_types_file":"decompiler/config/jak1_ntsc_black_label/label_types.jsonc",
 
   "analyze_functions":true,
-  "analyze_expressions":false,
+  "analyze_expressions":true,
   "function_type_prop":true,
+  "insert_lets":true,
   "write_disassembly":true,
   "write_hex_near_instructions":false,
 
-  "run_ir2":false,
+  "run_ir2":true,
 
   // if false, skips printing disassembly of object with functions, as these are usually large (~1 GB) and not interesting yet.
   "disassemble_objects_without_functions":false,
@@ -90,17 +94,7 @@
     "joint-anim-matrix",
     "part-tracker"],
 
-  "no_type_analysis_functions_by_name":[
-    "(method 2 vec4s)",       // 128-bit bitfield.
-    "(method 3 vec4s)",       // 128-bit bitfield
-    "qmem-copy<-!",           // 128-bit loads and stores
-    "qmem-copy->!",           // 128-bit loads and stores
-    "breakpoint-range-set!",  // messing with COP0 registers
-    "(method 0 catch-frame)", // kernel asm
-    "throw-dispatch",         // kernel asm
-    "reset-and-call",         // stack manipulation
-    "(method 10 cpu-thread)"  // loading saved regs off of the stack.
-  ],
+  "no_type_analysis_functions_by_name":[],
 
 
   "asm_functions_by_name":[

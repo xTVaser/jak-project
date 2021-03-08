@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <cassert>
+#include <stdexcept>
 #include "common/log/log.h"
 #include "common/type_system/TypeSpec.h"
 #include "common/common_types.h"
@@ -15,17 +16,22 @@ namespace decompiler {
 class TP_Type {
  public:
   enum class Kind {
-    TYPESPEC,                           // just a normal typespec
-    TYPE_OF_TYPE_OR_CHILD,              // a type object, of the given type of a child type.
+    TYPESPEC,               // just a normal typespec
+    TYPE_OF_TYPE_OR_CHILD,  // a type object, of the given type of a child type.
+    TYPE_OF_TYPE_NO_VIRTUAL,
     FALSE_AS_NULL,                      // the GOAL "false" object, possibly used as a null.
     UNINITIALIZED,                      // representing data which is uninitialized.
     PRODUCT_WITH_CONSTANT,              // representing: (val * multiplier)
     OBJECT_PLUS_PRODUCT_WITH_CONSTANT,  // address: obj + (val * multiplier)
-    OBJECT_NEW_METHOD,      // the method new of object, as used in an (object-new) or similar.
-    STRING_CONSTANT,        // a string that's part of the string pool
-    FORMAT_STRING,          // a string with a given number of format arguments
-    INTEGER_CONSTANT,       // a constant integer.
-    DYNAMIC_METHOD_ACCESS,  // partial access into a
+    OBJECT_NEW_METHOD,          // the method new of object, as used in an (object-new) or similar.
+    STRING_CONSTANT,            // a string that's part of the string pool
+    FORMAT_STRING,              // a string with a given number of format arguments
+    INTEGER_CONSTANT,           // a constant integer.
+    INTEGER_CONSTANT_PLUS_VAR,  // constant + variable. for dynamic addr of
+    INTEGER_CONSTANT_PLUS_VAR_MULT,  // like var + 100 + 12 * var2
+    DYNAMIC_METHOD_ACCESS,           // partial access into a
+    VIRTUAL_METHOD,
+    NON_VIRTUAL_METHOD,
     INVALID
   } kind = Kind::UNINITIALIZED;
   TP_Type() = default;
@@ -71,6 +77,20 @@ class TP_Type {
 
   static TP_Type make_from_ts(const std::string& ts) { return make_from_ts(TypeSpec(ts)); }
 
+  static TP_Type make_virtual_method(const TypeSpec& method_type) {
+    TP_Type result;
+    result.kind = Kind::VIRTUAL_METHOD;
+    result.m_ts = method_type;
+    return result;
+  }
+
+  static TP_Type make_non_virtual_method(const TypeSpec& method_type) {
+    TP_Type result;
+    result.kind = Kind::NON_VIRTUAL_METHOD;
+    result.m_ts = method_type;
+    return result;
+  }
+
   static TP_Type make_from_string(const std::string& str) {
     TP_Type result;
     result.kind = Kind::STRING_CONSTANT;
@@ -78,9 +98,16 @@ class TP_Type {
     return result;
   }
 
-  static TP_Type make_type_object(const TypeSpec& type) {
+  static TP_Type make_type_allow_virtual_object(const TypeSpec& type) {
     TP_Type result;
     result.kind = Kind::TYPE_OF_TYPE_OR_CHILD;
+    result.m_ts = type;
+    return result;
+  }
+
+  static TP_Type make_type_no_virtual_object(const TypeSpec& type) {
+    TP_Type result;
+    result.kind = Kind::TYPE_OF_TYPE_NO_VIRTUAL;
     result.m_ts = type;
     return result;
   }
@@ -104,10 +131,30 @@ class TP_Type {
     return result;
   }
 
-  static TP_Type make_from_product(int64_t multiplier) {
+  static TP_Type make_from_integer_constant_plus_var(int64_t value, const TypeSpec& var_type) {
+    TP_Type result;
+    result.kind = Kind::INTEGER_CONSTANT_PLUS_VAR;
+    result.m_int = value;
+    result.m_ts = var_type;
+    return result;
+  }
+
+  static TP_Type make_from_integer_constant_plus_product(int64_t constant,
+                                                         const TypeSpec& var_type,
+                                                         int64_t multiplier) {
+    TP_Type result;
+    result.kind = Kind::INTEGER_CONSTANT_PLUS_VAR_MULT;
+    result.m_int = constant;
+    result.m_extra_multiplier = multiplier;
+    result.m_ts = var_type;
+    return result;
+  }
+
+  static TP_Type make_from_product(int64_t multiplier, bool is_signed) {
     TP_Type result;
     result.kind = Kind::PRODUCT_WITH_CONSTANT;
     result.m_int = multiplier;
+    result.m_ts = is_signed ? TypeSpec("int") : TypeSpec("uint");
     return result;
   }
 
@@ -133,12 +180,12 @@ class TP_Type {
   }
 
   const TypeSpec& get_objects_typespec() const {
-    assert(kind == Kind::TYPESPEC);
+    assert(kind == Kind::TYPESPEC || kind == Kind::INTEGER_CONSTANT_PLUS_VAR);
     return m_ts;
   }
 
   const TypeSpec& get_type_objects_typespec() const {
-    assert(kind == Kind::TYPE_OF_TYPE_OR_CHILD);
+    assert(kind == Kind::TYPE_OF_TYPE_OR_CHILD || kind == Kind::TYPE_OF_TYPE_NO_VIRTUAL);
     return m_ts;
   }
 
@@ -158,14 +205,26 @@ class TP_Type {
   }
 
   uint64_t get_integer_constant() const {
-    assert(kind == Kind::INTEGER_CONSTANT);
+    assert(kind == Kind::INTEGER_CONSTANT || kind == Kind::INTEGER_CONSTANT_PLUS_VAR);
     return m_int;
+  }
+
+  u64 get_add_int_constant() const {
+    assert(kind == Kind::INTEGER_CONSTANT_PLUS_VAR_MULT);
+    return m_int;
+  }
+
+  u64 get_mult_int_constant() const {
+    assert(kind == Kind::INTEGER_CONSTANT_PLUS_VAR_MULT);
+    return m_extra_multiplier;
   }
 
  private:
   TypeSpec m_ts;
   std::string m_str;
   int64_t m_int = 0;
+
+  int64_t m_extra_multiplier = 0;
 };
 
 struct TypeState {
@@ -181,6 +240,7 @@ struct TypeState {
         return fpr_types[r.get_fpr()];
       default:
         assert(false);
+        throw std::runtime_error("TP_Type::get failed");
     }
   }
 
@@ -193,6 +253,7 @@ struct TypeState {
       default:
         lg::die("Cannot use register {} with TypeState.", r.to_charp());
         assert(false);
+        throw std::runtime_error("TP_Type::get failed");
     }
   }
 };

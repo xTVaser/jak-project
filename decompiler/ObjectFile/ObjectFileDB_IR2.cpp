@@ -3,13 +3,21 @@
  * This runs the IR2 analysis passes.
  */
 
+#include <common/link_types.h>
 #include "ObjectFileDB.h"
 #include "common/log/log.h"
 #include "common/util/Timer.h"
 #include "common/util/FileUtil.h"
 #include "decompiler/Function/TypeInspector.h"
-#include "decompiler/IR2/reg_usage.h"
-#include "decompiler/IR2/variable_naming.h"
+#include "decompiler/analysis/reg_usage.h"
+#include "decompiler/analysis/insert_lets.h"
+#include "decompiler/analysis/variable_naming.h"
+#include "decompiler/analysis/cfg_builder.h"
+#include "decompiler/analysis/final_output.h"
+#include "decompiler/analysis/expression_build.h"
+#include "decompiler/analysis/inline_asm_rewrite.h"
+#include "common/goos/PrettyPrinter.h"
+#include "decompiler/IR2/Form.h"
 
 namespace decompiler {
 
@@ -32,8 +40,25 @@ void ObjectFileDB::analyze_functions_ir2(const std::string& output_dir) {
   ir2_register_usage_pass();
   lg::info("Variable analysis...");
   ir2_variable_pass();
-  lg::info("Writing results...");
-  ir2_write_results(output_dir);
+  lg::info("Initial structuring..");
+  ir2_cfg_build_pass();
+  if (get_config().analyze_expressions) {
+    lg::info("Storing temporary form result...");
+    ir2_store_current_forms();
+    lg::info("Expression building...");
+    ir2_build_expressions();
+    lg::info("Re-writing inline asm instructions...");
+    ir2_rewrite_inline_asm_instructions();
+    if (get_config().insert_lets) {
+      lg::info("Inserting lets...");
+      ir2_insert_lets();
+    }
+  }
+
+  if (!output_dir.empty()) {
+    lg::info("Writing results...");
+    ir2_write_results(output_dir);
+  }
 }
 
 /*!
@@ -105,7 +130,7 @@ void ObjectFileDB::ir2_top_level_pass() {
 
         if (get_config().asm_functions_by_name.find(name) !=
             get_config().asm_functions_by_name.end()) {
-          func.warnings += ";; flagged as asm by config\n";
+          func.warnings.info("Flagged as asm by config");
           func.suspected_asm = true;
         }
       }
@@ -119,7 +144,7 @@ void ObjectFileDB::ir2_top_level_pass() {
 
     if (duplicated_functions.find(name) != duplicated_functions.end()) {
       duplicated_functions[name].insert(data.to_unique_name());
-      func.warnings += ";; this function exists in multiple non-identical object files\n";
+      func.warnings.info("this function exists in multiple non-identical object files");
     }
   });
 
@@ -150,6 +175,7 @@ void ObjectFileDB::ir2_basic_block_pass() {
   for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
     total_functions++;
     func.ir2.env.file = &data.linked_data;
+    func.ir2.env.dts = &dts;
 
     // first, find basic blocks.
     auto blocks = find_blocks_in_function(data.linked_data, segment_id, func);
@@ -173,12 +199,14 @@ void ObjectFileDB::ir2_basic_block_pass() {
       // run analysis
 
       // build a control flow graph, just looking at branch instructions.
+      //      if (func.guessed_name.to_string() == "abs") {
       func.cfg = build_cfg(data.linked_data, segment_id, func);
       if (!func.cfg->is_fully_resolved()) {
         lg::warn("Function {} from {} failed to build control flow graph!",
                  func.guessed_name.to_string(), data.to_unique_name());
         failed_to_build_cfg++;
       }
+      //      }
 
       // if we got an inspect method, inspect it.
       if (func.is_inspect_method) {
@@ -190,7 +218,7 @@ void ObjectFileDB::ir2_basic_block_pass() {
     }
 
     if (func.suspected_asm) {
-      func.warnings.append(";; Assembly Function\n");
+      func.warnings.info("Assembly Function");
       suspected_asm++;
     }
   });
@@ -226,11 +254,12 @@ void ObjectFileDB::ir2_atomic_op_pass() {
         auto ops = convert_function_to_atomic_ops(func, data.linked_data.labels);
         func.ir2.atomic_ops = std::make_shared<FunctionAtomicOps>(std::move(ops));
         func.ir2.atomic_ops_succeeded = true;
+        func.ir2.env.set_end_var(func.ir2.atomic_ops->end_op().return_var());
         successful++;
       } catch (std::exception& e) {
         lg::warn("Function {} from {} could not be converted to atomic ops: {}",
                  func.guessed_name.to_string(), data.to_unique_name(), e.what());
-        func.warnings.append(";; Failed to convert to atomic ops\n");
+        func.warnings.general_warning("Failed to convert to atomic ops: {}", e.what());
       }
     }
   });
@@ -261,18 +290,20 @@ void ObjectFileDB::ir2_type_analysis_pass() {
       non_asm_functions++;
       TypeSpec ts;
       if (lookup_function_type(func.guessed_name, data.to_unique_name(), &ts)) {
+        func.type = ts;
         attempted_functions++;
         // try type analysis here.
         auto hints = get_config().type_hints_by_function_by_idx[func.guessed_name.to_string()];
-        if (func.run_type_analysis_ir2(ts, dts, data.linked_data, hints)) {
+        auto label_types = get_config().label_types[data.to_unique_name()];
+        if (func.run_type_analysis_ir2(ts, dts, data.linked_data, hints, label_types)) {
           successful_functions++;
-          func.ir2.has_type_info = true;
         } else {
-          func.warnings.append(";; Type analysis failed\n");
+          func.warnings.type_prop_warning("Type analysis failed");
         }
       } else {
         // lg::warn("Function {} didn't know its type", func.guessed_name.to_string());
-        func.warnings.append(";; Type of function is unknown\n");
+        func.warnings.type_prop_warning("Function {} has unknown type",
+                                        func.guessed_name.to_string());
       }
     }
   });
@@ -291,8 +322,20 @@ void ObjectFileDB::ir2_register_usage_pass() {
     total_funcs++;
     if (!func.suspected_asm && func.ir2.atomic_ops_succeeded) {
       analyzed_funcs++;
-      func.ir2.reg_use = analyze_ir2_register_usage(func);
-      func.ir2.has_reg_use = true;
+      func.ir2.env.set_reg_use(analyze_ir2_register_usage(func));
+
+      auto block_0_start = func.ir2.env.reg_use().block.at(0).input;
+      for (auto x : block_0_start) {
+        if (x.get_kind() == Reg::VF && x.get_vf() != 0) {
+          lg::error("Bad vf dependency on {} in {}", x.to_charp(), func.guessed_name.to_string());
+          func.warnings.bad_vf_dependency("{}", x.to_string());
+        }
+
+        if (x.get_kind() == Reg::COP2_MACRO_SPECIAL) {
+          lg::error("Bad vf dependency on {} in {}", x.to_charp(), func.guessed_name.to_string());
+          func.warnings.bad_vf_dependency("{}", x.to_string());
+        }
+      }
     }
   });
 
@@ -307,10 +350,11 @@ void ObjectFileDB::ir2_variable_pass() {
   for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
     (void)segment_id;
     (void)data;
-    if (!func.suspected_asm && func.ir2.atomic_ops_succeeded) {
+    if (!func.suspected_asm && func.ir2.atomic_ops_succeeded && func.ir2.env.has_type_analysis()) {
       try {
         attempted++;
-        auto result = run_variable_renaming(func, func.ir2.reg_use, *func.ir2.atomic_ops, dts);
+        auto result =
+            run_variable_renaming(func, func.ir2.env.reg_use(), *func.ir2.atomic_ops, dts);
         if (result.has_value()) {
           successful++;
           func.ir2.env.set_local_vars(*result);
@@ -322,6 +366,106 @@ void ObjectFileDB::ir2_variable_pass() {
   });
   lg::info("{}/{} functions out of attempted passed variable pass in {:.2f} ms\n", successful,
            attempted, timer.getMs());
+}
+
+void ObjectFileDB::ir2_cfg_build_pass() {
+  Timer timer;
+  int total = 0;
+  int attempted = 0;
+  int successful = 0;
+  for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
+    (void)segment_id;
+    (void)data;
+    total++;
+    if (!func.suspected_asm && func.ir2.atomic_ops_succeeded && func.cfg->is_fully_resolved()) {
+      attempted++;
+      build_initial_forms(func);
+    }
+
+    if (func.ir2.top_form) {
+      successful++;
+    }
+  });
+
+  lg::info("{}/{}/{} cfg build in {:.2f} ms\n", successful, attempted, total, timer.getMs());
+}
+
+void ObjectFileDB::ir2_store_current_forms() {
+  Timer timer;
+  int total = 0;
+
+  for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
+    (void)segment_id;
+    (void)data;
+
+    if (func.ir2.top_form) {
+      total++;
+      func.ir2.debug_form_string =
+          pretty_print::to_string(func.ir2.top_form->to_form(func.ir2.env));
+    }
+  });
+
+  lg::info("Stored debug forms for {} functions in {:.2f} ms\n", total, timer.getMs());
+}
+
+void ObjectFileDB::ir2_build_expressions() {
+  Timer timer;
+  int total = 0;
+  int attempted = 0;
+  int successful = 0;
+  for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
+    (void)segment_id;
+    (void)data;
+    total++;
+    if (func.ir2.top_form && func.ir2.env.has_type_analysis() && func.ir2.env.has_local_vars()) {
+      attempted++;
+      if (convert_to_expressions(func.ir2.top_form, *func.ir2.form_pool, func, dts)) {
+        successful++;
+        func.ir2.print_debug_forms = true;
+        func.ir2.expressions_succeeded = true;
+      }
+    }
+  });
+
+  lg::info("{}/{}/{} expression build in {:.2f} ms\n", successful, attempted, total, timer.getMs());
+}
+
+void ObjectFileDB::ir2_insert_lets() {
+  Timer timer;
+  LetStats combined_stats;
+  int attempted = 0;
+
+  for_each_function_def_order([&](Function& func, int, ObjectFileData&) {
+    if (func.ir2.expressions_succeeded) {
+      attempted++;
+      combined_stats += insert_lets(func, func.ir2.env, *func.ir2.form_pool, func.ir2.top_form);
+    }
+  });
+
+  lg::info("Let pass on {} functions ({}/{} vars in lets) in {:.2f} ms\n", attempted,
+           combined_stats.vars_in_lets, combined_stats.total_vars, timer.getMs());
+}
+
+void ObjectFileDB::ir2_rewrite_inline_asm_instructions() {
+  Timer timer;
+  int total = 0;
+  int attempted = 0;
+  int successful = 0;
+  for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
+    (void)segment_id;
+    (void)data;
+    total++;
+    if (func.ir2.top_form && func.ir2.env.has_type_analysis()) {
+      attempted++;
+      if (rewrite_inline_asm_instructions(func.ir2.top_form, *func.ir2.form_pool, func, dts)) {
+        successful++;
+        func.ir2.print_debug_forms = true;
+      }
+    }
+  });
+
+  lg::info("{}/{}/{} rewrote inline-asm instructions in {:.2f} ms\n", successful, attempted, total,
+           timer.getMs());
 }
 
 void ObjectFileDB::ir2_write_results(const std::string& output_dir) {
@@ -336,8 +480,11 @@ void ObjectFileDB::ir2_write_results(const std::string& output_dir) {
       auto file_text = ir2_to_file(obj);
       total_bytes += file_text.length();
       auto file_name = file_util::combine_path(output_dir, obj.to_unique_name() + "_ir2.asm");
-
       file_util::write_text_file(file_name, file_text);
+
+      auto final = ir2_final_out(obj);
+      auto final_name = file_util::combine_path(output_dir, obj.to_unique_name() + "_disasm.gc");
+      file_util::write_text_file(final_name, final);
     }
   });
   lg::info("Wrote {} files ({:.2f} MB) in {:.2f} ms\n", total_files, total_bytes / float(1 << 20),
@@ -357,7 +504,60 @@ std::string ObjectFileDB::ir2_to_file(ObjectFileData& data) {
 
     // functions
     for (auto& func : data.linked_data.functions_by_seg.at(seg)) {
-      result += ir2_function_to_string(data, func, seg);
+      try {
+        result += ir2_function_to_string(data, func, seg);
+      } catch (std::exception& e) {
+        result += "Failed to write: ";
+        result += e.what();
+        result += "\n";
+      }
+
+      if (func.ir2.top_form && func.ir2.env.has_local_vars()) {
+        result += '\n';
+        if (func.ir2.env.has_local_vars()) {
+          if (!func.ir2.print_debug_forms) {
+            result += ";; expression building failed part way through, function may be weird\n";
+          }
+          result += final_defun_out(func, func.ir2.env, dts);
+        } else {
+          result += ";; no variable information\n";
+          result += pretty_print::to_string(func.ir2.top_form->to_form(func.ir2.env));
+        }
+
+        result += '\n';
+      } else if (func.ir2.atomic_ops_succeeded) {
+        auto& ao = func.ir2.atomic_ops;
+        for (size_t i = 0; i < ao->ops.size(); i++) {
+          auto& op = ao->ops.at(i);
+
+          if (!dynamic_cast<FunctionEndOp*>(op.get())) {
+            auto instr_idx = ao->atomic_op_to_instruction.at(i);
+
+            // check for a label to print
+            auto label_id = data.linked_data.get_label_at(seg, (func.start_word + instr_idx) * 4);
+            if (label_id != -1) {
+              result += fmt::format("(label {})\n", data.linked_data.labels.at(label_id).name);
+            }
+            // check for no misaligned labels in code segments.
+            for (int j = 1; j < 4; j++) {
+              assert(data.linked_data.get_label_at(seg, (func.start_word + instr_idx) * 4 + j) ==
+                     -1);
+            }
+
+            // print assembly ops.
+          }
+
+          // print instruction
+          result += fmt::format("  {}\n", op->to_string(func.ir2.env));
+        }
+      }
+
+      if (func.ir2.print_debug_forms) {
+        result += '\n';
+        result += ";; DEBUG OUTPUT BELOW THIS LINE:\n";
+        result += func.ir2.debug_form_string;
+        result += '\n';
+      }
     }
 
     // print data
@@ -426,12 +626,12 @@ std::string ObjectFileDB::ir2_function_to_string(ObjectFileData& data, Function&
   result += "; .function " + func.guessed_name.to_string() + "\n";
   result += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n";
   result += func.prologue.to_string(2) + "\n";
-  if (!func.warnings.empty()) {
-    result += ";;Warnings:\n" + func.warnings + "\n";
+  if (func.warnings.has_warnings()) {
+    result += ";; Warnings:\n" + func.warnings.get_warning_text(true) + "\n";
   }
 
   if (func.ir2.env.has_local_vars()) {
-    result += func.ir2.env.print_local_var_types();
+    result += func.ir2.env.print_local_var_types(func.ir2.top_form);
   }
 
   bool print_atomics = func.ir2.atomic_ops_succeeded;
@@ -505,7 +705,8 @@ std::string ObjectFileDB::ir2_function_to_string(ObjectFileData& data, Function&
         auto& op = func.get_atomic_op_at_instr(instr_id);
         op_id = func.ir2.atomic_ops->instruction_to_atomic_op.at(instr_id);
         append_commented(line, printed_comment,
-                         op.to_string(data.linked_data.labels, &func.ir2.env));
+                         op.to_form(data.linked_data.labels, func.ir2.env).print() + "[" +
+                             std::to_string(op_id) + "]");
 
         if (func.ir2.env.has_type_analysis()) {
           append_commented(
@@ -513,9 +714,9 @@ std::string ObjectFileDB::ir2_function_to_string(ObjectFileData& data, Function&
               op.reg_type_info_as_string(*init_types, func.ir2.env.get_types_after_op(op_id)), 50);
         }
 
-        if (func.ir2.has_reg_use) {
+        if (func.ir2.env.has_reg_use()) {
           std::string regs;
-          for (auto r : func.ir2.reg_use.op.at(op_id).consumes) {
+          for (auto r : func.ir2.env.reg_use().op.at(op_id).consumes) {
             regs += r.to_charp();
             regs += ' ';
           }
@@ -549,6 +750,16 @@ std::string ObjectFileDB::ir2_function_to_string(ObjectFileData& data, Function&
   for (int i = end_idx; i < func.end_word - func.start_word; i++) {
     print_instr_start(i);
     print_instr_end(i);
+  }
+
+  if (func.cfg) {
+    result += func.cfg->to_form_string();
+
+    if (!func.cfg->is_fully_resolved()) {
+      result += "\n";
+      result += func.cfg->to_dot();
+      result += "\n";
+    }
   }
 
   result += "\n";
@@ -617,6 +828,22 @@ bool ObjectFileDB::lookup_function_type(const FunctionName& name,
     assert(false);
   }
   return false;
+}
+
+std::string ObjectFileDB::ir2_final_out(ObjectFileData& data,
+                                        const std::unordered_set<std::string>& skip_functions) {
+  if (data.obj_version == 3) {
+    std::string result;
+    result += ";;-*-Lisp-*-\n";
+    result += "(in-package goal)\n\n";
+    assert(data.linked_data.functions_by_seg.at(TOP_LEVEL_SEGMENT).size() == 1);
+    auto top_level = data.linked_data.functions_by_seg.at(TOP_LEVEL_SEGMENT).at(0);
+    result += write_from_top_level(top_level, dts, data.linked_data, skip_functions);
+    result += "\n\n";
+    return result;
+  } else {
+    return ";; not a code file.";
+  }
 }
 
 }  // namespace decompiler

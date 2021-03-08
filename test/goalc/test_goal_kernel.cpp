@@ -18,6 +18,7 @@ class KernelTest : public testing::Test {
     printf("Starting GOAL Kernel...\n");
     runtime_thread = std::thread(GoalTest::runtime_with_kernel);
     runner.c = &compiler;
+    compiler.run_test_from_string("(set! *use-old-listener-print* #t)");
   }
 
   static void TearDownTestSuite() {
@@ -107,5 +108,28 @@ TEST_F(KernelTest, RunFunctionInProcess) {
       "4 5 6\n"
       "Stack Alignemnt 0/16\n"
       "run-function-in-process result: #f\n";
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(KernelTest, StateAndXmm) {
+  runner.c->run_test_from_string("(ml \"test/goalc/source_templates/kernel/kernel-test.gc\")");
+  std::string result = send_code_and_get_multiple_responses("(state-test)", 5, &runner);
+
+  std::string expected =
+      "0\nenter wreck: 3 4 5 6\nwreck: 3 4 5 6\nenter check: 9 8 7 6\nrun xmm-check 12.3400 "
+      "45.6300 9 8 7 6\nwreck: 3 4 5 6\nrun xmm-check 12.3400 45.6300 9 8 7 6\nwreck: 3 4 5 6\nrun "
+      "xmm-check 12.3400 45.6300 9 8 7 6\nwreck: 3 4 5 6\nexit check\nenter die\ntime to "
+      "die!\nexit die\nexit wreck\nenter die\ntime to die!\nexit die\n";
+  EXPECT_EQ(expected, result);
+}
+
+TEST_F(KernelTest, ThrowXmm) {
+  runner.c->run_test_from_string("(ml \"test/goalc/source_templates/kernel/kernel-test.gc\")");
+  std::string result = send_code_and_get_multiple_responses("(throw-backup-test)", 1, &runner);
+
+  std::string expected =
+      "value now is 10.1000\n"
+      "now its 10.1000\n"
+      "0\n";
   EXPECT_EQ(expected, result);
 }

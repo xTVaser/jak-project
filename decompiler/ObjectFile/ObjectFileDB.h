@@ -64,7 +64,6 @@ class ObjectFileDB {
                          bool write_json,
                          const std::string& file_suffix = "");
 
-  void write_debug_type_analysis(const std::string& output_dir, const std::string& suffix = "");
   void analyze_functions_ir1();
   void analyze_functions_ir2(const std::string& output_dir);
   void ir2_top_level_pass();
@@ -73,12 +72,18 @@ class ObjectFileDB {
   void ir2_type_analysis_pass();
   void ir2_register_usage_pass();
   void ir2_variable_pass();
+  void ir2_cfg_build_pass();
+  void ir2_store_current_forms();
+  void ir2_build_expressions();
+  void ir2_insert_lets();
+  void ir2_rewrite_inline_asm_instructions();
   void ir2_write_results(const std::string& output_dir);
   std::string ir2_to_file(ObjectFileData& data);
   std::string ir2_function_to_string(ObjectFileData& data, Function& function, int seg);
+  std::string ir2_final_out(ObjectFileData& data,
+                            const std::unordered_set<std::string>& skip_functions = {});
 
   void process_tpages();
-  void analyze_expressions();
   std::string process_game_count_file();
   std::string process_game_text_files();
 
@@ -90,7 +95,7 @@ class ObjectFileDB {
                             const std::string& obj_name,
                             TypeSpec* result);
 
- private:
+ public:
   void load_map_file(const std::string& map_data);
   void get_objs_from_dgo(const std::string& filename);
   void add_obj_from_dgo(const std::string& obj_name,

@@ -1,5 +1,6 @@
 #include "config.h"
 #include "third-party/json.hpp"
+#include "third-party/fmt/core.h"
 #include "common/util/FileUtil.h"
 
 namespace decompiler {
@@ -52,6 +53,7 @@ void set_config(const std::string& path_to_config_file) {
   gConfig.function_type_prop = cfg.at("function_type_prop").get<bool>();
   gConfig.analyze_expressions = cfg.at("analyze_expressions").get<bool>();
   gConfig.run_ir2 = cfg.at("run_ir2").get<bool>();
+  gConfig.insert_lets = cfg.at("insert_lets").get<bool>();
 
   std::vector<std::string> asm_functions_by_name =
       cfg.at("asm_functions_by_name").get<std::vector<std::string>>();
@@ -74,6 +76,11 @@ void set_config(const std::string& path_to_config_file) {
   auto bad_inspect = cfg.at("types_with_bad_inspect_methods").get<std::vector<std::string>>();
   for (const auto& x : bad_inspect) {
     gConfig.bad_inspect_types.insert(x);
+  }
+
+  auto allowed = cfg.at("allowed_objects").get<std::vector<std::string>>();
+  for (const auto& x : allowed) {
+    gConfig.allowed_objects.insert(x);
   }
 
   auto type_hints_json = read_json_file_from_config(cfg, "type_hints_file");
@@ -100,6 +107,39 @@ void set_config(const std::string& path_to_config_file) {
       auto id = anon_type.at(0).get<int>();
       const auto& type_name = anon_type.at(1).get<std::string>();
       gConfig.anon_function_types_by_obj_by_id[obj_file_name][id] = type_name;
+    }
+  }
+  auto var_names_json = read_json_file_from_config(cfg, "var_names_file");
+  for (auto& kv : var_names_json.items()) {
+    auto& function_name = kv.key();
+    auto arg = kv.value().find("args");
+    if (arg != kv.value().end()) {
+      for (auto& x : arg.value()) {
+        gConfig.function_arg_names[function_name].push_back(x);
+      }
+    }
+
+    auto var = kv.value().find("vars");
+    if (var != kv.value().end()) {
+      for (auto& vkv : var->get<std::unordered_map<std::string, std::string>>()) {
+        gConfig.function_var_names[function_name][vkv.first] = vkv.second;
+      }
+    }
+  }
+
+  auto label_types_json = read_json_file_from_config(cfg, "label_types_file");
+  for (auto& kv : label_types_json.items()) {
+    auto& obj_name = kv.key();
+    auto& types = kv.value();
+    for (auto& x : types) {
+      const auto& name = x.at(0).get<std::string>();
+      const auto& type_name = x.at(1).get<std::string>();
+      bool is_const = x.at(2).get<bool>();
+      auto& config_entry = gConfig.label_types[obj_name][name];
+      config_entry = {type_name, is_const, {}};
+      if (x.size() > 3) {
+        config_entry.array_size = x.at(3).get<int>();
+      }
     }
   }
 }

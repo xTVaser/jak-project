@@ -14,7 +14,7 @@
  * Object::make_<type>
  *
  * To convert an Object into a more specific object, use the as_<type> method of Object.
- * It will throw an exception is you get the type wrong.
+ * It will throw an exception if you get the type wrong.
  *
  * These are all the types:
  *
@@ -103,6 +103,12 @@ std::string fixed_to_string<FloatType>(FloatType);
  */
 template <>
 std::string fixed_to_string<char>(char);
+
+/*!
+ * Special case to print integer
+ */
+template <>
+std::string fixed_to_string<IntType>(IntType);
 
 /*!
  * Common implementation for a fixed object

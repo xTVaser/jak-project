@@ -8,6 +8,7 @@
 #include "goalc/regalloc/allocate.h"
 #include "Val.h"
 #include "goalc/emitter/ObjectGenerator.h"
+#include "goalc/emitter/Register.h"
 
 class IR {
  public:
@@ -116,22 +117,6 @@ class IR_RegSet : public IR {
   const RegVal* m_src = nullptr;
 };
 
-class IR_GotoLabel : public IR {
- public:
-  IR_GotoLabel();
-  void resolve(const Label* dest);
-  explicit IR_GotoLabel(const Label* dest);
-  std::string print() override;
-  RegAllocInstr to_rai() override;
-  void do_codegen(emitter::ObjectGenerator* gen,
-                  const AllocationResult& allocs,
-                  emitter::IR_Record irec) override;
-
- protected:
-  const Label* m_dest = nullptr;
-  bool m_resolved = false;
-};
-
 class IR_FunctionCall : public IR {
  public:
   IR_FunctionCall(const RegVal* func, const RegVal* ret, std::vector<RegVal*> args);
@@ -227,7 +212,7 @@ class IR_IntegerMath : public IR {
   u8 m_shift_amount = 0;
 };
 
-enum class FloatMathKind { DIV_SS, MUL_SS, ADD_SS, SUB_SS, MIN_SS, MAX_SS };
+enum class FloatMathKind { DIV_SS, MUL_SS, ADD_SS, SUB_SS, MIN_SS, MAX_SS, SQRT_SS };
 
 class IR_FloatMath : public IR {
  public:
@@ -255,6 +240,22 @@ struct Condition {
   bool is_float = false;
   RegAllocInstr to_rai();
   std::string print() const;
+};
+
+class IR_GotoLabel : public IR {
+ public:
+  IR_GotoLabel();
+  void resolve(const Label* dest);
+  explicit IR_GotoLabel(const Label* dest);
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+
+ protected:
+  const Label* m_dest = nullptr;
+  bool m_resolved = false;
 };
 
 class IR_ConditionalBranch : public IR {
@@ -337,6 +338,16 @@ class IR_GetStackAddr : public IR {
  private:
   const RegVal* m_dest = nullptr;
   int m_slot = -1;
+};
+
+class IR_Nop : public IR {
+ public:
+  IR_Nop();
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
 };
 
 class IR_Asm : public IR {
@@ -452,6 +463,26 @@ class IR_AsmAdd : public IR_Asm {
   const RegVal* m_src = nullptr;
 };
 
+class IR_AsmFNop : public IR_Asm {
+ public:
+  IR_AsmFNop();
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+};
+
+class IR_AsmFWait : public IR_Asm {
+ public:
+  IR_AsmFWait();
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+};
+
 class IR_GetSymbolValueAsm : public IR_Asm {
  public:
   IR_GetSymbolValueAsm(bool use_coloring, const RegVal* dest, std::string sym_name, bool sext);
@@ -496,7 +527,7 @@ class IR_RegSetAsm : public IR_Asm {
 
 class IR_VFMath3Asm : public IR_Asm {
  public:
-  enum class Kind { XOR, SUB, ADD };
+  enum class Kind { XOR, SUB, ADD, MUL, MAX, MIN, DIV };
   IR_VFMath3Asm(bool use_color,
                 const RegVal* dst,
                 const RegVal* src1,
@@ -515,6 +546,27 @@ class IR_VFMath3Asm : public IR_Asm {
   Kind m_kind;
 };
 
+class IR_VFMath2Asm : public IR_Asm {
+ public:
+  enum class Kind { ITOF, FTOI, PW_SLL, PW_SRL, PW_SRA };
+  IR_VFMath2Asm(bool use_color,
+                const RegVal* dst,
+                const RegVal* src,
+                Kind kind,
+                std::optional<int64_t> = std::nullopt);
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+
+ protected:
+  const RegVal* m_dst = nullptr;
+  const RegVal* m_src = nullptr;
+  Kind m_kind;
+  std::optional<int64_t> m_imm;
+};
+
 class IR_BlendVF : public IR_Asm {
  public:
   IR_BlendVF(bool use_color, const RegVal* dst, const RegVal* src1, const RegVal* src2, u8 mask);
@@ -529,5 +581,52 @@ class IR_BlendVF : public IR_Asm {
   const RegVal* m_src1 = nullptr;
   const RegVal* m_src2 = nullptr;
   u8 m_mask = 0xff;
+};
+
+class IR_SplatVF : public IR_Asm {
+ public:
+  IR_SplatVF(bool use_color,
+             const RegVal* dst,
+             const RegVal* src,
+             const emitter::Register::VF_ELEMENT element);
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+
+ protected:
+  const RegVal* m_dst = nullptr;
+  const RegVal* m_src = nullptr;
+  const emitter::Register::VF_ELEMENT m_element = emitter::Register::VF_ELEMENT::NONE;
+};
+
+class IR_SwizzleVF : public IR_Asm {
+ public:
+  IR_SwizzleVF(bool use_color, const RegVal* dst, const RegVal* src, const u8 m_controlBytes);
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+
+ protected:
+  const RegVal* m_dst = nullptr;
+  const RegVal* m_src = nullptr;
+  const u8 m_controlBytes = 0;
+};
+
+class IR_SqrtVF : public IR_Asm {
+ public:
+  IR_SqrtVF(bool use_color, const RegVal* dst, const RegVal* src);
+  std::string print() override;
+  RegAllocInstr to_rai() override;
+  void do_codegen(emitter::ObjectGenerator* gen,
+                  const AllocationResult& allocs,
+                  emitter::IR_Record irec) override;
+
+ protected:
+  const RegVal* m_dst = nullptr;
+  const RegVal* m_src = nullptr;
 };
 #endif  // JAK_IR_H

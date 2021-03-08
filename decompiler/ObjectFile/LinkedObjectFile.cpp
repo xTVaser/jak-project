@@ -101,6 +101,21 @@ Function& LinkedObjectFile::get_function_at_label(int label_id) {
 }
 
 /*!
+ * Get the function starting at this label, or nullptr if there is none.
+ */
+const Function* LinkedObjectFile::try_get_function_at_label(int label_id) const {
+  auto& label = labels.at(label_id);
+  for (auto& func : functions_by_seg.at(label.target_segment)) {
+    // + 4 to skip past type tag to the first word, which is were the label points.
+    if (func.start_word * 4 + 4 == label.offset) {
+      return &func;
+    }
+  }
+
+  return nullptr;
+}
+
+/*!
  * Get the name of the label.
  */
 std::string LinkedObjectFile::get_label_name(int label_id) const {
@@ -480,6 +495,11 @@ void LinkedObjectFile::process_fp_relative_links() {
               case InstructionKind::DADDU:
               case InstructionKind::ADDU: {
                 assert(prev_instr);
+                if (prev_instr->kind != InstructionKind::ORI) {
+                  lg::error("Failed to process fp relative links for (d)addu preceded by: {}",
+                            prev_instr->to_string(labels));
+                  return;
+                }
                 assert(prev_instr->kind == InstructionKind::ORI);
                 int offset_reg_src_id = instr.kind == InstructionKind::DADDU ? 0 : 1;
                 auto offset_reg = instr.get_src(offset_reg_src_id).get_reg();
@@ -533,7 +553,7 @@ std::string LinkedObjectFile::to_asm_json(const std::string& obj_file_name) {
       f["name"] = fname;
       f["type"] = func.type.print();
       f["segment"] = seg;
-      f["warnings"] = func.warnings;
+      f["warnings"] = func.warnings.get_warning_text(false);
       f["parent_object"] = obj_file_name;
       std::vector<nlohmann::json::object_t> ops;
 
@@ -586,8 +606,8 @@ std::string LinkedObjectFile::print_function_disassembly(Function& func,
   result += "; .function " + func.guessed_name.to_string() + " " + extra_name + "\n";
   result += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n";
   result += func.prologue.to_string(2) + "\n";
-  if (!func.warnings.empty()) {
-    result += ";;Warnings:\n" + func.warnings + "\n";
+  if (func.warnings.has_warnings()) {
+    result += ";; Warnings:\n" + func.warnings.get_warning_text(true) + "\n";
   }
 
   // print each instruction in the function.
@@ -769,76 +789,6 @@ std::string LinkedObjectFile::print_disassembly() {
   return result;
 }
 
-std::string LinkedObjectFile::print_type_analysis_debug() {
-  std::string result;
-
-  assert(segments <= 3);
-  for (int seg = segments; seg-- > 0;) {
-    // segment header
-    result += ";------------------------------------------\n;  ";
-    result += segment_names[seg];
-    result += "\n;------------------------------------------\n\n";
-
-    // functions
-    for (auto& func : functions_by_seg.at(seg)) {
-      result += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n";
-      result += "; .function " + func.guessed_name.to_string() + "\n";
-      result += ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n";
-      if (!func.warnings.empty()) {
-        result += ";; WARNING:\n" + func.warnings + "\n";
-      }
-
-      for (auto& block : func.basic_blocks) {
-        result += "\n";
-        if (!block.label_name.empty()) {
-          result += block.label_name + ":\n";
-        }
-
-        TypeState* init_types = &block.init_types;
-        for (int i = block.start_basic_op; i < block.end_basic_op; i++) {
-          result += "  ";
-          // result += func.basic_ops.at(i)->print_with_reguse(*this);
-          // result += func.basic_ops.at(i)->print(*this);
-          if (func.attempted_type_analysis) {
-            result += fmt::format("[{:3d}] ", i);
-            auto& op = func.basic_ops.at(i);
-            result += op->print_with_types(*init_types, *this);
-
-            // temporary debug load path print
-            auto op_as_set = dynamic_cast<IR_Set_Atomic*>(op.get());
-            if (op_as_set) {
-              auto op_as_load = dynamic_cast<IR_Load*>(op_as_set->src.get());
-              if (op_as_load && op_as_load->load_path_set) {
-                if (op_as_load->load_path_addr_of) {
-                  result += " (&->";
-                } else {
-                  result += " (->";
-                }
-                result += ' ';
-                result += op_as_load->load_path_base->print(*this);
-                for (auto& tok : op_as_load->load_path) {
-                  result += ' ';
-                  result += tok;
-                }
-                result += ')';
-              }
-            }
-
-            result += "\n";
-            init_types = &func.basic_ops.at(i)->end_types;
-          } else {
-            result += fmt::format("[{:3d}] ", i);
-            result += func.basic_ops.at(i)->print(*this);
-            result += "\n";
-          }
-        }
-      }
-    }
-  }
-
-  return result;
-}
-
 /*!
  * Hacky way to get a GOAL string object
  */
@@ -869,7 +819,9 @@ std::string LinkedObjectFile::get_goal_string(int seg, int word_idx, bool with_q
     char cword[4];
     memcpy(cword, &word.data, 4);
     result += cword[byte_offset];
-    assert(result.back() != 0);
+    if (result.back() == 0) {
+      return "invalid string! (check me!)";
+    }
   }
   if (with_quotes) {
     result += "\"";
@@ -1064,5 +1016,14 @@ u32 LinkedObjectFile::read_data_word(const DecompilerLabel& label) {
 std::string LinkedObjectFile::get_goal_string_by_label(const DecompilerLabel& label) const {
   assert(0 == (label.offset % 4));
   return get_goal_string(label.target_segment, (label.offset / 4) - 1, false);
+}
+
+const DecompilerLabel& LinkedObjectFile::get_label_by_name(const std::string& name) const {
+  for (auto& label : labels) {
+    if (label.name == name) {
+      return label;
+    }
+  }
+  throw std::runtime_error("Can't find label " + name);
 }
 }  // namespace decompiler

@@ -24,6 +24,9 @@
 #include "game/sce/sif_ee.h"
 #include "game/sce/libcdvd_ee.h"
 #include "game/sce/stubs.h"
+#include "game/sce/libdma.h"
+#include "game/sce/libgraph.h"
+#include "game/sce/libpad.h"
 #include "common/symbols.h"
 #include "common/log/log.h"
 using namespace ee;
@@ -425,7 +428,8 @@ u64 kopen(u64 fs, u64 name, u64 mode) {
   file_stream->flags = 0;
   printf("****** CALL TO kopen() ******\n");
   char buffer[128];
-  sprintf(buffer, "host:%s", Ptr<String>(name)->data());
+  // sprintf(buffer, "host:%s", Ptr<String>(name)->data());
+  sprintf(buffer, "%s", Ptr<String>(name)->data());
   if (!strcmp(info(Ptr<Symbol>(mode))->str->data(), "read")) {
     file_stream->file = sceOpen(buffer, SCE_RDONLY);
   } else {

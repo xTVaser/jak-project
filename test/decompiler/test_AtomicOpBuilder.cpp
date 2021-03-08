@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "decompiler/IR2/AtomicOp.h"
-#include "decompiler/IR2/AtomicOpBuilder.h"
+#include "decompiler/analysis/atomic_op_builder.h"
 #include "decompiler/Disasm/InstructionParser.h"
 #include "third-party/fmt/core.h"
 #include "third-party/fmt/format.h"
@@ -56,7 +56,7 @@ void test_case(std::string assembly_lines,
   // check the we get the right result:
   for (size_t i = 0; i < container.ops.size(); i++) {
     const auto& op = container.ops.at(i);
-    EXPECT_EQ(op->to_string(prg.labels, &env), output_lines.at(i));
+    EXPECT_EQ(op->to_form(prg.labels, env).print(), output_lines.at(i));
 
     // check that the registers read/written are identified for the operation
 
@@ -67,7 +67,7 @@ void test_case(std::string assembly_lines,
       // the ordering of the registers doesn't matter. It could happen to be in the same order
       // as the opcode here, but it may not always be the case.
       bool found = false;
-      for (const std::string reg : write_regs.at(i)) {
+      for (const std::string& reg : write_regs.at(i)) {
         // TODO - is there a potential bug here in the event that either list has duplicate
         // registers?
         if (reg == expected_reg) {
@@ -86,7 +86,7 @@ void test_case(std::string assembly_lines,
       // the ordering of the registers doesn't matter. It could happen to be in the same order
       // as the opcode here, but it may not always be the case.
       bool found = false;
-      for (const std::string reg : read_regs.at(i)) {
+      for (const std::string& reg : read_regs.at(i)) {
         // TODO - is there a potential bug here in the event that either list has duplicate
         // registers?
         if (reg == expected_reg) {
@@ -104,7 +104,7 @@ void test_case(std::string assembly_lines,
       // the ordering of the registers doesn't matter. It could happen to be in the same order
       // as the opcode here, but it may not always be the case.
       bool found = false;
-      for (const std::string reg : clobbered_regs.at(i)) {
+      for (const std::string& reg : clobbered_regs.at(i)) {
         // TODO - is there a potential bug here in the event that either list has duplicate
         // registers?
         if (reg == expected_reg) {
@@ -170,14 +170,14 @@ TEST(DecompilerAtomicOpBuilder, ANDI) {
 }
 
 TEST(DecompilerAtomicOpBuilder, BEQL_SLL) {
-  test_case(assembly_from_list({"L100:", "beql a0, a1, L100", "sll r0, r0, 0"}),
-            {"(bl! (= a0 a1) L100 (nop!))"}, {{}}, {{"a0", "a1"}}, {{}});
-  test_case(assembly_from_list({"L100:", "beql r0, r0, L100", "sll r0, r0, 0"}),
-            {"(bl! #t L100 (nop!))"}, {{}}, {{}}, {{}});
-  test_case(assembly_from_list({"L100:", "beql a0, r0, L100", "sll r0, r0, 0"}),
-            {"(bl! (zero? a0) L100 (nop!))"}, {{}}, {{"a0"}}, {{}});
-  test_case(assembly_from_list({"L100:", "beql s7, a0, L100", "sll r0, r0, 0"}),
-            {"(bl! (not a0) L100 (nop!))"}, {{}}, {{"a0"}}, {{}});
+  test_case(assembly_from_list({"L100:", "beql a0, a1, L100"}),
+            {"(bl! (= a0 a1) L100 (no-delay!))"}, {{}}, {{"a0", "a1"}}, {{}});
+  test_case(assembly_from_list({"L100:", "beql r0, r0, L100"}), {"(bl! #t L100 (no-delay!))"}, {{}},
+            {{}}, {{}});
+  test_case(assembly_from_list({"L100:", "beql a0, r0, L100"}),
+            {"(bl! (zero? a0) L100 (no-delay!))"}, {{}}, {{"a0"}}, {{}});
+  test_case(assembly_from_list({"L100:", "beql s7, a0, L100"}), {"(bl! (not a0) L100 (no-delay!))"},
+            {{}}, {{"a0"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, BEQ_SLL) {
@@ -192,27 +192,27 @@ TEST(DecompilerAtomicOpBuilder, BEQ_SLL) {
 }
 
 TEST(DecompilerAtomicOpBuilder, BGEZL_SLL) {
-  test_case(assembly_from_list({"L100:", "bgezl a0, L100", "sll r0, r0, 0"}),
-            {"(bl! (>=0.si a0) L100 (nop!))"}, {{}}, {{"a0"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bgezl a0, L100"}), {"(bl! (>=0.si a0) L100 (no-delay!))"},
+            {{}}, {{"a0"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, BGTZL_SLL) {
-  test_case(assembly_from_list({"L100:", "bgtzl a0, L100", "sll r0, r0, 0"}),
-            {"(bl! (>0.si a0) L100 (nop!))"}, {{}}, {{"a0"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bgtzl a0, L100"}), {"(bl! (>0.si a0) L100 (no-delay!))"},
+            {{}}, {{"a0"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, BLTZL_SLL) {
-  test_case(assembly_from_list({"L100:", "bltzl a0, L100", "sll r0, r0, 0"}),
-            {"(bl! (<0.si a0) L100 (nop!))"}, {{}}, {{"a0"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bltzl a0, L100"}), {"(bl! (<0.si a0) L100 (no-delay!))"},
+            {{}}, {{"a0"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, BNEL_SLL) {
-  test_case(assembly_from_list({"L100:", "bnel a1, a2, L100", "sll r0, r0, 0"}),
-            {"(bl! (!= a1 a2) L100 (nop!))"}, {{}}, {{"a1", "a2"}}, {{}});
-  test_case(assembly_from_list({"L100:", "bnel a1, r0, L100", "sll r0, r0, 0"}),
-            {"(bl! (nonzero? a1) L100 (nop!))"}, {{}}, {{"a1"}}, {{}});
-  test_case(assembly_from_list({"L100:", "bnel s7, a1, L100", "sll r0, r0, 0"}),
-            {"(bl! (truthy a1) L100 (nop!))"}, {{}}, {{"a1"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bnel a1, a2, L100"}),
+            {"(bl! (!= a1 a2) L100 (no-delay!))"}, {{}}, {{"a1", "a2"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bnel a1, r0, L100"}),
+            {"(bl! (nonzero? a1) L100 (no-delay!))"}, {{}}, {{"a1"}}, {{}});
+  test_case(assembly_from_list({"L100:", "bnel s7, a1, L100"}),
+            {"(bl! (truthy a1) L100 (no-delay!))"}, {{}}, {{"a1"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, BNE_DADDIU) {
@@ -299,7 +299,7 @@ TEST(DecompilerAtomicOpBuilder, DADDIU) {
   test_case(assembly_from_list({"daddiu a1, s7, -10"}), {"(set! a1 '())"}, {{"a1"}}, {{}}, {{}});
   test_case(assembly_from_list({"daddiu a1, s7, -32768"}), {"(set! a1 __START-OF-TABLE__)"},
             {{"a1"}}, {{}}, {{}});
-  test_case(assembly_from_list({"daddiu a1, s7, 8"}), {"(set! a1 '#t)"}, {{"a1"}}, {{}}, {{}});
+  test_case(assembly_from_list({"daddiu a1, s7, 8"}), {"(set! a1 #t)"}, {{"a1"}}, {{}}, {{}});
   test_case(assembly_from_list({"L123:", "daddiu a1, fp, L123"}), {"(set! a1 L123)"}, {{"a1"}},
             {{}}, {{}});
   test_case(assembly_from_list({"daddiu a1, a2, 1234"}), {"(set! a1 (+ a2 1234))"}, {{"a1"}},
@@ -417,7 +417,7 @@ TEST(DecompilerAtomicOpBuilder, DSUBU_DADDIU_MOVZ) {
 }
 
 TEST(DecompilerAtomicOpBuilder, JALR_SLL) {
-  test_case(assembly_from_list({"jalr ra, t9", "sll v0, ra, 0"}), {"(call!)"}, {{}}, {{"t9"}},
+  test_case(assembly_from_list({"jalr ra, t9", "sll v0, ra, 0"}), {"(call!)"}, {{"v0"}}, {{"t9"}},
             {{"a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
               "at", "v1"}});
 }
@@ -465,13 +465,13 @@ TEST(DecompilerAtomicOpBuilder, LHU) {
 }
 
 TEST(DecompilerAtomicOpBuilder, LUI) {
-  test_case(assembly_from_list({"lui a3, 2"}), {"(set! a3 131072)"}, {{"a3"}}, {{}}, {{}});
+  test_case(assembly_from_list({"lui a3, 2"}), {"(set! a3 #x20000)"}, {{"a3"}}, {{}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, LUI_ORI) {
-  test_case(assembly_from_list({"L100:", "lui a0, 2", "ori a1, a0, 3"}), {"(set! a1 131075)"},
+  test_case(assembly_from_list({"L100:", "lui a0, 2", "ori a1, a0, 3"}), {"(set! a1 #x20003)"},
             {{"a1"}}, {{}}, {{"a0"}});
-  test_case(assembly_from_list({"L100:", "lui a0, 2", "ori a0, a0, 3"}), {"(set! a0 131075)"},
+  test_case(assembly_from_list({"L100:", "lui a0, 2", "ori a0, a0, 3"}), {"(set! a0 #x20003)"},
             {{"a0"}}, {{}}, {{}});
   test_case(assembly_from_list({"L100:", "lui a0, L100", "ori a1, a0, L100"}), {"(set! a1 L100)"},
             {{"a1"}}, {{}}, {{"a0"}});
@@ -530,8 +530,8 @@ TEST(DecompilerAtomicOpBuilder, MINS) {
 }
 
 TEST(DecompilerAtomicOpBuilder, MOVN) {
-  test_case(assembly_from_list({"movn a1, s7, a2"}), {"(cmove-#f-nonzero a1 a2)"}, {{"a1"}},
-            {{"a2"}}, {{}});
+  test_case(assembly_from_list({"movn a1, s7, a2"}), {"(cmove-#f-nonzero a1 a2 a1)"}, {{"a1"}},
+            {{"a2", "a1"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, MOVS) {
@@ -539,8 +539,8 @@ TEST(DecompilerAtomicOpBuilder, MOVS) {
 }
 
 TEST(DecompilerAtomicOpBuilder, MOVZ) {
-  test_case(assembly_from_list({"movz a1, s7, a2"}), {"(cmove-#f-zero a1 a2)"}, {{"a1"}}, {{"a2"}},
-            {{}});
+  test_case(assembly_from_list({"movz a1, s7, a2"}), {"(cmove-#f-zero a1 a2 a1)"}, {{"a1"}},
+            {{"a2", "a1"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, MTC1) {
@@ -580,7 +580,7 @@ TEST(DecompilerAtomicOpBuilder, OR) {
   test_case(assembly_from_list({"or a1, a2, a3"}), {"(set! a1 (logior a2 a3))"}, {{"a1"}},
             {{"a2", "a3"}}, {{}});
   test_case(assembly_from_list({"or a2, r0, r0"}), {"(set! a2 0)"}, {{"a2"}}, {{}}, {{}});
-  test_case(assembly_from_list({"or a1, s7, r0"}), {"(set! a1 '#f)"}, {{"a1"}}, {{}}, {{}});
+  test_case(assembly_from_list({"or a1, s7, r0"}), {"(set! a1 #f)"}, {{"a1"}}, {{}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, ORI) {
@@ -594,24 +594,24 @@ TEST(DecompilerAtomicOpBuilder, SB) {
   test_case(assembly_from_list({"sb a1, 2(a3)"}), {"(s.b! (+ a3 2) a1)"}, {{}}, {{"a1", "a3"}},
             {{}});
   test_case(assembly_from_list({"sb a1, 0(a3)"}), {"(s.b! a3 a1)"}, {{}}, {{"a1", "a3"}}, {{}});
-  test_case(assembly_from_list({"sb s7, 2(a3)"}), {"(s.b! (+ a3 2) '#f)"}, {{}}, {{"a3"}}, {{}});
-  test_case(assembly_from_list({"sb s7, 0(a3)"}), {"(s.b! a3 '#f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sb s7, 2(a3)"}), {"(s.b! (+ a3 2) #f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sb s7, 0(a3)"}), {"(s.b! a3 #f)"}, {{}}, {{"a3"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, SD) {
   test_case(assembly_from_list({"sd a1, 2(a3)"}), {"(s.d! (+ a3 2) a1)"}, {{}}, {{"a1", "a3"}},
             {{}});
   test_case(assembly_from_list({"sd a1, 0(a3)"}), {"(s.d! a3 a1)"}, {{}}, {{"a1", "a3"}}, {{}});
-  test_case(assembly_from_list({"sd s7, 2(a3)"}), {"(s.d! (+ a3 2) '#f)"}, {{}}, {{"a3"}}, {{}});
-  test_case(assembly_from_list({"sd s7, 0(a3)"}), {"(s.d! a3 '#f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sd s7, 2(a3)"}), {"(s.d! (+ a3 2) #f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sd s7, 0(a3)"}), {"(s.d! a3 #f)"}, {{}}, {{"a3"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, SH) {
   test_case(assembly_from_list({"sh a1, 2(a3)"}), {"(s.h! (+ a3 2) a1)"}, {{}}, {{"a1", "a3"}},
             {{}});
   test_case(assembly_from_list({"sh a1, 0(a3)"}), {"(s.h! a3 a1)"}, {{}}, {{"a1", "a3"}}, {{}});
-  test_case(assembly_from_list({"sh s7, 2(a3)"}), {"(s.h! (+ a3 2) '#f)"}, {{}}, {{"a3"}}, {{}});
-  test_case(assembly_from_list({"sh s7, 0(a3)"}), {"(s.h! a3 '#f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sh s7, 2(a3)"}), {"(s.h! (+ a3 2) #f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sh s7, 0(a3)"}), {"(s.h! a3 #f)"}, {{}}, {{"a3"}}, {{}});
 }
 
 TEST(DecompilerAtomicOpBuilder, SLL) {
@@ -756,12 +756,12 @@ TEST(DecompilerAtomicOpBuilder, SUBS) {
 
 TEST(DecompilerAtomicOpBuilder, SW) {
   test_case(assembly_from_list({"sw a1, test(s7)"}), {"(s.w! test a1)"}, {{}}, {{"a1"}}, {{}});
-  test_case(assembly_from_list({"sw s7, test(s7)"}), {"(s.w! test '#f)"}, {{}}, {{}}, {{}});
+  test_case(assembly_from_list({"sw s7, test(s7)"}), {"(s.w! test #f)"}, {{}}, {{}}, {{}});
   test_case(assembly_from_list({"sw a1, 2(a3)"}), {"(s.w! (+ a3 2) a1)"}, {{}}, {{"a1", "a3"}},
             {{}});
   test_case(assembly_from_list({"sw a1, 0(a3)"}), {"(s.w! a3 a1)"}, {{}}, {{"a1", "a3"}}, {{}});
-  test_case(assembly_from_list({"sw s7, 2(a3)"}), {"(s.w! (+ a3 2) '#f)"}, {{}}, {{"a3"}}, {{}});
-  test_case(assembly_from_list({"sw s7, 0(a3)"}), {"(s.w! a3 '#f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sw s7, 2(a3)"}), {"(s.w! (+ a3 2) #f)"}, {{}}, {{"a3"}}, {{}});
+  test_case(assembly_from_list({"sw s7, 0(a3)"}), {"(s.w! a3 #f)"}, {{}}, {{"a3"}}, {{}});
   test_case(assembly_from_list({"sw r0, test(s7)"}), {"(s.w! test 0)"}, {{}}, {{}}, {{}});
   test_case(assembly_from_list({"sw r0, 2(a3)"}), {"(s.w! (+ a3 2) 0)"}, {{}}, {{"a3"}}, {{}});
   test_case(assembly_from_list({"sw r0, 0(a3)"}), {"(s.w! a3 0)"}, {{}}, {{"a3"}}, {{}});

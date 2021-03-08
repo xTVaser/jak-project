@@ -10,19 +10,19 @@
 #include <set>
 #include <cstring>
 #include <map>
+#include "common/link_types.h"
+#include "common/util/dgo_util.h"
 #include "decompiler/data/tpage.h"
 #include "decompiler/data/game_text.h"
 #include "decompiler/data/StrFileReader.h"
 #include "decompiler/data/game_count.h"
 #include "LinkedObjectFileCreation.h"
 #include "decompiler/config.h"
-#include "third-party/minilzo/minilzo.h"
 #include "common/util/BinaryReader.h"
 #include "common/util/Timer.h"
 #include "common/util/FileUtil.h"
 #include "decompiler/Function/BasicBlocks.h"
 #include "decompiler/IR/BasicOpBuilder.h"
-#include "decompiler/IR/CfgBuilder.h"
 #include "decompiler/Function/TypeInspector.h"
 #include "common/log/log.h"
 #include "third-party/json.hpp"
@@ -154,6 +154,11 @@ ObjectFileDB::ObjectFileDB(const std::vector<std::string>& _dgos,
   }
 
   lg::info("ObjectFileDB Initialized\n");
+  if (obj_files_by_name.empty()) {
+    lg::die(
+        "No object files have been added. Check that there are input files and the allowed_objects "
+        "list.");
+  }
 }
 
 void ObjectFileDB::load_map_file(const std::string& map_data) {
@@ -181,62 +186,6 @@ void ObjectFileDB::load_map_file(const std::string& map_data) {
   }
 }
 
-// Header for a DGO file
-struct DgoHeader {
-  uint32_t size;
-  char name[60];
-};
-
-namespace {
-/*!
- * Assert false if the char[] has non-null data after the null terminated string.
- * Used to sanity check the sizes of strings in DGO/object file headers.
- */
-void assert_string_empty_after(const char* str, int size) {
-  auto ptr = str;
-  while (*ptr)
-    ptr++;
-  while (ptr - str < size) {
-    assert(!*ptr);
-    ptr++;
-  }
-}
-}  // namespace
-
-namespace {
-std::string get_object_file_name(const std::string& original_name, uint8_t* data, int size) {
-  const char art_group_text[] =
-      "/src/next/data/art-group6/";  // todo, this may change in other games
-  const char suffix[] = "-ag.go";
-
-  int len = int(strlen(art_group_text));
-  for (int start = 0; start < size; start++) {
-    bool failed = false;
-    for (int i = 0; i < len; i++) {
-      if (start + i >= size || data[start + i] != art_group_text[i]) {
-        failed = true;
-        break;
-      }
-    }
-
-    if (!failed) {
-      for (int i = 0; i < int(original_name.length()); i++) {
-        if (start + len + i >= size || data[start + len + i] != original_name[i]) {
-          assert(false);
-        }
-      }
-
-      assert(int(strlen(suffix)) + start + len + int(original_name.length()) < size);
-      assert(!memcmp(data + start + len + original_name.length(), suffix, strlen(suffix) + 1));
-
-      return original_name + "-ag";
-    }
-  }
-
-  return original_name;
-}
-}  // namespace
-
 constexpr int MAX_CHUNK_SIZE = 0x8000;
 /*!
  * Load the objects stored in the given DGO into the ObjectFileDB
@@ -245,55 +194,8 @@ void ObjectFileDB::get_objs_from_dgo(const std::string& filename) {
   auto dgo_data = file_util::read_binary_file(filename);
   stats.total_dgo_bytes += dgo_data.size();
 
-  const char jak2_header[] = "oZlB";
-  bool is_jak2 = true;
-  for (int i = 0; i < 4; i++) {
-    if (jak2_header[i] != dgo_data[i]) {
-      is_jak2 = false;
-    }
-  }
-
-  if (is_jak2) {
-    if (lzo_init() != LZO_E_OK) {
-      assert(false);
-    }
-    BinaryReader compressed_reader(dgo_data);
-    // seek past oZlB
-    compressed_reader.ffwd(4);
-    auto decompressed_size = compressed_reader.read<uint32_t>();
-    std::vector<uint8_t> decompressed_data;
-    decompressed_data.resize(decompressed_size);
-    size_t output_offset = 0;
-    while (true) {
-      // seek past alignment bytes and read the next chunk size
-      uint32_t chunk_size = 0;
-      while (!chunk_size) {
-        chunk_size = compressed_reader.read<uint32_t>();
-      }
-
-      if (chunk_size < MAX_CHUNK_SIZE) {
-        lzo_uint bytes_written;
-        auto lzo_rv =
-            lzo1x_decompress(compressed_reader.here(), chunk_size,
-                             decompressed_data.data() + output_offset, &bytes_written, nullptr);
-        assert(lzo_rv == LZO_E_OK);
-        compressed_reader.ffwd(chunk_size);
-        output_offset += bytes_written;
-      } else {
-        // nope - sometimes chunk_size is bigger than MAX, but we should still use max.
-        //        assert(chunk_size == MAX_CHUNK_SIZE);
-        memcpy(decompressed_data.data() + output_offset, compressed_reader.here(), MAX_CHUNK_SIZE);
-        compressed_reader.ffwd(MAX_CHUNK_SIZE);
-        output_offset += MAX_CHUNK_SIZE;
-      }
-
-      if (output_offset >= decompressed_size)
-        break;
-      while (compressed_reader.get_seek() % 4) {
-        compressed_reader.ffwd(1);
-      }
-    }
-    dgo_data = decompressed_data;
+  if (file_util::dgo_header_is_compressed(dgo_data)) {
+    dgo_data = file_util::decompress_dgo(dgo_data);
   }
 
   BinaryReader reader(dgo_data);
@@ -304,9 +206,9 @@ void ObjectFileDB::get_objs_from_dgo(const std::string& filename) {
   assert_string_empty_after(header.name, 60);
 
   // get all obj files...
-  for (uint32_t i = 0; i < header.size; i++) {
+  for (uint32_t i = 0; i < header.object_count; i++) {
     auto obj_header = reader.read<DgoHeader>();
-    assert(reader.bytes_left() >= obj_header.size);
+    assert(reader.bytes_left() >= obj_header.object_count);
     assert_string_empty_after(obj_header.name, 60);
 
     if (std::string(obj_header.name).find("-ag") != std::string::npos) {
@@ -317,10 +219,10 @@ void ObjectFileDB::get_objs_from_dgo(const std::string& filename) {
       assert(false);
     }
 
-    auto name = get_object_file_name(obj_header.name, reader.here(), obj_header.size);
+    auto name = get_object_file_name(obj_header.name, reader.here(), obj_header.object_count);
 
-    add_obj_from_dgo(name, obj_header.name, reader.here(), obj_header.size, dgo_base_name);
-    reader.ffwd(obj_header.size);
+    add_obj_from_dgo(name, obj_header.name, reader.here(), obj_header.object_count, dgo_base_name);
+    reader.ffwd(obj_header.object_count);
   }
 
   // check we're at the end
@@ -335,6 +237,12 @@ void ObjectFileDB::add_obj_from_dgo(const std::string& obj_name,
                                     const uint8_t* obj_data,
                                     uint32_t obj_size,
                                     const std::string& dgo_name) {
+  const auto& config = get_config();
+  if (!config.allowed_objects.empty()) {
+    if (config.allowed_objects.find(obj_name) == config.allowed_objects.end()) {
+      return;
+    }
+  }
   stats.total_obj_files++;
   assert(obj_size > 128);
   uint16_t version = *(const uint16_t*)(obj_data + 8);
@@ -434,8 +342,11 @@ std::string ObjectFileDB::generate_dgo_listing() {
 
 namespace {
 std::string pad_string(const std::string& in, size_t length) {
-  assert(in.length() < length);
-  return in + std::string(length - in.length(), ' ');
+  if (in.length() < length) {
+    return in + std::string(length - in.length(), ' ');
+  } else {
+    return in;
+  }
 }
 }  // namespace
 
@@ -457,15 +368,22 @@ std::string ObjectFileDB::generate_obj_listing() {
                 pad_string(x.name_in_dgo + "\", ", 50) + std::to_string(x.obj_version) + ", " +
                 dgos + ", \"\"],\n";
       unique_count++;
+      if (all_unique_names.find(x.to_unique_name()) != all_unique_names.end()) {
+        lg::error("Object file {} appears multiple times with the same name.", x.to_unique_name());
+      }
       all_unique_names.insert(x.to_unique_name());
     }
     // this check is extremely important. It makes sure we don't have any repeat names. This could
     // be caused by two files with the same name, in the same DGOs, but different data.
-    assert(int(all_unique_names.size()) == unique_count);
+    if (int(all_unique_names.size()) != unique_count) {
+      lg::error("Object files are not named properly, data will be lost!");
+    }
   }
 
-  result.pop_back();  // kill last new line
-  result.pop_back();  // kill last comma
+  if (result.length() >= 2) {
+    result.pop_back();  // kill last new line
+    result.pop_back();  // kill last comma
+  }
   return result + "]";
 }
 
@@ -531,31 +449,6 @@ void ObjectFileDB::write_object_file_words(const std::string& output_dir, bool d
   lg::info(" Total {} ms ({:.3f} MB/sec)", timer.getMs(),
            total_bytes / ((1u << 20u) * timer.getSeconds()));
   // printf("\n");
-}
-
-void ObjectFileDB::write_debug_type_analysis(const std::string& output_dir,
-                                             const std::string& suffix) {
-  lg::info("- Writing debug type analysis...");
-  Timer timer;
-  uint32_t total_bytes = 0, total_files = 0;
-
-  for_each_obj([&](ObjectFileData& obj) {
-    if (obj.linked_data.has_any_functions()) {
-      auto file_text = obj.linked_data.print_type_analysis_debug();
-      auto file_name =
-          file_util::combine_path(output_dir, obj.to_unique_name() + suffix + "_dbt.asm");
-
-      total_bytes += file_text.size();
-      file_util::write_text_file(file_name, file_text);
-      total_files++;
-    }
-  });
-
-  lg::info("Wrote functions dumps:");
-  lg::info(" Total {} files", total_files);
-  lg::info(" Total {} MB", total_bytes / ((float)(1u << 20u)));
-  lg::info(" Total {} ms ({:.3f} MB/sec)", timer.getMs(),
-           total_bytes / ((1u << 20u) * timer.getSeconds()));
 }
 
 /*!
@@ -744,7 +637,6 @@ void ObjectFileDB::analyze_functions_ir1() {
   Timer timer;
 
   int total_functions = 0;
-  int resolved_cfg_functions = 0;
   const auto& config = get_config();
 
   // Step 1 - analyze the "top level" or "login" code for each object file.
@@ -787,7 +679,7 @@ void ObjectFileDB::analyze_functions_ir1() {
         unique_names.insert(name);
 
         if (config.asm_functions_by_name.find(name) != config.asm_functions_by_name.end()) {
-          func.warnings += ";; flagged as asm by config\n";
+          func.warnings.info("Flagged as asm by config");
           func.suspected_asm = true;
         }
       }
@@ -800,30 +692,16 @@ void ObjectFileDB::analyze_functions_ir1() {
 
     if (duplicated_functions.find(name) != duplicated_functions.end()) {
       duplicated_functions[name].insert(data.to_unique_name());
-      func.warnings += ";; this function exists in multiple non-identical object files\n";
+      func.warnings.info("Exists in multiple non-identical object files");
     }
   });
-  /*
-      for (const auto& kv : duplicated_functions) {
-        printf("Function %s is found in non-identical object files:\n", kv.first.c_str());
-        for (const auto& obj : kv.second) {
-          printf(" %s\n", obj.c_str());
-        }
-      }
-      */
 
   int total_trivial_cfg_functions = 0;
   int total_named_functions = 0;
   int total_basic_ops = 0;
   int total_failed_basic_ops = 0;
-  int total_reginfo_ops = 0;
 
   int asm_funcs = 0;
-  int non_asm_funcs = 0;
-  int successful_cfg_irs = 0;
-  int successful_type_analysis = 0;
-  int attempted_type_analysis = 0;
-  int bad_type_analysis = 0;  // didn't attempt because we didn't know how + attempted but failed
 
   std::map<int, std::vector<std::string>> unresolved_by_length;
 
@@ -833,11 +711,6 @@ void ObjectFileDB::analyze_functions_ir1() {
   // Main Pass over each function...
   for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
     total_functions++;
-    //        if (func.guessed_name.to_string() != "sort") {
-    //          return;
-    //        }
-    //          printf("in %s from %s\n", func.guessed_name.to_string().c_str(),
-    //                 data.to_unique_name().c_str());
 
     // first, find basic blocks.
     auto blocks = find_blocks_in_function(data.linked_data, segment_id, func);
@@ -872,7 +745,6 @@ void ObjectFileDB::analyze_functions_ir1() {
       }
       total_basic_ops += func.get_basic_op_count();
       total_failed_basic_ops += func.get_failed_basic_op_count();
-      total_reginfo_ops += func.get_reginfo_basic_op_count();
 
       // if we got an inspect method, inspect it.
       if (func.is_inspect_method) {
@@ -880,157 +752,9 @@ void ObjectFileDB::analyze_functions_ir1() {
         all_type_defs += ";; " + data.to_unique_name() + "\n";
         all_type_defs += result.print_as_deftype() + "\n";
       }
-
-      // Combine basic ops + CFG to build a nested IR
-      // register usage first, so we can tell if the SC's if's are used by value.
-      func.run_reg_usage();
-      func.ir = build_cfg_ir(func, *func.cfg, data.linked_data);
-      non_asm_funcs++;
-      if (func.ir) {
-        successful_cfg_irs++;
-      }
-
-      if (func.cfg->is_fully_resolved()) {
-        resolved_cfg_functions++;
-      } else {
-        lg::warn("Function {} from {} failed cfg ir", func.guessed_name.to_string(),
-                 data.to_unique_name());
-      }
-
-      // type analysis
-
-      if (get_config().function_type_prop) {
-        auto hints = get_config().type_hints_by_function_by_idx[func.guessed_name.to_string()];
-        if (get_config().no_type_analysis_functions_by_name.find(func.guessed_name.to_string()) ==
-            get_config().no_type_analysis_functions_by_name.end()) {
-          if (func.guessed_name.kind == FunctionName::FunctionKind::GLOBAL) {
-            // we're a global named function. This means we're stored in a symbol
-            auto kv = dts.symbol_types.find(func.guessed_name.function_name);
-            if (kv != dts.symbol_types.end() && kv->second.arg_count() >= 1) {
-              if (kv->second.base_type() != "function") {
-                lg::error("Found a function named {} but the symbol has type {}",
-                          func.guessed_name.to_string(), kv->second.print());
-                assert(false);
-              }
-              // GOOD!
-              func.type = kv->second;
-              func.attempted_type_analysis = true;
-              attempted_type_analysis++;
-              //            lg::info("Type Analysis on {} {}", func.guessed_name.to_string(),
-              //                         kv->second.print());
-              if (func.run_type_analysis(kv->second, dts, data.linked_data, hints)) {
-                successful_type_analysis++;
-              } else {
-                // bad, failed.
-                bad_type_analysis++;
-              }
-            } else {
-              // bad, don't know global type
-              bad_type_analysis++;
-            }
-          } else if (func.guessed_name.kind == FunctionName::FunctionKind::METHOD) {
-            // it's a method.
-            try {
-              auto info =
-                  dts.ts.lookup_method(func.guessed_name.type_name, func.guessed_name.method_id);
-              if (info.type.arg_count() >= 1) {
-                if (info.type.base_type() != "function") {
-                  lg::error("Found a method named {} but the symbol has type {}",
-                            func.guessed_name.to_string(), info.type.print());
-                  assert(false);
-                }
-                // GOOD!
-                func.type = info.type.substitute_for_method_call(func.guessed_name.type_name);
-                func.attempted_type_analysis = true;
-                attempted_type_analysis++;
-                //              lg::info("Type Analysis on {} {}",
-                //              func.guessed_name.to_string(),
-                //                           func.type.print());
-                if (func.run_type_analysis(func.type, dts, data.linked_data, hints)) {
-                  successful_type_analysis++;
-                } else {
-                  bad_type_analysis++;
-                }
-              } else {
-                // not enough type info
-                bad_type_analysis++;
-              }
-
-            } catch (std::runtime_error& e) {
-              // failed to lookup method info
-              bad_type_analysis++;
-            }
-          } else if (func.guessed_name.kind == FunctionName::FunctionKind::TOP_LEVEL_INIT) {
-            attempted_type_analysis++;
-            func.type = dts.ts.make_function_typespec({}, "none");
-            func.attempted_type_analysis = true;
-            if (func.run_type_analysis(func.type, dts, data.linked_data, hints)) {
-              successful_type_analysis++;
-            } else {
-              // failed
-              bad_type_analysis++;
-            }
-          } else if (func.guessed_name.kind == FunctionName::FunctionKind::UNIDENTIFIED) {
-            auto obj_name = data.to_unique_name();
-            // try looking up the object
-            const auto& map = get_config().anon_function_types_by_obj_by_id;
-            auto obj_kv = map.find(obj_name);
-            if (obj_kv != map.end()) {
-              auto func_kv = obj_kv->second.find(func.guessed_name.get_anon_id());
-              if (func_kv != obj_kv->second.end()) {
-                attempted_type_analysis++;
-                func.type = dts.parse_type_spec(func_kv->second);
-                func.attempted_type_analysis = true;
-                if (func.run_type_analysis(func.type, dts, data.linked_data, hints)) {
-                  successful_type_analysis++;
-                } else {
-                  // tried, but failed.
-                  bad_type_analysis++;
-                }
-              } else {
-                // no id
-                bad_type_analysis++;
-              }
-            } else {
-              // no object in map
-              bad_type_analysis++;
-            }
-          } else {
-            // unsupported function kind
-            bad_type_analysis++;
-          }
-
-          if (!func.attempted_type_analysis) {
-            func.warnings.append(";; Failed to try type analysis\n");
-          }
-        } else {
-          func.warnings.append(";; Marked as no type analysis in config\n");
-        }
-      }
     } else {
       asm_funcs++;
-      func.warnings.append(";; Assembly Function. Analysis passes were not attempted.\n");
     }
-
-    if (func.basic_blocks.size() > 1 && !func.suspected_asm) {
-      if (func.cfg->is_fully_resolved()) {
-      } else {
-        unresolved_by_length[func.end_word - func.start_word].push_back(
-            func.guessed_name.to_string());
-      }
-    }
-
-    if (!func.suspected_asm && func.basic_blocks.size() <= 1) {
-      total_trivial_cfg_functions++;
-    }
-
-    if (!func.guessed_name.empty()) {
-      total_named_functions++;
-    }
-
-    //    if (func.guessed_name.to_string() == "reset-and-call") {
-    //      assert(false);
-    //    }
   });
 
   lg::info("Found {} functions ({} with no control flow)", total_functions,
@@ -1039,58 +763,9 @@ void ObjectFileDB::analyze_functions_ir1() {
            100.f * float(total_named_functions) / float(total_functions));
   lg::info("Excluding {} asm functions", asm_funcs);
   lg::info("Found {} basic blocks in {:.3f} ms", total_basic_blocks, timer.getMs());
-  lg::info(" {}/{} functions passed cfg analysis stage ({:.3f}%)", resolved_cfg_functions,
-           non_asm_funcs, 100.f * float(resolved_cfg_functions) / float(non_asm_funcs));
   int successful_basic_ops = total_basic_ops - total_failed_basic_ops;
   lg::info(" {}/{} basic ops converted successfully ({:.3f}%)", successful_basic_ops,
            total_basic_ops, 100.f * float(successful_basic_ops) / float(total_basic_ops));
-  lg::info(" {}/{} basic ops with reginfo ({:.3f}%)", total_reginfo_ops, total_basic_ops,
-           100.f * float(total_reginfo_ops) / float(total_basic_ops));
-  lg::info(" {}/{} cfgs converted to ir ({:.3f}%)", successful_cfg_irs, non_asm_funcs,
-           100.f * float(successful_cfg_irs) / float(non_asm_funcs));
-  lg::info(" {}/{} functions attempted type analysis ({:.2f}%)", attempted_type_analysis,
-           non_asm_funcs, 100.f * float(attempted_type_analysis) / float(non_asm_funcs));
-  lg::info(" {}/{} functions that attempted type analysis succeeded ({:.2f}%)",
-           successful_type_analysis, attempted_type_analysis,
-           100.f * float(successful_type_analysis) / float(attempted_type_analysis));
-  lg::info(" {}/{} functions passed type analysis ({:.2f}%)", successful_type_analysis,
-           non_asm_funcs, 100.f * float(successful_type_analysis) / float(non_asm_funcs));
-  lg::info(
-      " {} functions were supposed to do type analysis but either failed or didn't know their "
-      "types.\n",
-      bad_type_analysis);
-
-  //    for (auto& kv : unresolved_by_length) {
-  //      printf("LEN %d\n", kv.first);
-  //      for (auto& x : kv.second) {
-  //        printf("  %s\n", x.c_str());
-  //      }
-  //    }
-}
-
-void ObjectFileDB::analyze_expressions() {
-  lg::info("- Analyzing Expressions...");
-  Timer timer;
-  int attempts = 0;
-  int success = 0;
-  bool had_failure = false;
-  for_each_function_def_order([&](Function& func, int segment_id, ObjectFileData& data) {
-    (void)segment_id;
-
-    if (/*!had_failure &&*/ func.attempted_type_analysis) {
-      attempts++;
-      lg::info("Analyze {}", func.guessed_name.to_string());
-      if (func.build_expression(data.linked_data)) {
-        success++;
-      } else {
-        func.warnings.append(";; Expression analysis failed.\n");
-        had_failure = true;
-      }
-    }
-  });
-
-  lg::info(" {}/{} functions passed expression building ({:.2f}%)\n", success, attempts,
-           100.f * float(success) / float(attempts));
 }
 
 void ObjectFileDB::dump_raw_objects(const std::string& output_dir) {

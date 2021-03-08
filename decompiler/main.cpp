@@ -5,6 +5,7 @@
 #include "common/log/log.h"
 #include "config.h"
 #include "common/util/FileUtil.h"
+#include "common/versions.h"
 
 int main(int argc, char** argv) {
   using namespace decompiler;
@@ -13,12 +14,13 @@ int main(int argc, char** argv) {
   lg::set_stdout_level(lg::level::info);
   lg::set_flush_level(lg::level::info);
   lg::initialize();
+  lg::info("GOAL Decompiler version {}\n", versions::DECOMPILER_VERSION);
 
   file_util::init_crc();
   init_opcode_info();
 
   if (argc != 4) {
-    printf("Usage: jak_disassembler <config_file> <in_folder> <out_folder>\n");
+    printf("Usage: decompiler <config_file> <in_folder> <out_folder>\n");
     return 1;
   }
 
@@ -39,6 +41,8 @@ int main(int argc, char** argv) {
   for (const auto& str_name : get_config().str_file_names) {
     strs.push_back(file_util::combine_path(in_folder, str_name));
   }
+
+  file_util::create_dir_if_needed(out_folder);
 
   // build file database
   lg::info("Setting up object file DB...");
@@ -70,12 +74,6 @@ int main(int argc, char** argv) {
     if (get_config().write_disassembly) {
       db.write_disassembly(out_folder, get_config().disassemble_objects_without_functions,
                            get_config().write_func_json);
-      db.write_debug_type_analysis(out_folder);
-    }
-
-    if (get_config().analyze_expressions) {
-      db.analyze_expressions();
-      db.write_disassembly(out_folder, false, false, "_expr");
     }
   }
 

@@ -18,6 +18,18 @@
 #include "TypeSpec.h"
 #include "Type.h"
 
+struct TypeFlags {
+  union {
+    uint64_t flag = 0;
+    struct {
+      uint16_t size;
+      uint16_t heap_base;
+      uint16_t methods;
+      uint16_t pad;
+    };
+  };
+};
+
 struct FieldLookupInfo {
   Field field;
   TypeSpec type;
@@ -40,38 +52,6 @@ struct DerefInfo {
   int stride = -1;
   int load_size = -1;
   TypeSpec result_type;
-};
-
-struct ReverseDerefInfo {
-  struct DerefToken {
-    enum Kind { INDEX, FIELD } kind;
-    std::string name;
-    int index;
-    std::string print() const {
-      switch (kind) {
-        case INDEX:
-          return std::to_string(index);
-        case FIELD:
-          return name;
-        default:
-          assert(false);
-      }
-    }
-  };
-
-  TypeSpec result_type;
-  std::vector<DerefToken> deref_path;
-  bool success = false;
-  bool addr_of = false;
-};
-
-struct ReverseDerefInputInfo {
-  int offset = -1;
-  bool mem_deref = false;
-  RegClass reg = RegClass::INVALID;
-  int load_size = -1;
-  bool sign_extend = false;
-  TypeSpec input_type;
 };
 
 /*!
@@ -117,7 +97,6 @@ class TypeSystem {
   std::string get_runtime_type(const TypeSpec& ts);
 
   DerefInfo get_deref_info(const TypeSpec& ts) const;
-  ReverseDerefInfo get_reverse_deref_info(const ReverseDerefInputInfo& input) const;
   FieldReverseLookupOutput reverse_field_lookup(const FieldReverseLookupInput& input) const;
 
   bool fully_defined_type_exists(const std::string& name) const;
@@ -147,11 +126,16 @@ class TypeSystem {
                         const TypeSpec& ts,
                         bool allow_new_method = true);
   MethodInfo add_new_method(Type* type, const TypeSpec& ts);
-  MethodInfo lookup_method(const std::string& type_name, const std::string& method_name);
-  MethodInfo lookup_method(const std::string& type_name, int method_id);
-  bool try_lookup_method(const std::string& type_name, int method_id, MethodInfo* info);
-  MethodInfo lookup_new_method(const std::string& type_name);
+  MethodInfo lookup_method(const std::string& type_name, const std::string& method_name) const;
+  MethodInfo lookup_method(const std::string& type_name, int method_id) const;
+  bool try_lookup_method(const std::string& type_name, int method_id, MethodInfo* info) const;
+  MethodInfo lookup_new_method(const std::string& type_name) const;
   void assert_method_id(const std::string& type_name, const std::string& method_name, int id);
+
+  std::string generate_deftype(const Type* type) const;
+  std::string generate_deftype_for_structure(const StructureType* type) const;
+  std::string generate_deftype_for_bitfield(const BitFieldType* type) const;
+  std::string generate_deftype_footer(const Type* type) const;
 
   FieldLookupInfo lookup_field_info(const std::string& type_name,
                                     const std::string& field_name) const;
@@ -164,18 +148,20 @@ class TypeSystem {
                         bool is_inline = false,
                         bool is_dynamic = false,
                         int array_size = -1,
-                        int offset_override = -1);
+                        int offset_override = -1,
+                        bool skip_in_static_decomp = false);
 
   void add_builtin_types();
 
   std::string print_all_type_information() const;
-  bool typecheck(const TypeSpec& expected,
-                 const TypeSpec& actual,
-                 const std::string& error_source_name = "",
-                 bool print_on_error = true,
-                 bool throw_on_error = true) const;
+  bool typecheck_and_throw(const TypeSpec& expected,
+                           const TypeSpec& actual,
+                           const std::string& error_source_name = "",
+                           bool print_on_error = true,
+                           bool throw_on_error = true) const;
+  bool tc(const TypeSpec& expected, const TypeSpec& actual) const;
   std::vector<std::string> get_path_up_tree(const std::string& type) const;
-  int get_next_method_id(Type* type);
+  int get_next_method_id(const Type* type) const;
 
   bool is_bitfield_type(const std::string& type_name) const;
   void add_field_to_bitfield(BitFieldType* type,
@@ -201,11 +187,9 @@ class TypeSystem {
   TypeSpec lowest_common_ancestor_reg(const TypeSpec& a, const TypeSpec& b) const;
   TypeSpec lowest_common_ancestor(const std::vector<TypeSpec>& types) const;
 
+  int get_size_in_type(const Field& field) const;
+
  private:
-  bool reverse_deref(const ReverseDerefInputInfo& input,
-                     std::vector<ReverseDerefInfo::DerefToken>* path,
-                     bool* addr_of,
-                     TypeSpec* result_type) const;
   bool try_reverse_lookup(const FieldReverseLookupInput& input,
                           std::vector<FieldReverseLookupOutput::Token>* path,
                           bool* addr_of,
@@ -228,7 +212,6 @@ class TypeSystem {
                                 TypeSpec* result_type) const;
   std::string lca_base(const std::string& a, const std::string& b) const;
   bool typecheck_base_types(const std::string& expected, const std::string& actual) const;
-  int get_size_in_type(const Field& field) const;
   int get_alignment_in_type(const Field& field);
   Field lookup_field(const std::string& type_name, const std::string& field_name) const;
   StructureType* add_builtin_structure(const std::string& parent,

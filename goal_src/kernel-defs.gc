@@ -73,20 +73,20 @@
 (define-extern unload (function string none))
 (define-extern _format (function _varargs_ object))
 (define-extern malloc (function symbol int pointer))
-(define-extern kmalloc (function kheap int int string))
+(define-extern kmalloc (function kheap int int string pointer))
 (define-extern new-dynamic-structure (function kheap type int structure))
 (define-extern method-set! (function type int function none)) ;; may actually return function.
 (define-extern link (function pointer pointer int kheap int pointer))
 (define-extern dgo-load (function string kheap int int none))
 (define-extern link-begin (function pointer string int kheap int int))
 (define-extern link-resume (function int))
-;; mc-run
+(define-extern mc-run (function none))
 ;; mc-format
 ;; mc-unformat
 ;; mc-create-file
 ;; mc-save
 ;; mc-load
-;; mc-check-result
+(define-extern mc-check-result (function int))
 ;; mc-get-slot-info
 ;; mc-makefile
 ;; kset-language
@@ -114,22 +114,26 @@
 ;; put-display-env
 ;; syncv
 ;; sync-path
-;; reset-path
-;; rest-graph
+(define-extern reset-path (function none))
+(define-extern reset-graph (function int int int int none))
 ;; dma-sync
+(define-extern dma-sync (function pointer int int int))
 ;; gs-put-imr
 ;; gs-get-imr
 ;; gs-store-image
-;; flush-cache
+(define-extern flush-cache (function int none))
 ;; cpad-open
-;; cpad-get-data
+(declare-type cpad-info structure)
+(define-extern cpad-open (function cpad-info int cpad-info))
+(define-extern cpad-get-data (function cpad-info cpad-info))
 ;; install-handler
 ;; install-debug-handler
 ;; file-stream-open
+(define-extern file-stream-open (function file-stream basic basic file-stream))
 ;; file-stream-close
-;; file-stream-length
+(define-extern file-stream-length (function file-stream int))
 ;; file-stream-seek
-;; file-stream-read
+(define-extern file-stream-read (function file-stream pointer int int))
 ;; file-stream-write
 ;; scf-get-language
 ;; scf-get-time

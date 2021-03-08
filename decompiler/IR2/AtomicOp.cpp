@@ -1,17 +1,19 @@
 #include <cassert>
 #include <utility>
 #include <stdexcept>
+#include "common/goal_constants.h"
 #include "third-party/fmt/core.h"
 #include "common/goos/PrettyPrinter.h"
 #include "decompiler/ObjectFile/LinkedObjectFile.h"
 #include "AtomicOp.h"
+#include "OpenGoalMapping.h"
 
 namespace decompiler {
 /////////////////////////////
 // VARIABLE
 /////////////////////////////
 
-Variable::Variable(VariableMode mode, Register reg, int atomic_idx, bool allow_all)
+RegisterAccess::RegisterAccess(AccessMode mode, Register reg, int atomic_idx, bool allow_all)
     : m_mode(mode), m_reg(reg), m_atomic_idx(atomic_idx) {
   // make sure we're using a valid GPR.
   if (reg.get_kind() == Reg::GPR && !allow_all) {
@@ -22,31 +24,36 @@ Variable::Variable(VariableMode mode, Register reg, int atomic_idx, bool allow_a
   }
 }
 
-std::string Variable::to_string(const Env* env, Print mode) const {
+goos::Object RegisterAccess::to_form(const Env& env, Print mode) const {
   switch (mode) {
     case Print::AS_REG:
-      return m_reg.to_string();
+      return pretty_print::to_symbol(m_reg.to_string());
     case Print::FULL:
-      return fmt::format("{}-{:03d}-{}", m_reg.to_charp(), m_atomic_idx,
-                         m_mode == VariableMode::READ ? 'r' : 'w');
+      return pretty_print::to_symbol(fmt::format("{}-{:03d}-{}", m_reg.to_charp(), m_atomic_idx,
+                                                 m_mode == AccessMode::READ ? 'r' : 'w'));
     case Print::AS_VARIABLE:
-      return env->get_variable_name(m_reg, m_atomic_idx, m_mode);
+      return env.get_variable_name(m_reg, m_atomic_idx, m_mode);
     case Print::AUTOMATIC:
-      if (env->has_local_vars()) {
-        return env->get_variable_name(m_reg, m_atomic_idx, m_mode);
+      if (env.has_local_vars()) {
+        return env.get_variable_name(m_reg, m_atomic_idx, m_mode);
       } else {
-        return m_reg.to_string();
+        return pretty_print::to_symbol(m_reg.to_string());
       }
     default:
       assert(false);
+      return {};
   }
 }
 
-bool Variable::operator==(const Variable& other) const {
-  return m_mode == other.m_mode && m_reg == other.m_reg && m_atomic_idx && other.m_atomic_idx;
+std::string RegisterAccess::to_string(const Env& env, Print mode) const {
+  return to_form(env, mode).print();
 }
 
-bool Variable::operator!=(const Variable& other) const {
+bool RegisterAccess::operator==(const RegisterAccess& other) const {
+  return m_mode == other.m_mode && m_reg == other.m_reg && m_atomic_idx == other.m_atomic_idx;
+}
+
+bool RegisterAccess::operator!=(const RegisterAccess& other) const {
   return !((*this) == other);
 }
 
@@ -55,12 +62,12 @@ bool Variable::operator!=(const Variable& other) const {
 /////////////////////////////
 AtomicOp::AtomicOp(int my_idx) : m_my_idx(my_idx) {}
 
-std::string AtomicOp::to_string(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+std::string AtomicOp::to_string(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   return pretty_print::to_string(to_form(labels, env));
 }
 
 std::string AtomicOp::to_string(const Env& env) const {
-  return to_string(env.file->labels, &env);
+  return to_string(env.file->labels, env);
 }
 
 bool AtomicOp::operator!=(const AtomicOp& other) const {
@@ -81,7 +88,7 @@ void AtomicOp::clobber_temps() {
 // SimpleAtom
 /////////////////////////////
 
-SimpleAtom SimpleAtom::make_var(const Variable& var) {
+SimpleAtom SimpleAtom::make_var(const RegisterAccess& var) {
   SimpleAtom result;
   result.m_kind = Kind::VARIABLE;
   result.m_variable = var;
@@ -122,14 +129,18 @@ SimpleAtom SimpleAtom::make_static_address(int static_label_id) {
   return result;
 }
 
-goos::Object SimpleAtom::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object SimpleAtom::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   switch (m_kind) {
     case Kind::VARIABLE:
-      return pretty_print::to_symbol(m_variable.to_string(env));
+      return m_variable.to_form(env);
     case Kind::INTEGER_CONSTANT:
-      return pretty_print::to_symbol(std::to_string(m_int));
+      return goos::Object::make_integer(m_int);
     case Kind::SYMBOL_PTR:
-      return pretty_print::to_symbol(fmt::format("'{}", m_string));
+      if (m_string == "#t") {
+        return pretty_print::to_symbol("#t");
+      } else {
+        return pretty_print::to_symbol(fmt::format("'{}", m_string));
+      }
     case Kind::SYMBOL_VAL:
       return pretty_print::to_symbol(m_string);
     case Kind::EMPTY_LIST:
@@ -139,6 +150,12 @@ goos::Object SimpleAtom::to_form(const std::vector<DecompilerLabel>& labels, con
     default:
       assert(false);
       return {};
+  }
+}
+
+void SimpleAtom::collect_vars(RegAccessSet& vars) const {
+  if (is_var()) {
+    vars.insert(var());
   }
 }
 
@@ -252,8 +269,10 @@ std::string get_simple_expression_op_name(SimpleExpression::Kind kind) {
       return "max.ui";
     default:
       assert(false);
+      return {};
   }
 }
+}  // namespace
 
 int get_simple_expression_arg_count(SimpleExpression::Kind kind) {
   switch (kind) {
@@ -300,9 +319,9 @@ int get_simple_expression_arg_count(SimpleExpression::Kind kind) {
       return 2;
     default:
       assert(false);
+      return -1;
   }
 }
-}  // namespace
 
 SimpleExpression::SimpleExpression(Kind kind, const SimpleAtom& arg0) : n_args(1) {
   m_args[0] = arg0;
@@ -319,7 +338,7 @@ SimpleExpression::SimpleExpression(Kind kind, const SimpleAtom& arg0, const Simp
 }
 
 goos::Object SimpleExpression::to_form(const std::vector<DecompilerLabel>& labels,
-                                       const Env* env) const {
+                                       const Env& env) const {
   std::vector<goos::Object> forms;
   if (m_kind == Kind::IDENTITY) {
     // we are "identity" so just pass through the atom
@@ -353,13 +372,18 @@ void SimpleExpression::get_regs(std::vector<Register>* out) const {
   }
 }
 
+void SimpleExpression::collect_vars(RegAccessSet& vars) const {
+  for (int i = 0; i < args(); i++) {
+    get_arg(i).collect_vars(vars);
+  }
+}
+
 /////////////////////////////
 // SetVarOp
 /////////////////////////////
 
-goos::Object SetVarOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
-  return pretty_print::build_list(pretty_print::to_symbol("set!"),
-                                  pretty_print::to_symbol(m_dst.to_string(env)),
+goos::Object SetVarOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
+  return pretty_print::build_list(pretty_print::to_symbol("set!"), m_dst.to_form(env),
                                   m_src.to_form(labels, env));
 }
 
@@ -370,10 +394,6 @@ bool SetVarOp::operator==(const AtomicOp& other) const {
   auto po = dynamic_cast<const SetVarOp*>(&other);
   assert(po);
   return m_dst == po->m_dst && m_src == po->m_src;
-}
-
-bool SetVarOp::is_variable_set() const {
-  return true;
 }
 
 bool SetVarOp::is_sequence_point() const {
@@ -390,21 +410,18 @@ bool SetVarOp::is_sequence_point() const {
   return true;
 }
 
-Variable SetVarOp::get_set_destination() const {
+RegisterAccess SetVarOp::get_set_destination() const {
   return m_dst;
-}
-
-std::unique_ptr<Expr> SetVarOp::get_set_source_as_expr() const {
-  throw std::runtime_error("get_set_source_as_expr NYI for SetVarOp");
-}
-
-std::unique_ptr<Expr> SetVarOp::get_as_expr() const {
-  throw std::runtime_error("get_as_expr NYI for SetVarOp");
 }
 
 void SetVarOp::update_register_info() {
   m_write_regs.push_back(m_dst.reg());
   m_src.get_regs(&m_read_regs);
+}
+
+void SetVarOp::collect_vars(RegAccessSet& vars) const {
+  vars.insert(m_dst);
+  m_src.collect_vars(vars);
 }
 
 /////////////////////////////
@@ -417,25 +434,25 @@ AsmOp::AsmOp(Instruction instr, int my_idx) : AtomicOp(my_idx), m_instr(std::mov
     auto& dst = m_instr.get_dst(0);
     if (dst.is_reg()) {
       auto reg = dst.get_reg();
-      if (reg.get_kind() == Reg::FPR || reg.get_kind() == Reg::GPR) {
-        m_dst = Variable(VariableMode::WRITE, reg, my_idx, true);
+      if (reg.get_kind() == Reg::FPR || reg.get_kind() == Reg::GPR || reg.get_kind() == Reg::VF) {
+        m_dst = RegisterAccess(AccessMode::WRITE, reg, my_idx, true);
       }
     }
   }
 
-  assert(m_instr.n_src <= 3);
+  assert(m_instr.n_src <= 4);
   for (int i = 0; i < m_instr.n_src; i++) {
     auto& src = m_instr.get_src(i);
     if (src.is_reg()) {
       auto reg = src.get_reg();
-      if (reg.get_kind() == Reg::FPR || reg.get_kind() == Reg::GPR) {
-        m_src[i] = Variable(VariableMode::READ, reg, my_idx, true);
+      if (reg.get_kind() == Reg::FPR || reg.get_kind() == Reg::GPR || reg.get_kind() == Reg::VF) {
+        m_src[i] = RegisterAccess(AccessMode::READ, reg, my_idx, true);
       }
     }
   }
 }
 
-goos::Object AsmOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object AsmOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   std::vector<goos::Object> forms;
   forms.push_back(pretty_print::to_symbol("." + m_instr.op_name_to_string()));
   assert(m_instr.n_dst <= 1);
@@ -443,17 +460,17 @@ goos::Object AsmOp::to_form(const std::vector<DecompilerLabel>& labels, const En
   if (m_instr.n_dst == 1) {
     if (m_dst.has_value()) {
       // then print it as a variable
-      forms.push_back(pretty_print::to_symbol(m_dst.value().to_string(env)));
+      forms.push_back(m_dst.value().to_form(env));
     } else {
       // print the atom
       forms.push_back(pretty_print::to_symbol(m_instr.get_dst(0).to_string(labels)));
     }
   }
 
-  assert(m_instr.n_src <= 3);
+  assert(m_instr.n_src <= 4);
   for (int i = 0; i < m_instr.n_src; i++) {
     if (m_src[i].has_value()) {
-      forms.push_back(pretty_print::to_symbol(m_src[i].value().to_string(env)));
+      forms.push_back(m_src[i].value().to_form(env));
     } else {
       forms.push_back(pretty_print::to_symbol(m_instr.get_src(i).to_string(labels)));
     }
@@ -461,6 +478,37 @@ goos::Object AsmOp::to_form(const std::vector<DecompilerLabel>& labels, const En
 
   return pretty_print::build_list(forms);
 }
+
+goos::Object AsmOp::to_open_goal_form(const std::vector<DecompilerLabel>& labels,
+                                      const Env& env) const {
+  std::vector<goos::Object> forms;
+
+  std::vector<std::optional<RegisterAccess>> src;
+  for (int i = 0; i < m_instr.n_src; i++) {
+    auto v = m_src[i];
+    src.push_back(v);
+  }
+
+  OpenGOALAsm goalOp = OpenGOALAsm(m_instr, m_dst, src);
+  forms.push_back(pretty_print::to_symbol(goalOp.full_function_name()));
+
+  assert(m_instr.n_dst <= 1);
+  if (m_instr.n_dst == 1) {
+    if (m_dst.has_value()) {
+      // then print it as a variable
+      forms.push_back(m_dst.value().to_form(env));
+    } else {
+      // print the atom
+      forms.push_back(pretty_print::to_symbol(m_instr.get_dst(0).to_string(labels)));
+    }
+  }
+
+  assert(m_instr.n_src <= 4);
+  std::vector<goos::Object> args = goalOp.get_args(labels, env);
+  forms.insert(forms.end(), args.begin(), args.end());
+
+  return pretty_print::build_list(forms);
+}  // namespace decompiler
 
 bool AsmOp::operator==(const AtomicOp& other) const {
   if (typeid(AsmOp) != typeid(other)) {
@@ -474,24 +522,12 @@ bool AsmOp::operator==(const AtomicOp& other) const {
          (m_src[1] == po->m_src[1]) && (m_src[2] == po->m_src[2]);
 }
 
-bool AsmOp::is_variable_set() const {
-  return false;
-}
-
 bool AsmOp::is_sequence_point() const {
   return true;
 }
 
-Variable AsmOp::get_set_destination() const {
+RegisterAccess AsmOp::get_set_destination() const {
   throw std::runtime_error("AsmOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> AsmOp::get_set_source_as_expr() const {
-  throw std::runtime_error("AsmOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> AsmOp::get_as_expr() const {
-  throw std::runtime_error("AsmOp::get_as_expr is not implemented.");
 }
 
 void AsmOp::update_register_info() {
@@ -504,13 +540,119 @@ void AsmOp::update_register_info() {
       m_read_regs.push_back(src->reg());
     }
   }
+
+  if (m_instr.kind >= FIRST_COP2_MACRO && m_instr.kind <= LAST_COP2_MACRO) {
+    switch (m_instr.kind) {
+      case InstructionKind::VMSUBQ:
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_Q));
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+
+      case InstructionKind::VMULAQ:
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_Q));
+        m_write_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+
+        // Read Q register
+      case InstructionKind::VADDQ:
+      case InstructionKind::VSUBQ:
+      case InstructionKind::VMULQ:
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_Q));
+        break;
+
+        // Write ACC register
+      case InstructionKind::VADDA:
+      case InstructionKind::VADDA_BC:
+      case InstructionKind::VMULA:
+      case InstructionKind::VMULA_BC:
+      case InstructionKind::VOPMULA:
+        m_write_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+
+        // Write Q register
+      case InstructionKind::VDIV:
+      case InstructionKind::VSQRT:
+      case InstructionKind::VRSQRT:
+        m_write_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_Q));
+        break;
+
+        // Read acc register
+      case InstructionKind::VMADD:
+      case InstructionKind::VMADD_BC:
+      case InstructionKind::VMSUB:
+      case InstructionKind::VMSUB_BC:
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+      case InstructionKind::VOPMSUB:
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+
+        // Read/Write acc register
+      case InstructionKind::VMADDA:
+      case InstructionKind::VMADDA_BC:
+      case InstructionKind::VMSUBA_BC:
+        m_write_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        m_read_regs.push_back(Register(Reg::COP2_MACRO_SPECIAL, Reg::MACRO_ACC));
+        break;
+
+      case InstructionKind::VMOVE:
+      case InstructionKind::VFTOI0:
+      case InstructionKind::VFTOI4:
+      case InstructionKind::VFTOI12:
+      case InstructionKind::VITOF0:
+      case InstructionKind::VITOF12:
+      case InstructionKind::VITOF15:
+      case InstructionKind::VABS:
+      case InstructionKind::VADD:
+      case InstructionKind::VADD_BC:
+      case InstructionKind::VSUB:
+      case InstructionKind::VSUB_BC:
+      case InstructionKind::VMUL:
+      case InstructionKind::VMUL_BC:
+      case InstructionKind::VMINI:
+      case InstructionKind::VMINI_BC:
+      case InstructionKind::VMAX:
+      case InstructionKind::VMAX_BC:
+      case InstructionKind::VCLIP:
+      case InstructionKind::VNOP:
+
+        // anything using one of these should be manually analyzed.
+      case InstructionKind::VMTIR:
+      case InstructionKind::VIAND:
+      case InstructionKind::VLQI:
+      case InstructionKind::VIADDI:
+      case InstructionKind::VSQI:
+      case InstructionKind::VRGET:
+      case InstructionKind::VRXOR:
+      case InstructionKind::VRNEXT:
+      case InstructionKind::VWAITQ:  // okay if following vsqrt/vrsqrt/vdiv
+      case InstructionKind::VCALLMS:
+
+        // do not read/write acc/q
+        break;
+
+      default:
+        assert(false);
+        break;
+    }
+  }
 }
 
+void AsmOp::collect_vars(RegAccessSet& vars) const {
+  if (m_dst.has_value()) {
+    vars.insert(*m_dst);
+  }
+
+  for (auto& x : m_src) {
+    if (x.has_value()) {
+      vars.insert(*x);
+    }
+  }
+}
 /////////////////////////////
 // Condition
 /////////////////////////////
 
-namespace {
 std::string get_condition_kind_name(IR2_Condition::Kind kind) {
   switch (kind) {
     case IR2_Condition::Kind::NOT_EQUAL:
@@ -579,6 +721,7 @@ std::string get_condition_kind_name(IR2_Condition::Kind kind) {
       return ">=0.ui";
     default:
       assert(false);
+      return "";
   }
 }
 
@@ -621,6 +764,7 @@ int get_condition_num_args(IR2_Condition::Kind kind) {
       return 0;
     default:
       assert(false);
+      return -1;
   }
 }
 
@@ -692,9 +836,23 @@ IR2_Condition::Kind get_condition_opposite(IR2_Condition::Kind kind) {
       return IR2_Condition::Kind::LESS_THAN_ZERO_UNSIGNED;
     default:
       assert(false);
+      return IR2_Condition::Kind::INVALID;
   }
 }
-}  // namespace
+
+bool condition_uses_float(IR2_Condition::Kind kind) {
+  switch (kind) {
+    case IR2_Condition::Kind::FLOAT_LESS_THAN:
+    case IR2_Condition::Kind::FLOAT_LEQ:
+    case IR2_Condition::Kind::FLOAT_NOT_EQUAL:
+    case IR2_Condition::Kind::FLOAT_EQUAL:
+    case IR2_Condition::Kind::FLOAT_GEQ:
+    case IR2_Condition::Kind::FLOAT_GREATER_THAN:
+      return true;
+    default:
+      return false;
+  }
+}
 
 IR2_Condition::IR2_Condition(Kind kind) : m_kind(kind) {
   assert(get_condition_num_args(m_kind) == 0);
@@ -730,7 +888,7 @@ bool IR2_Condition::operator==(const IR2_Condition& other) const {
 }
 
 goos::Object IR2_Condition::to_form(const std::vector<DecompilerLabel>& labels,
-                                    const Env* env) const {
+                                    const Env& env) const {
   (void)labels;
   std::vector<goos::Object> forms;
   forms.push_back(pretty_print::to_symbol(get_condition_kind_name(m_kind)));
@@ -750,17 +908,22 @@ void IR2_Condition::get_regs(std::vector<Register>* out) const {
   }
 }
 
+void IR2_Condition::collect_vars(RegAccessSet& vars) const {
+  for (int i = 0; i < get_condition_num_args(m_kind); i++) {
+    m_src[i].collect_vars(vars);
+  }
+}
+
 /////////////////////////////
 // SetVarConditionOp
 /////////////////////////////
 
-SetVarConditionOp::SetVarConditionOp(Variable dst, IR2_Condition condition, int my_idx)
-    : AtomicOp(my_idx), m_dst(dst), m_condition(condition) {}
+SetVarConditionOp::SetVarConditionOp(RegisterAccess dst, IR2_Condition condition, int my_idx)
+    : AtomicOp(my_idx), m_dst(dst), m_condition(std::move(condition)) {}
 
 goos::Object SetVarConditionOp::to_form(const std::vector<DecompilerLabel>& labels,
-                                        const Env* env) const {
-  return pretty_print::build_list(pretty_print::to_symbol("set!"),
-                                  pretty_print::to_symbol(m_dst.to_string(env)),
+                                        const Env& env) const {
+  return pretty_print::build_list(pretty_print::to_symbol("set!"), m_dst.to_form(env),
                                   m_condition.to_form(labels, env));
 }
 
@@ -774,29 +937,22 @@ bool SetVarConditionOp::operator==(const AtomicOp& other) const {
   return m_dst == po->m_dst && m_condition == po->m_condition;
 }
 
-bool SetVarConditionOp::is_variable_set() const {
-  return true;
-}
-
 bool SetVarConditionOp::is_sequence_point() const {
   return true;
 }
 
-Variable SetVarConditionOp::get_set_destination() const {
+RegisterAccess SetVarConditionOp::get_set_destination() const {
   return m_dst;
-}
-
-std::unique_ptr<Expr> SetVarConditionOp::get_set_source_as_expr() const {
-  throw std::runtime_error("SetVarConditionOp::get_source_as_expr is not yet implemented.");
-}
-
-std::unique_ptr<Expr> SetVarConditionOp::get_as_expr() const {
-  throw std::runtime_error("SetVarConditionOp::get_as_expr is not yet implemented.");
 }
 
 void SetVarConditionOp::update_register_info() {
   m_write_regs.push_back(m_dst.reg());
   m_condition.get_regs(&m_read_regs);
+}
+
+void SetVarConditionOp::collect_vars(RegAccessSet& vars) const {
+  vars.insert(m_dst);
+  m_condition.collect_vars(vars);
 }
 
 /////////////////////////////
@@ -810,7 +966,7 @@ StoreOp::StoreOp(int size, bool is_float, SimpleExpression addr, SimpleAtom valu
       m_addr(std::move(addr)),
       m_value(std::move(value)) {}
 
-goos::Object StoreOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object StoreOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   std::string store_name;
   if (m_is_float) {
     assert(m_size == 4);
@@ -849,24 +1005,12 @@ bool StoreOp::operator==(const AtomicOp& other) const {
   return m_addr == po->m_addr && m_value == po->m_value;
 }
 
-bool StoreOp::is_variable_set() const {
-  return false;
-}
-
 bool StoreOp::is_sequence_point() const {
   return true;
 }
 
-Variable StoreOp::get_set_destination() const {
+RegisterAccess StoreOp::get_set_destination() const {
   throw std::runtime_error("StoreOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> StoreOp::get_set_source_as_expr() const {
-  throw std::runtime_error("StoreOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> StoreOp::get_as_expr() const {
-  throw std::runtime_error("StoreOp::get_as_expr is not yet implemented");
 }
 
 void StoreOp::update_register_info() {
@@ -874,16 +1018,20 @@ void StoreOp::update_register_info() {
   m_value.get_regs(&m_read_regs);
 }
 
+void StoreOp::collect_vars(RegAccessSet& vars) const {
+  m_addr.collect_vars(vars);
+  m_value.collect_vars(vars);
+}
+
 /////////////////////////////
 // LoadVarOp
 /////////////////////////////
 
-LoadVarOp::LoadVarOp(Kind kind, int size, Variable dst, SimpleExpression src, int my_idx)
+LoadVarOp::LoadVarOp(Kind kind, int size, RegisterAccess dst, SimpleExpression src, int my_idx)
     : AtomicOp(my_idx), m_kind(kind), m_size(size), m_dst(dst), m_src(std::move(src)) {}
 
-goos::Object LoadVarOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
-  std::vector<goos::Object> forms = {pretty_print::to_symbol("set!"),
-                                     pretty_print::to_symbol(m_dst.to_string(env))};
+goos::Object LoadVarOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
+  std::vector<goos::Object> forms = {pretty_print::to_symbol("set!"), m_dst.to_form(env)};
 
   switch (m_kind) {
     case Kind::FLOAT:
@@ -939,24 +1087,12 @@ bool LoadVarOp::operator==(const AtomicOp& other) const {
   return m_dst == po->m_dst && m_src == po->m_src;
 }
 
-bool LoadVarOp::is_variable_set() const {
-  return true;
-}
-
 bool LoadVarOp::is_sequence_point() const {
   return true;
 }
 
-Variable LoadVarOp::get_set_destination() const {
+RegisterAccess LoadVarOp::get_set_destination() const {
   return m_dst;
-}
-
-std::unique_ptr<Expr> LoadVarOp::get_set_source_as_expr() const {
-  throw std::runtime_error("LoadVarOp::get_set_source_as_expr is not yet implemented");
-}
-
-std::unique_ptr<Expr> LoadVarOp::get_as_expr() const {
-  throw std::runtime_error("LoadVarOp::get_as_expr is not yet implemented");
 }
 
 void LoadVarOp::update_register_info() {
@@ -964,76 +1100,90 @@ void LoadVarOp::update_register_info() {
   m_write_regs.push_back(m_dst.reg());
 }
 
+void LoadVarOp::collect_vars(RegAccessSet& vars) const {
+  vars.insert(m_dst);
+  m_src.collect_vars(vars);
+}
+
 /////////////////////////////
 // IR2_BranchDelay
 /////////////////////////////
 
 IR2_BranchDelay::IR2_BranchDelay(Kind kind) : m_kind(kind) {
-  assert(m_kind == Kind::NOP);
+  assert(m_kind == Kind::NOP || m_kind == Kind::NO_DELAY || m_kind == Kind::UNKNOWN);
 }
 
-IR2_BranchDelay::IR2_BranchDelay(Kind kind, Variable var0) : m_kind(kind) {
+IR2_BranchDelay::IR2_BranchDelay(Kind kind, RegisterAccess var0) : m_kind(kind) {
   assert(m_kind == Kind::SET_REG_FALSE || m_kind == Kind::SET_REG_TRUE ||
          m_kind == Kind::SET_BINTEGER || m_kind == Kind::SET_PAIR);
-  assert(var0.mode() == VariableMode::WRITE);
+  assert(var0.mode() == AccessMode::WRITE);
   m_var[0] = var0;
 }
 
-IR2_BranchDelay::IR2_BranchDelay(Kind kind, Variable var0, Variable var1) : m_kind(kind) {
+IR2_BranchDelay::IR2_BranchDelay(Kind kind, RegisterAccess var0, RegisterAccess var1)
+    : m_kind(kind) {
   assert(m_kind == Kind::NEGATE || m_kind == Kind::SET_REG_REG);
-  assert(var0.mode() == VariableMode::WRITE);
-  assert(var1.mode() == VariableMode::READ);
+  assert(var0.mode() == AccessMode::WRITE);
+  assert(var1.mode() == AccessMode::READ);
   m_var[0] = var0;
   m_var[1] = var1;
 }
 
-IR2_BranchDelay::IR2_BranchDelay(Kind kind, Variable var0, Variable var1, Variable var2)
+IR2_BranchDelay::IR2_BranchDelay(Kind kind,
+                                 RegisterAccess var0,
+                                 RegisterAccess var1,
+                                 RegisterAccess var2)
     : m_kind(kind) {
   assert(m_kind == Kind::DSLLV);
-  assert(var0.mode() == VariableMode::WRITE);
-  assert(var1.mode() == VariableMode::READ);
-  assert(var2.mode() == VariableMode::READ);
+  assert(var0.mode() == AccessMode::WRITE);
+  assert(var1.mode() == AccessMode::READ);
+  assert(var2.mode() == AccessMode::READ);
   m_var[0] = var0;
   m_var[1] = var1;
   m_var[2] = var2;
 }
 
 goos::Object IR2_BranchDelay::to_form(const std::vector<DecompilerLabel>& labels,
-                                      const Env* env) const {
+                                      const Env& env) const {
   (void)labels;
   switch (m_kind) {
     case Kind::NOP:
       return pretty_print::build_list("nop!");
+    case Kind::NO_DELAY:
+      return pretty_print::build_list("no-delay!");
     case Kind::SET_REG_FALSE:
       assert(m_var[0].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env), "#f");
+      return pretty_print::build_list("set!", m_var[0]->to_form(env), "#f");
     case Kind::SET_REG_TRUE:
       assert(m_var[0].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env), "#t");
+      return pretty_print::build_list("set!", m_var[0]->to_form(env), "#t");
     case Kind::SET_REG_REG:
       assert(m_var[0].has_value());
       assert(m_var[1].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env), m_var[1]->to_string(env));
+      return pretty_print::build_list("set!", m_var[0]->to_form(env), m_var[1]->to_form(env));
     case Kind::SET_BINTEGER:
       assert(m_var[0].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env), "binteger");
+      return pretty_print::build_list("set!", m_var[0]->to_form(env), "binteger");
     case Kind::SET_PAIR:
       assert(m_var[0].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env), "pair");
+      return pretty_print::build_list("set!", m_var[0]->to_form(env), "pair");
     case Kind::DSLLV:
       assert(m_var[0].has_value());
       assert(m_var[1].has_value());
       assert(m_var[2].has_value());
       return pretty_print::build_list(
-          "set!", m_var[0]->to_string(env),
-          pretty_print::build_list("sll", m_var[1]->to_string(env), m_var[2]->to_string(env)));
+          "set!", m_var[0]->to_form(env),
+          pretty_print::build_list("sll", m_var[1]->to_form(env), m_var[2]->to_form(env)));
     case Kind::NEGATE:
       assert(m_var[0].has_value());
       assert(m_var[1].has_value());
-      return pretty_print::build_list("set!", m_var[0]->to_string(env),
-                                      pretty_print::build_list("-", m_var[1]->to_string(env)));
+      return pretty_print::build_list("set!", m_var[0]->to_form(env),
+                                      pretty_print::build_list("-", m_var[1]->to_form(env)));
+    case Kind::UNKNOWN:
+      return pretty_print::build_list("unknown-branch-delay!");
     default:
       assert(false);
+      return {};
   }
 }
 
@@ -1049,6 +1199,7 @@ bool IR2_BranchDelay::operator==(const IR2_BranchDelay& other) const {
 void IR2_BranchDelay::get_regs(std::vector<Register>* write, std::vector<Register>* read) const {
   switch (m_kind) {
     case Kind::NOP:
+    case Kind::NO_DELAY:
       break;
     case Kind::SET_REG_FALSE:
     case Kind::SET_REG_TRUE:
@@ -1071,6 +1222,14 @@ void IR2_BranchDelay::get_regs(std::vector<Register>* write, std::vector<Registe
   }
 }
 
+void IR2_BranchDelay::collect_vars(RegAccessSet& vars) const {
+  for (auto& x : m_var) {
+    if (x.has_value()) {
+      vars.insert(*x);
+    }
+  }
+}
+
 /////////////////////////////
 // BranchOp
 /////////////////////////////
@@ -1086,7 +1245,7 @@ BranchOp::BranchOp(bool likely,
       m_label(label),
       m_branch_delay(branch_delay) {}
 
-goos::Object BranchOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object BranchOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   std::vector<goos::Object> forms;
 
   if (m_likely) {
@@ -1113,29 +1272,94 @@ bool BranchOp::operator==(const AtomicOp& other) const {
          m_branch_delay == po->m_branch_delay;
 }
 
-bool BranchOp::is_variable_set() const {
-  return false;
-}
-
 bool BranchOp::is_sequence_point() const {
   return true;
 }
 
-Variable BranchOp::get_set_destination() const {
+RegisterAccess BranchOp::get_set_destination() const {
   throw std::runtime_error("BranchOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> BranchOp::get_set_source_as_expr() const {
-  throw std::runtime_error("BranchOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> BranchOp::get_as_expr() const {
-  throw std::runtime_error("BranchOp::get_as_expr is not yet implemented");
 }
 
 void BranchOp::update_register_info() {
   m_condition.get_regs(&m_read_regs);
   m_branch_delay.get_regs(&m_write_regs, &m_read_regs);
+}
+
+void BranchOp::collect_vars(RegAccessSet& vars) const {
+  m_condition.collect_vars(vars);
+  m_branch_delay.collect_vars(vars);
+}
+
+/////////////////////////////
+// AsmBranchOp
+/////////////////////////////
+
+AsmBranchOp::AsmBranchOp(bool likely,
+                         IR2_Condition condition,
+                         int label,
+                         std::shared_ptr<AtomicOp> branch_delay,
+                         int my_idx)
+    : AtomicOp(my_idx),
+      m_likely(likely),
+      m_condition(std::move(condition)),
+      m_label(label),
+      m_branch_delay(std::move(branch_delay)) {}
+
+goos::Object AsmBranchOp::to_form(const std::vector<DecompilerLabel>& labels,
+                                  const Env& env) const {
+  std::vector<goos::Object> forms;
+
+  if (m_likely) {
+    forms.push_back(pretty_print::to_symbol("bl!"));
+  } else {
+    forms.push_back(pretty_print::to_symbol("b!"));
+  }
+
+  forms.push_back(m_condition.to_form(labels, env));
+  forms.push_back(pretty_print::to_symbol(labels.at(m_label).name));
+  forms.push_back(m_branch_delay->to_form(labels, env));
+
+  return pretty_print::build_list(forms);
+}
+
+bool AsmBranchOp::operator==(const AtomicOp& other) const {
+  if (typeid(BranchOp) != typeid(other)) {
+    return false;
+  }
+
+  auto po = dynamic_cast<const AsmBranchOp*>(&other);
+  assert(po);
+  return m_likely == po->m_likely && m_condition == po->m_condition && m_label == po->m_label &&
+         m_branch_delay == po->m_branch_delay;
+}
+
+bool AsmBranchOp::is_sequence_point() const {
+  return true;
+}
+
+RegisterAccess AsmBranchOp::get_set_destination() const {
+  throw std::runtime_error("AsmBranchOp cannot be treated as a set! operation");
+}
+
+void AsmBranchOp::update_register_info() {
+  m_condition.get_regs(&m_read_regs);
+  m_branch_delay->update_register_info();
+  for (auto x : m_branch_delay->read_regs()) {
+    m_read_regs.push_back(x);
+  }
+
+  for (auto x : m_branch_delay->write_regs()) {
+    m_write_regs.push_back(x);
+  }
+
+  for (auto x : m_branch_delay->clobber_regs()) {
+    m_clobber_regs.push_back(x);
+  }
+}
+
+void AsmBranchOp::collect_vars(RegAccessSet& vars) const {
+  m_condition.collect_vars(vars);
+  m_branch_delay->collect_vars(vars);
 }
 
 /////////////////////////////
@@ -1144,7 +1368,7 @@ void BranchOp::update_register_info() {
 
 SpecialOp::SpecialOp(Kind kind, int my_idx) : AtomicOp(my_idx), m_kind(kind) {}
 
-goos::Object SpecialOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object SpecialOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   (void)labels;
   (void)env;
   switch (m_kind) {
@@ -1158,6 +1382,7 @@ goos::Object SpecialOp::to_form(const std::vector<DecompilerLabel>& labels, cons
       return pretty_print::build_list("suspend");
     default:
       assert(false);
+      return {};
   }
 }
 
@@ -1172,24 +1397,12 @@ bool SpecialOp::operator==(const AtomicOp& other) const {
   return m_kind == po->m_kind;
 }
 
-bool SpecialOp::is_variable_set() const {
-  return false;
-}
-
 bool SpecialOp::is_sequence_point() const {
   return true;
 }
 
-Variable SpecialOp::get_set_destination() const {
+RegisterAccess SpecialOp::get_set_destination() const {
   throw std::runtime_error("SpecialOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> SpecialOp::get_set_source_as_expr() const {
-  throw std::runtime_error("SpecialOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> SpecialOp::get_as_expr() const {
-  throw std::runtime_error("SpecialOp::get_as_expr not yet implemented");
 }
 
 void SpecialOp::update_register_info() {
@@ -1210,16 +1423,26 @@ void SpecialOp::update_register_info() {
   }
 }
 
+void SpecialOp::collect_vars(RegAccessSet&) const {}
+
 /////////////////////////////
 // CallOp
 /////////////////////////////
 
-CallOp::CallOp(int my_idx) : AtomicOp(my_idx) {}
+CallOp::CallOp(int my_idx)
+    : AtomicOp(my_idx),
+      m_function_var(AccessMode::READ, Register(Reg::GPR, Reg::T9), my_idx),
+      m_return_var(AccessMode::WRITE, Register(Reg::GPR, Reg::V0), my_idx) {}
 
-goos::Object CallOp::to_form(const std::vector<DecompilerLabel>& labels, const Env* env) const {
+goos::Object CallOp::to_form(const std::vector<DecompilerLabel>& labels, const Env& env) const {
   (void)labels;
   (void)env;
-  return pretty_print::build_list("call!");
+  std::vector<goos::Object> forms;
+  forms.push_back(pretty_print::to_symbol("call!"));
+  for (auto& x : m_arg_vars) {
+    forms.push_back(x.to_form(env));
+  }
+  return pretty_print::build_list(forms);
 }
 
 bool CallOp::operator==(const AtomicOp& other) const {
@@ -1232,44 +1455,51 @@ bool CallOp::operator==(const AtomicOp& other) const {
   return true;
 }
 
-bool CallOp::is_variable_set() const {
-  return false;
-}
-
 bool CallOp::is_sequence_point() const {
   return true;
 }
 
-Variable CallOp::get_set_destination() const {
+RegisterAccess CallOp::get_set_destination() const {
   throw std::runtime_error("CallOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> CallOp::get_set_source_as_expr() const {
-  throw std::runtime_error("CallOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> CallOp::get_as_expr() const {
-  throw std::runtime_error("CallOp::get_as_expr not yet implemented");
 }
 
 void CallOp::update_register_info() {
   // throw std::runtime_error("CallOp::update_register_info cannot be done until types are known");
   m_read_regs.push_back(Register(Reg::GPR, Reg::T9));
+  // if the type analysis succeeds, it will remove this if the function doesn't return a value.
+  // but, in the case we want to keep running without type information, we may need a
+  // renamed variable here, so we add this.
+  m_write_regs.push_back(Register(Reg::GPR, Reg::V0));
   clobber_temps();
+}
+
+void CallOp::collect_vars(RegAccessSet& vars) const {
+  vars.insert(m_function_var);
+  for (auto& e : m_arg_vars) {
+    vars.insert(e);
+  }
+
+  if (m_call_type_set && m_call_type.last_arg() != TypeSpec("none")) {
+    vars.insert(m_return_var);
+  }
 }
 
 /////////////////////////////
 // ConditionalMoveFalseOp
 /////////////////////////////
 
-ConditionalMoveFalseOp::ConditionalMoveFalseOp(Variable dst, Variable src, bool on_zero, int my_idx)
-    : AtomicOp(my_idx), m_dst(dst), m_src(src), m_on_zero(on_zero) {}
+ConditionalMoveFalseOp::ConditionalMoveFalseOp(RegisterAccess dst,
+                                               RegisterAccess src,
+                                               RegisterAccess old_value,
+                                               bool on_zero,
+                                               int my_idx)
+    : AtomicOp(my_idx), m_dst(dst), m_src(src), m_old_value(old_value), m_on_zero(on_zero) {}
 
 goos::Object ConditionalMoveFalseOp::to_form(const std::vector<DecompilerLabel>& labels,
-                                             const Env* env) const {
+                                             const Env& env) const {
   (void)labels;
   return pretty_print::build_list(m_on_zero ? "cmove-#f-zero" : "cmove-#f-nonzero",
-                                  m_dst.to_string(env), m_src.to_string(env));
+                                  m_dst.to_form(env), m_src.to_form(env), m_old_value.to_form(env));
 }
 
 bool ConditionalMoveFalseOp::operator==(const AtomicOp& other) const {
@@ -1279,31 +1509,88 @@ bool ConditionalMoveFalseOp::operator==(const AtomicOp& other) const {
 
   auto po = dynamic_cast<const ConditionalMoveFalseOp*>(&other);
   assert(po);
-  return m_dst == po->m_dst && m_src == po->m_src && m_on_zero == po->m_on_zero;
-}
-
-bool ConditionalMoveFalseOp::is_variable_set() const {
-  return false;
+  return m_dst == po->m_dst && m_src == po->m_src && m_on_zero == po->m_on_zero &&
+         m_old_value == po->m_old_value;
 }
 
 bool ConditionalMoveFalseOp::is_sequence_point() const {
   return true;
 }
 
-Variable ConditionalMoveFalseOp::get_set_destination() const {
+RegisterAccess ConditionalMoveFalseOp::get_set_destination() const {
   throw std::runtime_error("ConditionalMoveFalseOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> ConditionalMoveFalseOp::get_set_source_as_expr() const {
-  throw std::runtime_error("ConditionalMoveFalseOp cannot be treated as a set! operation");
-}
-
-std::unique_ptr<Expr> ConditionalMoveFalseOp::get_as_expr() const {
-  throw std::runtime_error("ConditionalMoveFalseOp::get_as_expr is not yet implemented");
 }
 
 void ConditionalMoveFalseOp::update_register_info() {
   m_write_regs.push_back(m_dst.reg());
   m_read_regs.push_back(m_src.reg());
+  m_read_regs.push_back(m_old_value.reg());
+}
+
+void ConditionalMoveFalseOp::collect_vars(RegAccessSet& vars) const {
+  vars.insert(m_dst);
+  vars.insert(m_src);
+  vars.insert(m_old_value);
+}
+
+bool get_as_reg_offset(const SimpleExpression& expr, IR2_RegOffset* out) {
+  if (expr.kind() == SimpleExpression::Kind::ADD && expr.get_arg(0).is_var() &&
+      expr.get_arg(1).is_int()) {
+    out->var = expr.get_arg(0).var();
+    out->reg = expr.get_arg(0).var().reg();
+    out->offset = expr.get_arg(1).get_int();
+    return true;
+  }
+
+  if (expr.is_identity() && expr.get_arg(0).is_var()) {
+    out->var = expr.get_arg(0).var();
+    out->reg = expr.get_arg(0).var().reg();
+    out->offset = 0;
+    return true;
+  }
+  return false;
+}
+
+/////////////////////////////
+// FunctionEndOp
+/////////////////////////////
+
+FunctionEndOp::FunctionEndOp(int my_idx)
+    : AtomicOp(my_idx), m_return_reg(AccessMode::READ, Register(Reg::GPR, Reg::V0), my_idx) {}
+
+goos::Object FunctionEndOp::to_form(const std::vector<DecompilerLabel>&, const Env& env) const {
+  if (m_function_has_return_value) {
+    return pretty_print::build_list("ret-value", m_return_reg.to_form(env));
+  } else {
+    return pretty_print::build_list("ret-none");
+  }
+}
+
+bool FunctionEndOp::operator==(const AtomicOp& other) const {
+  if (typeid(FunctionEndOp) != typeid(other)) {
+    return false;
+  }
+
+  auto po = dynamic_cast<const FunctionEndOp*>(&other);
+  assert(po);
+  return m_function_has_return_value == po->m_function_has_return_value;
+}
+
+bool FunctionEndOp::is_sequence_point() const {
+  return true;
+}
+
+RegisterAccess FunctionEndOp::get_set_destination() const {
+  throw std::runtime_error("FunctionEndOp cannot be treated as a set! operation");
+}
+
+void FunctionEndOp::update_register_info() {
+  m_read_regs.push_back(Register(Reg::GPR, Reg::V0));
+}
+
+void FunctionEndOp::collect_vars(RegAccessSet& vars) const {
+  if (m_function_has_return_value) {
+    vars.insert(m_return_reg);
+  }
 }
 }  // namespace decompiler

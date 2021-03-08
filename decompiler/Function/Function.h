@@ -8,13 +8,14 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <unordered_set>
-#include "decompiler/IR2/AtomicOpBuilder.h"
+#include "decompiler/analysis/atomic_op_builder.h"
 #include "decompiler/Disasm/Instruction.h"
 #include "decompiler/Disasm/Register.h"
 #include "BasicBlocks.h"
 #include "CfgVtx.h"
 #include "common/type_system/TypeSpec.h"
 #include "decompiler/config.h"
+#include "Warnings.h"
 
 namespace decompiler {
 class DecompilerTypeSystem;
@@ -76,6 +77,7 @@ struct FunctionName {
 class Function {
  public:
   Function(int _start_word, int _end_word);
+  ~Function();
   void analyze_prologue(const LinkedObjectFile& file);
   void find_global_function_defs(LinkedObjectFile& file, DecompilerTypeSystem& dts);
   void find_method_defs(LinkedObjectFile& file, DecompilerTypeSystem& dts);
@@ -88,17 +90,12 @@ class Function {
   const AtomicOp& get_atomic_op_at_instr(int idx);
   int get_basic_op_count();
   int get_failed_basic_op_count();
-  int get_reginfo_basic_op_count();
-  bool run_type_analysis(const TypeSpec& my_type,
-                         DecompilerTypeSystem& dts,
-                         LinkedObjectFile& file,
-                         const std::unordered_map<int, std::vector<TypeHint>>& hints);
+
   bool run_type_analysis_ir2(const TypeSpec& my_type,
                              DecompilerTypeSystem& dts,
                              LinkedObjectFile& file,
-                             const std::unordered_map<int, std::vector<TypeHint>>& hints);
-  void run_reg_usage();
-  bool build_expression(LinkedObjectFile& file);
+                             const std::unordered_map<int, std::vector<TypeHint>>& hints,
+                             const std::unordered_map<std::string, LabelType>& label_types);
   BlockTopologicalSort bb_topo_sort();
 
   TypeSpec type;
@@ -125,7 +122,8 @@ class Function {
   int epilogue_start = -1;
   int epilogue_end = -1;
 
-  std::string warnings;
+  DecompWarnings warnings;
+
   bool contains_asm_ops = false;
 
   bool attempted_type_analysis = false;
@@ -165,10 +163,12 @@ class Function {
     bool atomic_ops_attempted = false;
     bool atomic_ops_succeeded = false;
     std::shared_ptr<FunctionAtomicOps> atomic_ops = nullptr;
-    bool has_reg_use = false;
-    RegUsageInfo reg_use;
-    bool has_type_info = false;
     Env env;
+    std::shared_ptr<FormPool> form_pool = nullptr;
+    Form* top_form = nullptr;
+    std::string debug_form_string;
+    bool print_debug_forms = false;
+    bool expressions_succeeded = false;
   } ir2;
 
  private:

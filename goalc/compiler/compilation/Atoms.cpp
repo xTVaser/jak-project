@@ -9,11 +9,12 @@
 /*!
  * Main table for compiler forms
  */
-static const std::unordered_map<
+const std::unordered_map<
     std::string,
     Val* (Compiler::*)(const goos::Object& form, const goos::Object& rest, Env* env)>
-    goal_forms = {
-        // inline asm
+    g_goal_forms = {
+        // INLINE ASM
+        {".nop", &Compiler::compile_nop},
         {".ret", &Compiler::compile_asm_ret},
         {".push", &Compiler::compile_asm_push},
         {".pop", &Compiler::compile_asm_pop},
@@ -23,12 +24,77 @@ static const std::unordered_map<
         {".add", &Compiler::compile_asm_add},
         {".load-sym", &Compiler::compile_asm_load_sym},
         {".mov", &Compiler::compile_asm_mov},
+
+        // INLINE ASM - VECTOR FLOAT OPERATIONS
         {".lvf", &Compiler::compile_asm_lvf},
         {".svf", &Compiler::compile_asm_svf},
-        {".xor.vf", &Compiler::compile_asm_xor_vf},
-        {".sub.vf", &Compiler::compile_asm_sub_vf},
-        {".add.vf", &Compiler::compile_asm_add_vf},
+        {".mov.vf", &Compiler::compile_asm_mov_vf},
         {".blend.vf", &Compiler::compile_asm_blend_vf},
+
+        {".nop.vf", &Compiler::compile_asm_nop_vf},
+        {".wait.vf", &Compiler::compile_asm_wait_vf},
+
+        {".xor.vf", &Compiler::compile_asm_xor_vf},
+
+        {".max.vf", &Compiler::compile_asm_max_vf},
+        {".max.x.vf", &Compiler::compile_asm_max_x_vf},
+        {".max.y.vf", &Compiler::compile_asm_max_y_vf},
+        {".max.z.vf", &Compiler::compile_asm_max_z_vf},
+        {".max.w.vf", &Compiler::compile_asm_max_w_vf},
+
+        {".min.vf", &Compiler::compile_asm_min_vf},
+        {".min.x.vf", &Compiler::compile_asm_min_x_vf},
+        {".min.y.vf", &Compiler::compile_asm_min_y_vf},
+        {".min.z.vf", &Compiler::compile_asm_min_z_vf},
+        {".min.w.vf", &Compiler::compile_asm_min_w_vf},
+
+        {".add.vf", &Compiler::compile_asm_add_vf},
+        {".add.x.vf", &Compiler::compile_asm_add_x_vf},
+        {".add.y.vf", &Compiler::compile_asm_add_y_vf},
+        {".add.z.vf", &Compiler::compile_asm_add_z_vf},
+        {".add.w.vf", &Compiler::compile_asm_add_w_vf},
+
+        {".sub.vf", &Compiler::compile_asm_sub_vf},
+        {".sub.x.vf", &Compiler::compile_asm_sub_x_vf},
+        {".sub.y.vf", &Compiler::compile_asm_sub_y_vf},
+        {".sub.z.vf", &Compiler::compile_asm_sub_z_vf},
+        {".sub.w.vf", &Compiler::compile_asm_sub_w_vf},
+
+        {".mul.vf", &Compiler::compile_asm_mul_vf},
+        {".mul.x.vf", &Compiler::compile_asm_mul_x_vf},
+        {".mul.y.vf", &Compiler::compile_asm_mul_y_vf},
+        {".mul.z.vf", &Compiler::compile_asm_mul_z_vf},
+        {".mul.w.vf", &Compiler::compile_asm_mul_w_vf},
+
+        {".add.mul.vf", &Compiler::compile_asm_mul_add_vf},
+        {".add.mul.x.vf", &Compiler::compile_asm_mul_add_x_vf},
+        {".add.mul.y.vf", &Compiler::compile_asm_mul_add_y_vf},
+        {".add.mul.z.vf", &Compiler::compile_asm_mul_add_z_vf},
+        {".add.mul.w.vf", &Compiler::compile_asm_mul_add_w_vf},
+
+        {".sub.mul.vf", &Compiler::compile_asm_mul_sub_vf},
+        {".sub.mul.x.vf", &Compiler::compile_asm_mul_sub_x_vf},
+        {".sub.mul.y.vf", &Compiler::compile_asm_mul_sub_y_vf},
+        {".sub.mul.z.vf", &Compiler::compile_asm_mul_sub_z_vf},
+        {".sub.mul.w.vf", &Compiler::compile_asm_mul_sub_w_vf},
+
+        {".abs.vf", &Compiler::compile_asm_abs_vf},
+        // NOTE - to compute the Outer Product with the VU, two back to back instructions were used
+        // involving the ACC
+        // However, we can be better than that and just provide a single instruction
+        // BUT - if things used side effects of the modified ACC or benefited from only doing 1/2
+        // operations, we'll need to implement them separately.
+        {".outer.product.vf", &Compiler::compile_asm_outer_product_vf},
+
+        {".div.vf", &Compiler::compile_asm_div_vf},
+        {".sqrt.vf", &Compiler::compile_asm_sqrt_vf},
+        {".isqrt.vf", &Compiler::compile_asm_inv_sqrt_vf},
+        {".itof.vf", &Compiler::compile_asm_itof_vf},
+        {".ftoi.vf", &Compiler::compile_asm_ftoi_vf},
+
+        {".pw.sll", &Compiler::compile_asm_pw_sll},
+        {".pw.srl", &Compiler::compile_asm_pw_srl},
+        {".pw.sra", &Compiler::compile_asm_pw_sra},
 
         // BLOCK FORMS
         {"top-level", &Compiler::compile_top_level},
@@ -37,8 +103,11 @@ static const std::unordered_map<
         {"return-from", &Compiler::compile_return_from},
         {"label", &Compiler::compile_label},
         {"goto", &Compiler::compile_goto},
+        {"nop!", &Compiler::compile_nop},
 
         // COMPILER CONTROL
+        {"repl-help", &Compiler::compile_repl_help},
+        {":clear", &Compiler::compile_repl_clear_screen},
         {"gs", &Compiler::compile_gs},
         {":exit", &Compiler::compile_exit},
         {"asm-file", &Compiler::compile_asm_file},
@@ -47,6 +116,9 @@ static const std::unordered_map<
         {"reset-target", &Compiler::compile_reset_target},
         {":status", &Compiler::compile_poke},
         {"in-package", &Compiler::compile_in_package},
+        {"reload", &Compiler::compile_reload},
+        {"get-info", &Compiler::compile_get_info},
+        {"autocomplete", &Compiler::compile_autocomplete},
 
         // CONDITIONAL COMPILATION
         {"#cond", &Compiler::compile_gscond},
@@ -56,6 +128,8 @@ static const std::unordered_map<
         // CONTROL FLOW
         {"cond", &Compiler::compile_cond},
         {"when-goto", &Compiler::compile_when_goto},
+        {"and", &Compiler::compile_and_or},
+        {"or", &Compiler::compile_and_or},
 
         // DEFINITION
         {"define", &Compiler::compile_define},
@@ -86,7 +160,8 @@ static const std::unordered_map<
         {"new", &Compiler::compile_new},
         {"car", &Compiler::compile_car},
         {"cdr", &Compiler::compile_cdr},
-        {"method", &Compiler::compile_method},
+        {"method-of-type", &Compiler::compile_method_of_type},
+        {"method-of-object", &Compiler::compile_method_of_object},
         {"declare-type", &Compiler::compile_declare_type},
         {"none", &Compiler::compile_none},
 
@@ -94,6 +169,7 @@ static const std::unordered_map<
         {"lambda", &Compiler::compile_lambda},
         {"declare", &Compiler::compile_declare},
         {"inline", &Compiler::compile_inline},
+        {"local-vars", &Compiler::compile_local_vars},
         //        {"with-inline", &Compiler::compile_with_inline},
         //        {"get-ra-ptr", &Compiler::compile_get_ra_ptr},
 
@@ -111,9 +187,6 @@ static const std::unordered_map<
         {"*", &Compiler::compile_mul},
         {"imul64", &Compiler::compile_imul64},
         {"/", &Compiler::compile_div},
-        {"shlv", &Compiler::compile_shlv},
-        {"shrv", &Compiler::compile_shrv},
-        {"sarv", &Compiler::compile_sarv},
         {"shl", &Compiler::compile_shl},
         {"shr", &Compiler::compile_shr},
         {"sar", &Compiler::compile_sar},
@@ -134,6 +207,7 @@ static const std::unordered_map<
         {"&+", &Compiler::compile_pointer_add},
         {"fmax", &Compiler::compile_fmax},
         {"fmin", &Compiler::compile_fmin},
+        {"sqrtf", &Compiler::compile_sqrtf},
 
         // BUILDER (build-dgo/build-cgo?)
         {"build-dgos", &Compiler::compile_build_dgo},
@@ -178,8 +252,8 @@ Val* Compiler::compile_pair(const goos::Object& code, Env* env) {
   if (head.is_symbol()) {
     auto head_sym = head.as_symbol();
     // first try as a goal compiler form
-    auto kv_gfs = goal_forms.find(head_sym->name);
-    if (kv_gfs != goal_forms.end()) {
+    auto kv_gfs = g_goal_forms.find(head_sym->name);
+    if (kv_gfs != g_goal_forms.end()) {
       return ((*this).*(kv_gfs->second))(code, rest, env);
     }
 
@@ -364,7 +438,7 @@ Val* Compiler::compile_pointer_add(const goos::Object& form, const goos::Object&
 
   bool ok_type = false;
   for (auto& type : {"pointer", "structure", "inline-array"}) {
-    if (m_ts.typecheck(m_ts.make_typespec(type), first->type(), "", false, false)) {
+    if (m_ts.tc(m_ts.make_typespec(type), first->type())) {
       ok_type = true;
       break;
     }

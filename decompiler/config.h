@@ -1,18 +1,22 @@
 #pragma once
 
-#ifndef JAK2_DISASSEMBLER_CONFIG_H
-#define JAK2_DISASSEMBLER_CONFIG_H
-
 #include <string>
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <optional>
 #include "decompiler/Disasm/Register.h"
 
 namespace decompiler {
 struct TypeHint {
   Register reg;
   std::string type_name;
+};
+
+struct LabelType {
+  std::string type_name;
+  bool is_const = false;
+  std::optional<int> array_size;
 };
 
 struct Config {
@@ -36,18 +40,22 @@ struct Config {
   bool write_func_json = false;
   bool function_type_prop = false;
   bool analyze_expressions = false;
+  bool insert_lets = false;
   std::unordered_set<std::string> asm_functions_by_name;
   std::unordered_set<std::string> pair_functions_by_name;
   std::unordered_set<std::string> no_type_analysis_functions_by_name;
+  std::unordered_set<std::string> allowed_objects;
   std::unordered_map<std::string, std::unordered_map<int, std::vector<TypeHint>>>
       type_hints_by_function_by_idx;
   std::unordered_map<std::string, std::unordered_map<int, std::string>>
       anon_function_types_by_obj_by_id;
+  std::unordered_map<std::string, std::vector<std::string>> function_arg_names;
+  std::unordered_map<std::string, std::unordered_map<std::string, std::string>> function_var_names;
+
+  std::unordered_map<std::string, std::unordered_map<std::string, LabelType>> label_types;
   bool run_ir2 = false;
 };
 
 Config& get_config();
 void set_config(const std::string& path_to_config_file);
 }  // namespace decompiler
-
-#endif  // JAK2_DISASSEMBLER_CONFIG_H

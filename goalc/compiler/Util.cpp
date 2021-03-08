@@ -179,11 +179,11 @@ bool Compiler::is_none(Val* in) {
 }
 
 bool Compiler::is_basic(const TypeSpec& ts) {
-  return m_ts.typecheck(m_ts.make_typespec("basic"), ts, "", false, false);
+  return m_ts.tc(m_ts.make_typespec("basic"), ts);
 }
 
 bool Compiler::is_structure(const TypeSpec& ts) {
-  return m_ts.typecheck(m_ts.make_typespec("structure"), ts, "", false, false);
+  return m_ts.tc(m_ts.make_typespec("structure"), ts);
 }
 
 bool Compiler::is_bitfield(const TypeSpec& ts) {
@@ -191,7 +191,7 @@ bool Compiler::is_bitfield(const TypeSpec& ts) {
 }
 
 bool Compiler::is_pair(const TypeSpec& ts) {
-  return m_ts.typecheck(m_ts.make_typespec("pair"), ts, "", false, false);
+  return m_ts.tc(m_ts.make_typespec("pair"), ts);
 }
 
 bool Compiler::try_getting_constant_integer(const goos::Object& in, int64_t* out, Env* env) {
@@ -267,6 +267,8 @@ std::vector<goos::Object> Compiler::get_list_as_vector(const goos::Object& o,
     if (max_length >= 0 && n >= max_length) {
       if (rest_out) {
         *rest_out = *cur;
+      } else {
+        throw std::runtime_error("get_list_as_vector would discard arguments");
       }
       return result;
     }

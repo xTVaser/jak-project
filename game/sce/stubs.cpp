@@ -3,13 +3,6 @@
 #include "stubs.h"
 
 namespace ee {
-int scePadPortOpen(int port, int slot, void* data) {
-  (void)port;
-  (void)slot;
-  (void)data;
-  assert(false);
-  return 0;
-}
 
 void sceGsSyncV() {
   assert(false);
@@ -19,15 +12,7 @@ void sceGsSyncPath() {
   assert(false);
 }
 
-void sceGsResetPath() {
-  assert(false);
-}
-
 void sceGsResetGraph() {
-  assert(false);
-}
-
-void sceDmaSync() {
   assert(false);
 }
 

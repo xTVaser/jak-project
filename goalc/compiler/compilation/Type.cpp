@@ -112,7 +112,7 @@ void Compiler::generate_field_description(const goos::Object& form,
                                           const Field& f) {
   std::string str_template;
   std::vector<RegVal*> format_args = {};
-  if (m_ts.typecheck(m_ts.make_typespec("type"), f.type(), "", false, false)) {
+  if (m_ts.tc(m_ts.make_typespec("type"), f.type())) {
     // type
     return;
   } else if (f.is_array() && !f.is_dynamic()) {
@@ -123,17 +123,17 @@ void Compiler::generate_field_description(const goos::Object& form,
     // Dynamic Field
     str_template += fmt::format("~T{}[0] @ #x~X~%", f.name());
     format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
-  } else if (f.is_dynamic()) {
-    // Structure
-    str_template += fmt::format("~T{}: #<{} @ #x~X>~%", f.name(), f.type().print());
-    format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
-  } else if (m_ts.typecheck(m_ts.make_typespec("basic"), f.type(), "", false, false) ||
-             m_ts.typecheck(m_ts.make_typespec("binteger"), f.type(), "", false, false) ||
-             m_ts.typecheck(m_ts.make_typespec("pair"), f.type(), "", false, false)) {
+  } else if (m_ts.tc(m_ts.make_typespec("basic"), f.type()) ||
+             m_ts.tc(m_ts.make_typespec("binteger"), f.type()) ||
+             m_ts.tc(m_ts.make_typespec("pair"), f.type())) {
     // basic, binteger, pair
     str_template += fmt::format("~T{}: ~A~%", f.name());
     format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
-  } else if (m_ts.typecheck(m_ts.make_typespec("integer"), f.type(), "", false, false)) {
+  } else if (m_ts.tc(m_ts.make_typespec("structure"), f.type())) {
+    // Structure
+    str_template += fmt::format("~T{}: #<{} @ #x~X>~%", f.name(), f.type().print());
+    format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
+  } else if (m_ts.tc(m_ts.make_typespec("integer"), f.type())) {
     // Integer
     if (f.type().print() == "uint128") {
       str_template += fmt::format("~T{}: <cannot-print>~%", f.name());
@@ -142,11 +142,11 @@ void Compiler::generate_field_description(const goos::Object& form,
       format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
     }
 
-  } else if (m_ts.typecheck(m_ts.make_typespec("float"), f.type(), "", false, false)) {
+  } else if (m_ts.tc(m_ts.make_typespec("float"), f.type())) {
     // Float
     str_template += fmt::format("~T{}: ~f~%", f.name());
     format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
-  } else if (m_ts.typecheck(m_ts.make_typespec("pointer"), f.type(), "", false, false)) {
+  } else if (m_ts.tc(m_ts.make_typespec("pointer"), f.type())) {
     // Pointers
     str_template += fmt::format("~T{}: #x~X~%", f.name());
     format_args.push_back(get_field_of_structure(type, reg, f.name(), env)->to_gpr(env));
@@ -250,6 +250,8 @@ Val* Compiler::compile_deftype(const goos::Object& form, const goos::Object& res
 
   // Auto-generate (inspect) method
   generate_inspector_for_type(form, env, result.type_info);
+
+  m_symbol_info.add_type(result.type.base_type(), form);
 
   // return none, making the value of (deftype..) unusable
   return get_none();
@@ -382,6 +384,8 @@ Val* Compiler::compile_defmethod(const goos::Object& form, const goos::Object& _
   }
   place->set_type(lambda_ts);
 
+  m_symbol_info.add_method(symbol_string(method_name), symbol_string(type_name), form);
+
   auto info =
       m_ts.add_method(symbol_string(type_name), symbol_string(method_name), lambda_ts, false);
   auto type_obj = compile_get_symbol_value(form, symbol_string(type_name), env)->to_gpr(env);
@@ -412,7 +416,11 @@ Val* Compiler::get_field_of_structure(const StructureType* type,
     result = fe->alloc_val<MemoryDerefVal>(di.result_type, loc, MemLoadInfo(di));
     result->mark_as_settable();
   } else {
-    auto field_type_info = m_ts.lookup_type(field.type);
+    auto type_for_offset = field.type;
+    if (field.type.base_type() == "inline-array") {
+      type_for_offset = field.type.get_single_arg();
+    }
+    auto field_type_info = m_ts.lookup_type(type_for_offset);
     result = fe->alloc_val<MemoryOffsetConstantVal>(
         field.type, object, field.field.offset() + offset + field_type_info->get_offset());
     result->mark_as_settable();
@@ -479,7 +487,7 @@ Val* Compiler::compile_deref(const goos::Object& form, const goos::Object& _rest
           // array-indexable and a structure, we treat it like a structure only if the
           // deref thing is one of the field names. Otherwise, array.
           if (field_name == "content-type" || field_name == "length" ||
-              field_name == "allocated-length") {
+              field_name == "allocated-length" || field_name == "type" || field_name == "data") {
             result = get_field_of_structure(struct_type, result, field_name, env);
             continue;
           }
@@ -622,11 +630,11 @@ Val* Compiler::compile_the(const goos::Object& form, const goos::Object& rest, E
   auto base = compile_error_guard(args.unnamed.at(1), env);
 
   if (is_number(base->type())) {
-    if (m_ts.typecheck(m_ts.make_typespec("binteger"), desired_ts, "", false, false)) {
+    if (m_ts.tc(m_ts.make_typespec("binteger"), desired_ts)) {
       return number_to_binteger(form, base, env);
     }
 
-    if (m_ts.typecheck(m_ts.make_typespec("integer"), desired_ts, "", false, false)) {
+    if (m_ts.tc(m_ts.make_typespec("integer"), desired_ts)) {
       auto result = number_to_integer(form, base, env);
       if (result != base) {
         result->set_type(desired_ts);
@@ -637,7 +645,7 @@ Val* Compiler::compile_the(const goos::Object& form, const goos::Object& rest, E
       }
     }
 
-    if (m_ts.typecheck(m_ts.make_typespec("float"), desired_ts, "", false, false)) {
+    if (m_ts.tc(m_ts.make_typespec("float"), desired_ts)) {
       return number_to_float(form, base, env);
     }
   }
@@ -655,8 +663,9 @@ Val* Compiler::compile_the(const goos::Object& form, const goos::Object& rest, E
 Val* Compiler::compile_print_type(const goos::Object& form, const goos::Object& rest, Env* env) {
   auto args = get_va(form, rest);
   va_check(form, args, {{}}, {});
-  fmt::print("[TYPE] {}\n", compile(args.unnamed.at(0), env)->type().print());
-  return get_none();
+  auto result = compile(args.unnamed.at(0), env)->to_reg(env);
+  fmt::print("[TYPE] {}\n", result->type().print());
+  return result;
 }
 
 /*!
@@ -760,7 +769,9 @@ Val* Compiler::compile_static_new(const goos::Object& form,
                                   const goos::Object* rest,
                                   Env* env) {
   auto unquoted = unquote(type);
-  if (unquoted.is_symbol() && unquoted.as_symbol()->name == "boxed-array") {
+  if (unquoted.is_symbol() &&
+      (unquoted.as_symbol()->name == "boxed-array" || unquoted.as_symbol()->name == "array" ||
+       unquoted.as_symbol()->name == "inline-array")) {
     auto fe = get_parent_env_of_type<FunctionEnv>(env);
     auto sr = compile_static(form, env);
     auto result = fe->alloc_val<StaticVal>(sr.reference(), sr.typespec());
@@ -777,14 +788,16 @@ Val* Compiler::compile_static_new(const goos::Object& form,
   }
 
   throw_compiler_error(form,
-                       "Cannot do a static new of a {} because it is not a bitfield or structure.");
+                       "Cannot do a static new of a {} because it is not a bitfield or structure.",
+                       type.print());
   return get_none();
 }
 
 Val* Compiler::compile_stack_new(const goos::Object& form,
                                  const goos::Object& type,
                                  const goos::Object* rest,
-                                 Env* env) {
+                                 Env* env,
+                                 bool call_constructor) {
   auto type_of_object = parse_typespec(unquote(type));
   auto fe = get_parent_env_of_type<FunctionEnv>(env);
   if (type_of_object == TypeSpec("inline-array") || type_of_object == TypeSpec("array")) {
@@ -840,20 +853,30 @@ Val* Compiler::compile_stack_new(const goos::Object& form,
     // allocation
     auto mem = fe->allocate_aligned_stack_variable(type_of_object, ti->get_size_in_memory(), 16)
                    ->to_gpr(env);
-    // the new method actual takes a "symbol" according the type system. So we have to cheat it.
-    mem->set_type(TypeSpec("symbol"));
-    args.push_back(mem);
-    // type
-    args.push_back(compile_get_symbol_value(form, type_of_object.base_type(), env)->to_reg(env));
-    // the other arguments
-    for_each_in_list(*rest, [&](const goos::Object& o) {
-      args.push_back(compile_error_guard(o, env)->to_reg(env));
-    });
+    if (call_constructor) {
+      // the new method actual takes a "symbol" according the type system. So we have to cheat it.
+      mem->set_type(TypeSpec("symbol"));
+      args.push_back(mem);
+      // type
+      args.push_back(compile_get_symbol_value(form, type_of_object.base_type(), env)->to_reg(env));
+      // the other arguments
+      for_each_in_list(*rest, [&](const goos::Object& o) {
+        args.push_back(compile_error_guard(o, env)->to_reg(env));
+      });
 
-    auto new_method = compile_get_method_of_type(form, type_of_object, "new", env);
-    auto new_obj = compile_real_function_call(form, new_method, args, env);
-    new_obj->set_type(type_of_object);
-    return new_obj;
+      auto new_method = compile_get_method_of_type(form, type_of_object, "new", env);
+      auto new_obj = compile_real_function_call(form, new_method, args, env);
+      new_obj->set_type(type_of_object);
+      return new_obj;
+    } else {
+      if (ti->get_offset()) {
+        throw std::runtime_error("Cannot stack allocate with no constructor for a " +
+                                 ti->get_name());
+      } else {
+        mem->set_type(type_of_object);
+        return mem;
+      }
+    }
   }
 }
 
@@ -864,14 +887,16 @@ Val* Compiler::compile_new(const goos::Object& form, const goos::Object& _rest, 
   auto type = pair_car(*rest);
   rest = &pair_cdr(*rest);
 
-  if (allocation == "global" || allocation == "debug") {
+  if (allocation == "global" || allocation == "debug" || allocation == "process") {
     // allocate on a named heap
     return compile_heap_new(form, allocation, type, rest, env);
   } else if (allocation == "static") {
     // put in code.
     return compile_static_new(form, type, rest, env);
   } else if (allocation == "stack") {
-    return compile_stack_new(form, type, rest, env);
+    return compile_stack_new(form, type, rest, env, true);
+  } else if (allocation == "stack-no-clear") {
+    return compile_stack_new(form, type, rest, env, false);
   }
 
   throw_compiler_error(form, "Unsupported new form");
@@ -904,8 +929,9 @@ Val* Compiler::compile_cdr(const goos::Object& form, const goos::Object& rest, E
   return result;
 }
 
-// todo, consider splitting into method-of-object and method-of-type?
-Val* Compiler::compile_method(const goos::Object& form, const goos::Object& rest, Env* env) {
+Val* Compiler::compile_method_of_type(const goos::Object& form,
+                                      const goos::Object& rest,
+                                      Env* env) {
   auto args = get_va(form, rest);
   va_check(form, args, {{}, {goos::ObjectType::SYMBOL}}, {});
 
@@ -921,6 +947,19 @@ Val* Compiler::compile_method(const goos::Object& form, const goos::Object& rest
                            "The method form is ambiguous when used on a forward declared type.");
     }
   }
+
+  throw_compiler_error(form, "Cannot get method of type {}: the type is invalid", arg.print());
+  return get_none();
+}
+
+Val* Compiler::compile_method_of_object(const goos::Object& form,
+                                        const goos::Object& rest,
+                                        Env* env) {
+  auto args = get_va(form, rest);
+  va_check(form, args, {{}, {goos::ObjectType::SYMBOL}}, {});
+
+  auto arg = args.unnamed.at(0);
+  auto method_name = symbol_string(args.unnamed.at(1));
 
   auto obj = compile_error_guard(arg, env)->to_gpr(env);
   return compile_get_method_of_object(form, obj, method_name, env);

@@ -4,6 +4,11 @@
 #include "common/util/FileUtil.h"
 #include "common/log/log.h"
 
+#include "third-party/fmt/core.h"
+#include "third-party/fmt/color.h"
+
+#include "common/goos/ReplUtils.h"
+
 void setup_logging(bool verbose) {
   lg::set_file(file_util::get_file_path({"log/compiler.txt"}));
   if (verbose) {
@@ -38,12 +43,20 @@ int main(int argc, char** argv) {
 
   lg::info("OpenGOAL Compiler {}.{}", versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
 
-  Compiler compiler;
+  // Init REPL
+  std::unique_ptr<Compiler> compiler = std::make_unique<Compiler>();
 
   if (argument.empty()) {
-    compiler.execute_repl();
+    ReplStatus status = ReplStatus::WANT_RELOAD;
+    while (status == ReplStatus::WANT_RELOAD) {
+      compiler = std::make_unique<Compiler>(std::make_unique<ReplWrapper>());
+      status = compiler->execute_repl();
+      if (status == ReplStatus::WANT_RELOAD) {
+        fmt::print("Reloading compiler...\n");
+      }
+    }
   } else {
-    compiler.run_front_end_on_string(argument);
+    compiler->run_front_end_on_string(argument);
   }
 
   return 0;

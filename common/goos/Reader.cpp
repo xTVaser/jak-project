@@ -10,9 +10,10 @@
  */
 
 #include "Reader.h"
-#include "third-party/linenoise.h"
 #include "common/util/FileUtil.h"
 #include "third-party/fmt/core.h"
+#include <filesystem>
+#include "ReplUtils.h"
 
 namespace goos {
 
@@ -102,9 +103,6 @@ void TextStream::seek_past_whitespace_and_comments() {
 }
 
 Reader::Reader() {
-  // third-party library used for a fancy line in
-  linenoise::SetHistoryMaxLen(400);
-
   // add default macros
   add_reader_macro("'", "quote");
   add_reader_macro("`", "quasiquote");
@@ -138,12 +136,11 @@ Reader::Reader() {
 /*!
  * Prompt the user and read the result.
  */
-Object Reader::read_from_stdin(const std::string& prompt_name) {
-  std::string line;
+Object Reader::read_from_stdin(const std::string& prompt, ReplWrapper& repl) {
   // escape code will make sure that we remove any color
-  std::string prompt_full = "\033[0m" + prompt_name + "> ";
-  linenoise::Readline(prompt_full.c_str(), line);
-  linenoise::AddHistory(line.c_str());
+  std::string prompt_full = "\033[0m" + prompt;
+  std::string line = repl.readline(prompt_full);
+  repl.add_to_history(line.c_str());
   // todo, decide if we should keep reading or not.
 
   // create text fragment and add to the DB
@@ -159,13 +156,13 @@ Object Reader::read_from_stdin(const std::string& prompt_name) {
 /*!
  * Read a string.
  */
-Object Reader::read_from_string(const std::string& str) {
+Object Reader::read_from_string(const std::string& str, bool add_top_level) {
   // create text fragment and add to the DB
   auto textFrag = std::make_shared<ProgramString>(str);
   db.insert(textFrag);
 
   // perform read
-  auto result = internal_read(textFrag);
+  auto result = internal_read(textFrag, add_top_level);
   db.link(result, textFrag, 0);
   return result;
 }
@@ -185,7 +182,7 @@ Object Reader::read_from_file(const std::vector<std::string>& file_path) {
 /*!
  * Common read for a SourceText
  */
-Object Reader::internal_read(std::shared_ptr<SourceText> text) {
+Object Reader::internal_read(std::shared_ptr<SourceText> text, bool add_top_level) {
   // first create stream
   TextStream ts(text);
 
@@ -194,7 +191,11 @@ Object Reader::internal_read(std::shared_ptr<SourceText> text) {
 
   // read list!
   auto objs = read_list(ts, false);
-  return PairObject::make_new(SymbolObject::make_new(symbolTable, "top-level"), objs);
+  if (add_top_level) {
+    return PairObject::make_new(SymbolObject::make_new(symbolTable, "top-level"), objs);
+  } else {
+    return objs;
+  }
 }
 
 /*!

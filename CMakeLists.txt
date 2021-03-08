@@ -5,7 +5,10 @@ else ()
     cmake_minimum_required(VERSION 3.16)
 endif ()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 project(jak)
+include(CTest)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -33,25 +36,22 @@ if (LINUX)
         -Wsign-promo")
 elseif(UNIX)
     message(STATUS "MacOS detected, adding compile flags")
-
 else ()
     set(CMAKE_CXX_FLAGS "/EHsc")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:10000000")
 endif (LINUX)
-
-
 
 IF (WIN32)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-ENDIF ()
+endif()
 
-IF (ASAN_BUILD)
+if(ASAN_BUILD)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -O1")
     message(STATUS "Doing ASAN build")
-ENDIF ()
+endif()
 
 option(CODE_COVERAGE "Enable Code Coverage Compiler Flags" OFF)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/third-party/cmake/modules/)
@@ -69,6 +69,9 @@ include_directories(./)
 
 include_directories(SYSTEM third-party/inja)
 
+# build repl library
+add_subdirectory(third-party/replxx EXCLUDE_FROM_ALL)
+
 # build common library
 add_subdirectory(common)
 
@@ -81,26 +84,34 @@ add_subdirectory(game)
 # build the compiler
 add_subdirectory(goalc)
 
+# build standalone tools
+add_subdirectory(tools)
+
 # build the gtest libraries
-add_subdirectory(third-party/googletest)
+if(WIN32)
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
+add_subdirectory(third-party/googletest EXCLUDE_FROM_ALL)
+include(GoogleTest)
 
 # build tests
-add_subdirectory(test)
+include(test/CMakeLists.txt)
 
-# build minilzo library
-add_subdirectory(third-party/minilzo)
+# build lzokay library
+add_subdirectory(third-party/lzokay EXCLUDE_FROM_ALL)
 
 # build format library
-add_subdirectory(third-party/fmt)
+add_subdirectory(third-party/fmt EXCLUDE_FROM_ALL)
 
 # build zydis third party library for disassembling x86
-option(ZYDIS_BUILD_TOOLS "" OFF)
-option(ZYDIS_BUILD_EXAMPLES "" OFF)
-option(ZYDIS_BUILD_SHARED_LIB "" ON)
-add_subdirectory("third-party/zydis")
+# NOTE: Once under CMake 3.13's policy CMP0077, override with `set()` instead
+option(ZYDIS_BUILD_TOOLS "Zydis: Build tools" OFF)
+option(ZYDIS_BUILD_EXAMPLES "Zydis: Build examples" OFF)
+option(ZYDIS_BUILD_SHARED_LIB "Zydis: Build shared library" ON)
+add_subdirectory(third-party/zydis EXCLUDE_FROM_ALL)
 
 
 # windows memory management lib
-IF (WIN32)
+if(WIN32)
     add_subdirectory(third-party/mman)
-ENDIF ()
+endif()

@@ -125,11 +125,11 @@ Object Interpreter::intern(const std::string& name) {
 /*!
  * Display the REPL, which will run until the user executes exit.
  */
-void Interpreter::execute_repl() {
+void Interpreter::execute_repl(ReplWrapper& repl) {
   while (!want_exit) {
     try {
       // read something from the user
-      Object obj = reader.read_from_stdin("goos");
+      Object obj = reader.read_from_stdin("goos", repl);
       // evaluate
       Object evald = eval_with_rewind(obj, global_environment.as_env());
       // print
@@ -482,6 +482,12 @@ Object Interpreter::eval_symbol(const Object& sym, const std::shared_ptr<Environ
     throw_eval_error(sym, "symbol is not defined");
   }
   return result;
+}
+
+bool Interpreter::eval_symbol(const Object& sym,
+                              const std::shared_ptr<EnvironmentObject>& env,
+                              Object* result) {
+  return try_symbol_lookup(sym, env, result);
 }
 
 /*!

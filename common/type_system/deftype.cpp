@@ -53,7 +53,7 @@ std::string deftype_parent_list(const goos::Object& list) {
 }
 
 bool is_type(const std::string& expected, const TypeSpec& actual, const TypeSystem* ts) {
-  return ts->typecheck(ts->make_typespec(expected), actual, "", false, false);
+  return ts->tc(ts->make_typespec(expected), actual);
 }
 
 template <typename T>
@@ -98,6 +98,7 @@ void add_field(StructureType* structure, TypeSystem* ts, const goos::Object& def
   bool is_dynamic = false;
   int offset_override = -1;
   int offset_assert = -1;
+  bool skip_in_decomp = false;
 
   if (!rest->is_empty_list()) {
     if (car(rest).is_int()) {
@@ -122,6 +123,8 @@ void add_field(StructureType* structure, TypeSystem* ts, const goos::Object& def
           throw std::runtime_error("Cannot use -1 as offset-assert");
         }
         rest = cdr(rest);
+      } else if (opt_name == ":do-not-decompile") {
+        skip_in_decomp = true;
       } else {
         throw std::runtime_error("Invalid option in field specification: " + opt_name);
       }
@@ -129,7 +132,7 @@ void add_field(StructureType* structure, TypeSystem* ts, const goos::Object& def
   }
 
   int actual_offset = ts->add_field_to_type(structure, name, type, is_inline, is_dynamic,
-                                            array_size, offset_override);
+                                            array_size, offset_override, skip_in_decomp);
   if (offset_assert != -1 && actual_offset != offset_assert) {
     throw std::runtime_error("Field " + name + " was placed at " + std::to_string(actual_offset) +
                              " but offset-assert was set to " + std::to_string(offset_assert));
@@ -225,6 +228,7 @@ struct StructureDefResult {
   TypeFlags flags;
   bool generate_runtime_type = true;
   bool pack_me = false;
+  bool allow_misaligned = false;
 };
 
 StructureDefResult parse_structure_def(StructureType* type,
@@ -286,9 +290,9 @@ StructureDefResult parse_structure_def(StructureType* type,
         u16 hb = get_int(car(rest));
         rest = cdr(rest);
         flags.heap_base = hb;
-      }
-
-      else {
+      } else if (opt_name == ":allow-misaligned") {
+        result.allow_misaligned = true;
+      } else {
         throw std::runtime_error("Invalid option in field specification: " + opt_name);
       }
     }
@@ -459,8 +463,13 @@ DeftypeResult parse_deftype(const goos::Object& deftype, TypeSystem* ts) {
     result.flags = sr.flags;
     result.create_runtime_type = sr.generate_runtime_type;
     if (sr.pack_me) {
-      fmt::print("[TypeSystem] :pack-me was set on {}, which is a basic and cannot be packed.",
-                 name);
+      new_type->set_pack(true);
+    }
+    if (sr.allow_misaligned) {
+      fmt::print(
+          "[TypeSystem] :allow-misaligned was set on {}, which is a basic and cannot "
+          "be misaligned\n",
+          name);
       throw std::runtime_error("invalid pack option on basic");
     }
     ts->add_type(name, std::move(new_type));
@@ -475,6 +484,9 @@ DeftypeResult parse_deftype(const goos::Object& deftype, TypeSystem* ts) {
     result.create_runtime_type = sr.generate_runtime_type;
     if (sr.pack_me) {
       new_type->set_pack(true);
+    }
+    if (sr.allow_misaligned) {
+      new_type->set_allow_misalign(true);
     }
     ts->add_type(name, std::move(new_type));
   } else if (is_type("integer", parent_type, ts)) {

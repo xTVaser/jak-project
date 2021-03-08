@@ -21,6 +21,7 @@
 #include "common/versions.h"
 #include "common/goal_constants.h"
 #include "common/log/log.h"
+#include "common/util/Timer.h"
 
 //! Controls link mode when EnableMethodSet = 0, MasterDebug = 1, DiskBoot = 0. Will enable a
 //! warning message if EnableMethodSet = 1
@@ -164,6 +165,7 @@ u64 alloc_from_heap(u32 heapSymbol, u32 type, s32 size) {
     return kmalloc(*Ptr<Ptr<kheapinfo>>(heapSymbol), size, KMALLOC_MEMSET, gstr->data()).offset;
   } else if (heapOffset == FIX_SYM_PROCESS_TYPE) {
     assert(false);  // nyi
+    return 0;
     // allocate on current process heap
     //    Ptr start = *ptr<Ptr>(getS6() + 0x4c + 8);
     //    Ptr heapEnd = *ptr<Ptr>(getS6() + 0x4c + 4);
@@ -180,6 +182,7 @@ u64 alloc_from_heap(u32 heapSymbol, u32 type, s32 size) {
     //    }
   } else if (heapOffset == FIX_SYM_SCRATCH) {
     assert(false);  // nyi, I think unused.
+    return 0;
   } else {
     memset(Ptr<u8>(heapSymbol).c(), 0, (size_t)alignedSize);  // treat it as a stack address
     return heapSymbol;
@@ -1376,7 +1379,7 @@ u64 print_vu_function(u32 obj) {
  * Dynamically sized basics should override this method.
  */
 u64 asize_of_basic(u32 it) {
-  return Ptr<Type>(it - 4)->allocated_size;
+  return Ptr<Type>(*Ptr<u32>(it - BASIC_OFFSET))->allocated_size;
 }
 
 /*!
@@ -1667,6 +1670,7 @@ s32 test_function(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
  * This takes care of all initialization that isn't for the hardware itself.
  */
 s32 InitHeapAndSymbol() {
+  Timer heap_init_timer;
   // allocate memory for the symbol table
   auto symbol_table = kmalloc(kglobalheap, 0x20000, KMALLOC_MEMSET, "symbol-table").cast<u32>();
 
@@ -1959,9 +1963,11 @@ s32 InitHeapAndSymbol() {
   // set *boot-video-mode*
   intern_from_c("*boot-video-mode*")->value = 0;
 
+  lg::info("Initialized GOAL heap in {:.2} ms", heap_init_timer.getMs());
   // load the kernel!
   // todo, remove MasterUseKernel
   if (MasterUseKernel) {
+    Timer kernel_load_timer;
     method_set_symbol->value++;
     load_and_link_dgo_from_c("kernel", kglobalheap,
                              LINK_FLAG_OUTPUT_LOAD | LINK_FLAG_EXECUTE | LINK_FLAG_PRINT_LOGIN,
@@ -1979,8 +1985,8 @@ s32 InitHeapAndSymbol() {
           (kernel_version >> 3) & 0xffff);
       return -1;
     } else {
-      lg::info("Got correct kernel version {}.{}", kernel_version >> 0x13,
-               (kernel_version >> 3) & 0xffff);
+      lg::info("Got correct kernel version {}.{}, loaded in {:.2} ms", kernel_version >> 0x13,
+               (kernel_version >> 3) & 0xffff, kernel_load_timer.getMs());
     }
   }
 

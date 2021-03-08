@@ -36,15 +36,22 @@ add_library(compiler
         regalloc/allocate.cpp
         regalloc/allocate_common.cpp
         compiler/Compiler.cpp
-        compiler/compilation/Asm.cpp)
+        compiler/compilation/Asm.cpp
+        )
 
 target_link_libraries(compiler common Zydis)
 
-IF (WIN32)
+if(WIN32)
     target_link_libraries(compiler mman)
-ENDIF ()
+endif()
+
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+elseif(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+endif()
 
 add_executable(goalc main.cpp)
 target_link_libraries(goalc common Zydis compiler)
 
-
+install(TARGETS goalc)

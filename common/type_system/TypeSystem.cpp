@@ -10,6 +10,7 @@
 #include <third-party/fmt/core.h>
 #include "TypeSystem.h"
 #include "common/util/math_util.h"
+#include "deftype.h"
 
 TypeSystem::TypeSystem() {
   // the "none" and "_type_" types are included by default.
@@ -126,7 +127,7 @@ DerefInfo TypeSystem::get_deref_info(const TypeSpec& ts) const {
   info.reg = RegClass::GPR_64;
   info.mem_deref = true;
 
-  if (typecheck(TypeSpec("float"), ts, "", false, false)) {
+  if (tc(TypeSpec("float"), ts)) {
     info.reg = RegClass::FLOAT;
   }
 
@@ -146,8 +147,8 @@ DerefInfo TypeSystem::get_deref_info(const TypeSpec& ts) const {
     info.sign_extend = false;                // not applicable anyway
 
     if (result_type->is_reference()) {
-      info.stride =
-          align(result_type->get_size_in_memory(), result_type->get_inline_array_alignment());
+      info.stride = align(result_type->get_size_in_memory(),
+                          result_type->get_inline_array_stride_alignment());
     } else {
       // can't have an inline array of value types!
       assert(false);
@@ -404,7 +405,8 @@ MethodInfo TypeSystem::add_new_method(Type* type, const TypeSpec& ts) {
  * Lookup information on a method. Error if it can't be found.  Will check parent types if the
  * given type doesn't specialize the method.
  */
-MethodInfo TypeSystem::lookup_method(const std::string& type_name, const std::string& method_name) {
+MethodInfo TypeSystem::lookup_method(const std::string& type_name,
+                                     const std::string& method_name) const {
   if (method_name == "new") {
     return lookup_new_method(type_name);
   }
@@ -436,7 +438,9 @@ MethodInfo TypeSystem::lookup_method(const std::string& type_name, const std::st
 /*!
  * Like lookup_method, but won't throw or print an error when things go wrong.
  */
-bool TypeSystem::try_lookup_method(const std::string& type_name, int method_id, MethodInfo* info) {
+bool TypeSystem::try_lookup_method(const std::string& type_name,
+                                   int method_id,
+                                   MethodInfo* info) const {
   auto kv = m_types.find(type_name);
   if (kv == m_types.end()) {
     return false;
@@ -469,7 +473,7 @@ bool TypeSystem::try_lookup_method(const std::string& type_name, int method_id, 
  * Lookup information on a method by ID number. Error if it can't be found.  Will check parent types
  * if the given type doesn't specialize the method.
  */
-MethodInfo TypeSystem::lookup_method(const std::string& type_name, int method_id) {
+MethodInfo TypeSystem::lookup_method(const std::string& type_name, int method_id) const {
   if (method_id == GOAL_NEW_METHOD) {
     return lookup_new_method(type_name);
   }
@@ -502,7 +506,7 @@ MethodInfo TypeSystem::lookup_method(const std::string& type_name, int method_id
 /*!
  * Lookup information on a new method and get the most specialized version.
  */
-MethodInfo TypeSystem::lookup_new_method(const std::string& type_name) {
+MethodInfo TypeSystem::lookup_new_method(const std::string& type_name) const {
   MethodInfo info;
 
   // first lookup the type
@@ -612,7 +616,8 @@ int TypeSystem::add_field_to_type(StructureType* type,
                                   bool is_inline,
                                   bool is_dynamic,
                                   int array_size,
-                                  int offset_override) {
+                                  int offset_override,
+                                  bool skip_in_static_decomp) {
   if (type->lookup_field(field_name, nullptr)) {
     fmt::print("[TypeSystem] Type {} already has a field named {}\n", type->get_name(), field_name);
     throw std::runtime_error("add_field_to_type duplicate field names");
@@ -652,6 +657,9 @@ int TypeSystem::add_field_to_type(StructureType* type,
 
   field.set_offset(offset);
   field.set_alignment(field_alignment);
+  if (skip_in_static_decomp) {
+    field.set_skip_in_static_decomp();
+  }
 
   int after_field = offset + get_size_in_type(field);
   if (type->get_size_in_memory() < after_field) {
@@ -775,9 +783,10 @@ void TypeSystem::add_builtin_types() {
 
   // VU FUNCTION
   // don't inherit
-  add_field_to_type(vu_function_type, "length", make_typespec("int32"));    // todo integer type
-  add_field_to_type(vu_function_type, "origin", make_typespec("pointer"));  // todo sign extend?
-  add_field_to_type(vu_function_type, "qlength", make_typespec("int32"));   // todo integer type
+  add_field_to_type(vu_function_type, "length", make_typespec("int32"));   // todo integer type
+  add_field_to_type(vu_function_type, "origin", make_typespec("int32"));   // todo sign extend?
+  add_field_to_type(vu_function_type, "qlength", make_typespec("int32"));  // todo integer type
+  add_field_to_type(vu_function_type, "data", make_typespec("uint8"), false, true);
 
   // link block
   builtin_structure_inherit(link_block_type);
@@ -817,7 +826,13 @@ void TypeSystem::add_builtin_types() {
   add_field_to_type(connectable_type, "prev1", make_typespec("connectable"));
 
   // todo
-  (void)file_stream_type;
+  builtin_structure_inherit(file_stream_type);
+  add_field_to_type(file_stream_type, "flags", make_typespec("uint32"));
+  add_field_to_type(file_stream_type, "mode", make_typespec("basic"));
+  add_field_to_type(file_stream_type, "name", make_typespec("string"));
+  add_field_to_type(file_stream_type, "file", make_typespec("uint32"));
+  add_method(file_stream_type, "new",
+             make_function_typespec({"symbol", "type", "string", "basic"}, "_type_"));
 }
 
 /*!
@@ -834,7 +849,7 @@ std::string TypeSystem::print_all_type_information() const {
 /*!
  * Get the next free method ID of a type.
  */
-int TypeSystem::get_next_method_id(Type* type) {
+int TypeSystem::get_next_method_id(const Type* type) const {
   MethodInfo info;
 
   while (true) {
@@ -875,11 +890,11 @@ int TypeSystem::get_alignment_in_type(const Field& field) {
     if (field.is_array()) {
       // TODO - is this actually correct? or do we use in_memory for the first element and
       // inline_array for the ones that follow?
-      return field_type->get_inline_array_alignment();
+      return field_type->get_inline_array_start_alignment();
     } else {
       // it is an inlined field, so return the alignment in memory
       // TODO - for inline, but not inline array, do we use structure alignment always?
-      return field_type->get_inline_array_alignment();
+      return field_type->get_inline_array_start_alignment();
     }
   }
 
@@ -918,8 +933,8 @@ int TypeSystem::get_size_in_type(const Field& field) const {
         throw std::runtime_error("bad get size in type");
       }
       assert(field_type->is_reference());
-      return field.array_size() *
-             align(field_type->get_size_in_memory(), field_type->get_inline_array_alignment());
+      return field.array_size() * align(field_type->get_size_in_memory(),
+                                        field_type->get_inline_array_stride_alignment());
     } else {
       if (field_type->is_reference()) {
         return field.array_size() * POINTER_SIZE;
@@ -993,6 +1008,10 @@ void TypeSystem::builtin_structure_inherit(StructureType* st) {
   st->inherit(get_type_of_type<StructureType>(st->get_parent()));
 }
 
+bool TypeSystem::tc(const TypeSpec& expected, const TypeSpec& actual) const {
+  return typecheck_and_throw(expected, actual, "", false, false);
+}
+
 /*!
  * Main compile-time type check!
  * @param expected - the expected type
@@ -1002,11 +1021,11 @@ void TypeSystem::builtin_structure_inherit(StructureType* st) {
  * @param throw_on_error - throw a std::runtime_error on failure if set.
  * @return if the type check passes
  */
-bool TypeSystem::typecheck(const TypeSpec& expected,
-                           const TypeSpec& actual,
-                           const std::string& error_source_name,
-                           bool print_on_error,
-                           bool throw_on_error) const {
+bool TypeSystem::typecheck_and_throw(const TypeSpec& expected,
+                                     const TypeSpec& actual,
+                                     const std::string& error_source_name,
+                                     bool print_on_error,
+                                     bool throw_on_error) const {
   bool success = true;
   // first, typecheck the base types:
   if (!typecheck_base_types(expected.base_type(), actual.base_type())) {
@@ -1018,7 +1037,7 @@ bool TypeSystem::typecheck(const TypeSpec& expected,
     for (size_t i = 0; i < expected.m_arguments.size(); i++) {
       // don't print/throw because the error would be confusing. Better to fail only the
       // outer most check and print a single error message.
-      if (!typecheck(expected.m_arguments[i], actual.m_arguments[i], "", false, false)) {
+      if (!tc(expected.m_arguments[i], actual.m_arguments[i])) {
         success = false;
         break;
       }
@@ -1190,185 +1209,6 @@ TypeSpec coerce_to_reg_type(const TypeSpec& in) {
   return in;
 }
 
-bool debug_reverse_deref = false;
-
-/*!
- * Todo:
- * - I suspect inlined basics will be off by 4-bytes, depending on where the basic field starts.
- * - Inline array is not yet implemented.
- */
-bool TypeSystem::reverse_deref(const ReverseDerefInputInfo& input,
-                               std::vector<ReverseDerefInfo::DerefToken>* path,
-                               bool* addr_of,
-                               TypeSpec* result_type) const {
-  if (!input.mem_deref) {
-    assert(input.load_size == 0);
-  }
-  if (debug_reverse_deref) {
-    fmt::print("Reverse Deref Type {} Offset {} Deref {} Load Size {} Signed {}\n",
-               input.input_type.print(), input.offset, input.mem_deref, input.load_size,
-               input.sign_extend);
-  }
-
-  if (input.offset == 0 && !input.mem_deref) {
-    // base case, we are here!
-    *addr_of = false;
-    return true;
-  }
-
-  auto base_input_type = input.input_type.base_type();
-  if (base_input_type == "pointer") {
-    auto di = get_deref_info(input.input_type);
-    int closest_index = input.offset / di.stride;
-    int offset_into_elt = input.offset - (closest_index * di.stride);
-    auto base_type = di.result_type;
-
-    ReverseDerefInfo::DerefToken token;
-    token.kind = ReverseDerefInfo::DerefToken::INDEX;
-    token.index = closest_index;
-
-    if (!di.mem_deref) {
-      return false;
-    }
-    assert(di.mem_deref);
-    if (offset_into_elt == 0) {
-      if (input.mem_deref) {
-        // todo - this is a hack to let quadword loads always succeed because we don't support it
-        // correctly at this point.
-        if (input.load_size == 16 ||
-            (di.load_size == input.load_size && di.sign_extend == input.sign_extend)) {
-          path->push_back(token);
-          *addr_of = false;
-          *result_type = base_type;
-          return true;
-        } else {
-          if (debug_reverse_deref) {
-            fmt::print("load size {} {}, sext {} {}, input {}\n", di.load_size, input.load_size,
-                       di.sign_extend, input.sign_extend, input.input_type.print().c_str());
-          }
-          return false;
-        }
-      } else {
-        path->push_back(token);
-        *addr_of = true;
-        *result_type = make_pointer_typespec(base_type);
-        return true;
-      }
-    } else {
-      return false;
-    }
-
-  } else if (base_input_type == "inline-array") {
-    if (debug_reverse_deref) {
-      fmt::print("Got inline-array case\n");
-    }
-    // todo
-    return false;
-  } else {
-    auto type_info = lookup_type(input.input_type);
-    auto structure_type = dynamic_cast<StructureType*>(type_info);
-    if (!structure_type) {
-      if (debug_reverse_deref) {
-        fmt::print("Failed structure type check\n");
-      }
-      return false;
-    }
-    auto corrected_offset = input.offset + type_info->get_offset();
-    for (auto& field : structure_type->fields()) {
-      auto field_deref = lookup_field_info(type_info->get_name(), field.name());
-      if (debug_reverse_deref) {
-        fmt::print("Offset is {}, {} try field {} {} which is {}, {}\n", corrected_offset,
-                   corrected_offset + input.load_size, field.name(), field_deref.type.print(),
-                   field.offset(), field.offset() + get_size_in_type(field));
-      }
-      if (corrected_offset >= field.offset() && (corrected_offset + std::max(1, input.load_size) <=
-                                                     field.offset() + get_size_in_type(field) ||
-                                                 field.is_dynamic())) {
-        if (debug_reverse_deref) {
-          fmt::print("  ok, using field {}\n", field.name());
-        }
-        // we are somewhere in this field!
-        int offset_into_field = corrected_offset - field.offset();
-
-        ReverseDerefInfo::DerefToken token;
-        token.kind = ReverseDerefInfo::DerefToken::FIELD;
-        token.name = field.name();
-
-        if (offset_into_field == 0) {
-          if (field_deref.needs_deref) {
-            if (input.mem_deref) {
-              // perfect match to a field requiring a deref, which we have.
-              TypeSpec loc_type = make_pointer_typespec(field_deref.type);
-              auto di = get_deref_info(loc_type);
-              if (di.load_size == input.load_size && di.sign_extend == input.sign_extend) {
-                path->push_back(token);
-                *addr_of = false;
-                *result_type = field_deref.type;
-                return true;
-              } else {
-                return false;
-              }
-            } else {
-              // we didn't deref the field, so it's an addr of
-              path->push_back(token);
-              *addr_of = true;
-              *result_type = make_pointer_typespec(field_deref.type);
-              return true;
-            }
-          } else {
-            // field doesn't need deref to access.
-            if (input.mem_deref) {
-              // but we did deref...
-              // let's look deeper in this field.
-              path->push_back(token);
-              ReverseDerefInputInfo r_input = input;
-              r_input.offset = offset_into_field;
-              r_input.input_type = field_deref.type;
-              return reverse_deref(r_input, path, addr_of, result_type);
-            } else {
-              // and we didn't deref.
-              path->push_back(token);
-              *result_type = field_deref.type;
-              *addr_of = false;
-              return true;
-            }
-          }
-        } else {
-          // we are partially inside of a field here.
-          if (field_deref.needs_deref) {
-            // hmm.. shouldn't be possible
-            if (debug_reverse_deref) {
-              fmt::print("Failed extra deref case: {}.\n", field.print());
-            }
-            return false;
-          } else {
-            // we should try again.
-            path->push_back(token);
-            ReverseDerefInputInfo r_input = input;
-            r_input.offset = offset_into_field;
-            r_input.input_type = field_deref.type;
-            return reverse_deref(r_input, path, addr_of, result_type);
-          }
-        }
-      }
-    }
-  }
-
-  if (debug_reverse_deref) {
-    fmt::print("Failed (reached end)\n");
-  }
-  return false;
-}
-
-ReverseDerefInfo TypeSystem::get_reverse_deref_info(const ReverseDerefInputInfo& input) const {
-  if (!input.mem_deref) {
-    assert(input.load_size == 0);
-  }
-  ReverseDerefInfo result;
-  result.success = reverse_deref(input, &result.deref_path, &result.addr_of, &result.result_type);
-  return result;
-}
-
 /*!
  * Is the given type a bitfield type?
  */
@@ -1428,4 +1268,180 @@ void TypeSystem::add_field_to_bitfield(BitFieldType* type,
   }
   BitField field(field_type, field_name, offset, field_size);
   type->m_fields.push_back(field);
+}
+
+/*!
+ * Generate the part of a deftype for the flag asserts and methods.
+ * Doesn't include the final close paren of the deftype
+ * This should work for both structure/bitfield definitions.
+ */
+std::string TypeSystem::generate_deftype_footer(const Type* type) const {
+  std::string result;
+  auto method_count = get_next_method_id(type);
+  result.append(fmt::format("  :method-count-assert {}\n", get_next_method_id(type)));
+  result.append(fmt::format("  :size-assert         #x{:x}\n", type->get_size_in_memory()));
+  TypeFlags flags;
+  flags.heap_base = 0;
+  flags.size = type->get_size_in_memory();
+  flags.pad = 0;
+  flags.methods = method_count;
+
+  result.append(fmt::format("  :flag-assert         #x{:x}\n  ", flags.flag));
+
+  std::string methods_string;
+  auto new_info = type->get_new_method_defined_for_type();
+  if (new_info) {
+    methods_string.append("(new (");
+    for (size_t i = 0; i < new_info->type.arg_count() - 1; i++) {
+      methods_string.append(new_info->type.get_arg(i).print());
+      if (i != new_info->type.arg_count() - 2) {
+        methods_string.push_back(' ');
+      }
+    }
+    methods_string.append(fmt::format(
+        ") {} {})\n    ", new_info->type.get_arg(new_info->type.arg_count() - 1).print(), 0));
+  }
+
+  for (auto& info : type->get_methods_defined_for_type()) {
+    methods_string.append(fmt::format("({} (", info.name));
+    for (size_t i = 0; i < info.type.arg_count() - 1; i++) {
+      methods_string.append(info.type.get_arg(i).print());
+      if (i != info.type.arg_count() - 2) {
+        methods_string.push_back(' ');
+      }
+    }
+    methods_string.append(fmt::format(
+        ") {} {})\n    ", info.type.get_arg(info.type.arg_count() - 1).print(), info.id));
+  }
+
+  if (!methods_string.empty()) {
+    result.append("(:methods\n    ");
+    result.append(methods_string);
+    result.append(")\n  ");
+  }
+
+  result.append(")\n");
+  return result;
+}
+
+std::string TypeSystem::generate_deftype_for_structure(const StructureType* st) const {
+  std::string result;
+  result += fmt::format("(deftype {} ({})\n  (", st->get_name(), st->get_parent());
+
+  int longest_field_name = 0;
+  int longest_type_name = 0;
+  int longest_mods = 0;
+
+  std::string inline_string = ":inline";
+  std::string dynamic_string = ":dynamic";
+
+  for (size_t i = st->first_unique_field_idx(); i < st->fields().size(); i++) {
+    const auto& field = st->fields().at(i);
+    longest_field_name = std::max(longest_field_name, int(field.name().size()));
+    longest_type_name = std::max(longest_type_name, int(field.type().print().size()));
+
+    int mods = 0;
+    // mods are array size, :inline, :dynamic
+    if (field.is_array() && !field.is_dynamic()) {
+      mods += std::to_string(field.array_size()).size();
+    }
+
+    if (field.is_inline()) {
+      if (mods) {
+        mods++;  // space
+      }
+      mods += inline_string.size();
+    }
+
+    if (field.is_dynamic()) {
+      if (mods) {
+        mods++;  // space
+      }
+      mods += dynamic_string.size();
+    }
+    longest_mods = std::max(longest_mods, mods);
+  }
+
+  for (size_t i = st->first_unique_field_idx(); i < st->fields().size(); i++) {
+    const auto& field = st->fields().at(i);
+    result += "(";
+    result += field.name();
+    result.append(1 + (longest_field_name - int(field.name().size())), ' ');
+    result += field.type().print();
+    result.append(1 + (longest_type_name - int(field.type().print().size())), ' ');
+
+    std::string mods;
+    if (field.is_array() && !field.is_dynamic()) {
+      mods += std::to_string(field.array_size());
+      mods += " ";
+    }
+
+    if (field.is_inline()) {
+      mods += inline_string;
+      mods += " ";
+    }
+
+    if (field.is_dynamic()) {
+      mods += dynamic_string;
+      mods += " ";
+    }
+    result.append(mods);
+    result.append(longest_mods - int(mods.size() - 1), ' ');
+
+    result.append(":offset-assert ");
+    result.append(std::to_string(field.offset()));
+    result.append(")\n   ");
+  }
+
+  result.append(")\n");
+  result.append(generate_deftype_footer(st));
+
+  return result;
+}
+
+std::string TypeSystem::generate_deftype_for_bitfield(const BitFieldType* type) const {
+  std::string result;
+  result += fmt::format("(deftype {} ({})\n  (", type->get_name(), type->get_parent());
+
+  int longest_field_name = 0;
+  int longest_type_name = 0;
+
+  for (const auto& field : type->fields()) {
+    longest_field_name = std::max(longest_field_name, int(field.name().size()));
+    longest_type_name = std::max(longest_type_name, int(field.type().print().size()));
+  }
+
+  for (const auto& field : type->fields()) {
+    result += "(";
+    result += field.name();
+    result.append(1 + (longest_field_name - int(field.name().size())), ' ');
+    result += field.type().print();
+    result.append(1 + (longest_type_name - int(field.type().print().size())), ' ');
+
+    result.append(fmt::format(":offset {:3d} :size {:3d}", field.offset(), field.size()));
+    result.append(")\n   ");
+  }
+
+  result.append(")\n");
+  result.append(generate_deftype_footer(type));
+
+  return result;
+}
+
+std::string TypeSystem::generate_deftype(const Type* type) const {
+  std::string result;
+
+  auto st = dynamic_cast<const StructureType*>(type);
+  if (st) {
+    return generate_deftype_for_structure(st);
+  }
+
+  auto bf = dynamic_cast<const BitFieldType*>(type);
+  if (bf) {
+    return generate_deftype_for_bitfield(bf);
+  }
+
+  return fmt::format(
+      ";; cannot generate deftype for {}, it is not a structure, basic, or bitfield (parent {})\n",
+      type->get_name(), type->get_parent());
 }

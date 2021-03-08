@@ -96,7 +96,12 @@
       )
   )
 
-
+(desfun repeated-list (obj count)
+  (if (= 0 count)
+    '()
+    (cons obj (repeated-list obj (- count 1)))
+    )
+  )
 
 (defsmacro with-gensyms (names &rest body)
   `(let
@@ -120,7 +125,15 @@
 
 
 (defsmacro string? (x)
-           `(type? 'string ,x))
+  `(type? 'string ,x))
+
+(defsmacro float? (x)
+  `(type? 'float ,x)
+  )
+
+(defsmacro integer? (x)
+  `(type? 'integer ,x)
+  )
 
 (defsmacro ferror (&rest args)
   `(error (fmt #f ,@args))
@@ -132,7 +145,15 @@
 
 ;; goal macro to define a goal macro
 (defgmacro defmacro (name args &rest body)
-  `(seval (defgmacro ,name ,args ,@body))
+    (if (and
+        (> (length body) 1)      ;; more than one thing in function
+        (string? (first body))   ;; first thing is a string
+        )
+    ;; then it's a docstring and we ignore it.
+    `(seval (defgmacro ,name ,args ,@(cdr body)))
+    ;; otherwise don't ignore it.
+    `(seval (defgmacro ,name ,args ,@body))
+    )
   )
 
 ;; goal macro to define a goos macro

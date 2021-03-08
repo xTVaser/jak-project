@@ -9,12 +9,15 @@ IF(LINUX)
         goos/PrettyPrinter.cpp
         goos/Reader.cpp
         goos/TextDB.cpp
+        goos/ReplUtils.cpp
         log/log.cpp
         type_system/deftype.cpp
         type_system/Type.cpp
         type_system/TypeFieldLookup.cpp
         type_system/TypeSpec.cpp
         type_system/TypeSystem.cpp
+        util/dgo_util.cpp
+        util/DgoReader.cpp
         util/DgoWriter.cpp
         util/FileUtil.cpp
         util/Timer.cpp
@@ -61,12 +64,20 @@ add_library(common
         )
 ENDIF()
 
-target_link_libraries(common fmt)
+target_link_libraries(common fmt lzokay replxx)
 
-IF(WIN32)
+if(WIN32)
     target_link_libraries(common wsock32 ws2_32)
 ELSEIF (LINUX)
     target_link_libraries(common stdc++fs)
 ELSEIF (UNIX)
     target_link_libraries(common ${Boost_LIBRARIES})
 ENDIF()
+
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+elseif(WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /O2")
+endif()
+
+install(TARGETS common)

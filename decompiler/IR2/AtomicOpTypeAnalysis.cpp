@@ -2,37 +2,21 @@
 #include "decompiler/ObjectFile/LinkedObjectFile.h"
 #include "common/log/log.h"
 #include "AtomicOp.h"
+#include "decompiler/util/DecompilerTypeSystem.h"
 
 namespace decompiler {
 
 namespace {
 bool tc(const DecompilerTypeSystem& dts, const TypeSpec& expected, const TP_Type& actual) {
-  return dts.ts.typecheck(expected, actual.typespec(), "", false, false);
+  return dts.ts.tc(expected, actual.typespec());
 }
 
 bool is_int_or_uint(const DecompilerTypeSystem& dts, const TP_Type& type) {
-  return tc(dts, TypeSpec("int"), type) || tc(dts, TypeSpec("uint"), type);
+  return tc(dts, TypeSpec("integer"), type) || tc(dts, TypeSpec("uint"), type);
 }
 
-struct IR2_RegOffset {
-  Register reg;
-  int offset;
-};
-
-bool get_as_reg_offset(const SimpleExpression& expr, IR2_RegOffset* out) {
-  if (expr.kind() == SimpleExpression::Kind::ADD && expr.get_arg(0).is_var() &&
-      expr.get_arg(1).is_int()) {
-    out->reg = expr.get_arg(0).var().reg();
-    out->offset = expr.get_arg(1).get_int();
-    return true;
-  }
-
-  if (expr.is_identity() && expr.get_arg(0).is_var()) {
-    out->reg = expr.get_arg(0).var().reg();
-    out->offset = 0;
-    return true;
-  }
-  return false;
+bool is_signed(const DecompilerTypeSystem& dts, const TP_Type& type) {
+  return tc(dts, TypeSpec("int"), type) && !tc(dts, TypeSpec("uint"), type);
 }
 
 RegClass get_reg_kind(const Register& r) {
@@ -43,6 +27,7 @@ RegClass get_reg_kind(const Register& r) {
       return RegClass::FLOAT;
     default:
       assert(false);
+      return RegClass::INVALID;
   }
 }
 
@@ -104,7 +89,11 @@ TP_Type SimpleAtom::get_type(const TypeState& input,
 
       if (type->second == TypeSpec("type")) {
         // if we get a type by symbol, we should remember which type we got it from.
-        return TP_Type::make_type_object(TypeSpec(m_string));
+        return TP_Type::make_type_no_virtual_object(TypeSpec(m_string));
+      }
+
+      if (type->second == TypeSpec("function")) {
+        lg::warn("Function {} has unknown type", m_string);
       }
 
       // otherwise, just return a normal typespec
@@ -128,7 +117,9 @@ TP_Type SimpleAtom::get_type(const TypeState& input,
       } else if ((label.offset & 7) == PAIR_OFFSET) {
         return TP_Type::make_from_ts(TypeSpec("pair"));
       }
-      throw std::runtime_error("IR_StaticAddress couldn't figure out the type: " + label.name);
+      // throw std::runtime_error("IR_StaticAddress couldn't figure out the type: " + label.name);
+      lg::error("IR_StaticAddress doesn't know the type of {}", label.name);
+      return TP_Type::make_from_ts("object");
     }
     case Kind::INVALID:
     default:
@@ -145,14 +136,27 @@ TP_Type SimpleExpression::get_type(const TypeState& input,
       return m_args[0].get_type(input, env, dts);
     case Kind::GPR_TO_FPR: {
       const auto& in_type = input.get(get_arg(0).var().reg());
-      if (in_type.typespec() != TypeSpec("float")) {
-        lg::warn("GPR to FPR used on a {}", in_type.print());
+      if (in_type.is_integer_constant(0)) {
+        // GOAL is smart enough to use binary 0b0 as floating point 0.
+        return TP_Type::make_from_ts("float");
       }
-      return TP_Type::make_from_ts("float");
+      return in_type;
     }
     case Kind::FPR_TO_GPR:
+      return m_args[0].get_type(input, env, dts);
     case Kind::DIV_S:
+    case Kind::SUB_S:
+    case Kind::MUL_S:
+    case Kind::ADD_S:
+    case Kind::SQRT_S:
+    case Kind::ABS_S:
+    case Kind::NEG_S:
+    case Kind::INT_TO_FLOAT:
+    case Kind::MIN_S:
+    case Kind::MAX_S:
       return TP_Type::make_from_ts("float");
+    case Kind::FLOAT_TO_INT:
+      return TP_Type::make_from_ts("int");
     case Kind::ADD:
     case Kind::SUB:
     case Kind::MUL_SIGNED:
@@ -174,7 +178,7 @@ TP_Type SimpleExpression::get_type(const TypeState& input,
       return get_type_int1(input, env, dts);
     default:
       throw std::runtime_error("Simple expression can't get_type: " +
-                               to_form(env.file->labels, &env).print());
+                               to_form(env.file->labels, env).print());
   }
   return {};
 }
@@ -203,7 +207,7 @@ TP_Type SimpleExpression::get_type_int1(const TypeState& input,
   }
 
   throw std::runtime_error("IR_IntMath1::get_expression_type case not handled: " +
-                           to_form(env.file->labels, &env).print() + " " + arg_type.print());
+                           to_form(env.file->labels, env).print() + " " + arg_type.print());
 }
 
 /*!
@@ -222,13 +226,30 @@ TP_Type SimpleExpression::get_type_int2(const TypeState& input,
       if (m_args[1].is_int() && is_int_or_uint(dts, arg0_type)) {
         assert(m_args[1].get_int() >= 0);
         assert(m_args[1].get_int() < 64);
-        return TP_Type::make_from_product(1ull << m_args[1].get_int());
+        return TP_Type::make_from_product(1ull << m_args[1].get_int(), is_signed(dts, arg0_type));
       }
       break;
 
     case Kind::MUL_SIGNED: {
       if (arg0_type.is_integer_constant() && is_int_or_uint(dts, arg1_type)) {
-        return TP_Type::make_from_product(arg0_type.get_integer_constant());
+        return TP_Type::make_from_product(arg0_type.get_integer_constant(),
+                                          is_signed(dts, arg0_type));
+      } else if (is_int_or_uint(dts, arg0_type) && is_int_or_uint(dts, arg1_type)) {
+        // signed multiply will always return a signed number.
+        return TP_Type::make_from_ts("int");
+      }
+    } break;
+
+    case Kind::MUL_UNSIGNED: {
+      // unsigned multiply will always return a unsigned number.
+      return TP_Type::make_from_ts("uint");
+    } break;
+
+    case Kind::DIV_SIGNED:
+    case Kind::MOD_SIGNED: {
+      if (is_int_or_uint(dts, arg0_type) && is_int_or_uint(dts, arg1_type)) {
+        // signed division will always return a signed number.
+        return TP_Type::make_from_ts("int");
       }
     } break;
 
@@ -238,10 +259,43 @@ TP_Type SimpleExpression::get_type_int2(const TypeState& input,
         // no need to track the type because we don't know the method index anyway.
         return TP_Type::make_partial_dyanmic_vtable_access();
       }
+
+      if (arg1_type.is_integer_constant() &&
+          arg0_type.kind == TP_Type::Kind::PRODUCT_WITH_CONSTANT) {
+        return TP_Type::make_from_integer_constant_plus_product(
+            arg1_type.get_integer_constant(), arg0_type.typespec(), arg0_type.get_multiplier());
+      }
+
+      if (arg1_type.is_integer_constant() && is_int_or_uint(dts, arg0_type)) {
+        return TP_Type::make_from_integer_constant_plus_var(arg1_type.get_integer_constant(),
+                                                            arg0_type.typespec());
+      }
       break;
 
     default:
       break;
+  }
+
+  if (arg0_type.kind == TP_Type::Kind::INTEGER_CONSTANT_PLUS_VAR_MULT && m_kind == Kind::ADD) {
+    FieldReverseLookupInput rd_in;
+    rd_in.offset = arg0_type.get_add_int_constant();
+    rd_in.stride = arg0_type.get_mult_int_constant();
+    rd_in.base_type = arg1_type.typespec();
+    auto out = env.dts->ts.reverse_field_lookup(rd_in);
+    if (out.success) {
+      return TP_Type::make_from_ts(coerce_to_reg_type(out.result_type));
+    }
+  }
+
+  if (arg0_type.kind == TP_Type::Kind::INTEGER_CONSTANT_PLUS_VAR && m_kind == Kind::ADD) {
+    FieldReverseLookupInput rd_in;
+    rd_in.offset = arg0_type.get_integer_constant();
+    rd_in.stride = 1;
+    rd_in.base_type = arg1_type.typespec();
+    auto out = env.dts->ts.reverse_field_lookup(rd_in);
+    if (out.success) {
+      return TP_Type::make_from_ts(coerce_to_reg_type(out.result_type));
+    }
   }
 
   if (arg0_type == arg1_type && is_int_or_uint(dts, arg0_type)) {
@@ -334,7 +388,7 @@ TP_Type SimpleExpression::get_type_int2(const TypeState& input,
   }
 
   throw std::runtime_error(fmt::format("Can't get_type_int2: {}, args {} and {}",
-                                       to_form(env.file->labels, &env).print(), arg0_type.print(),
+                                       to_form(env.file->labels, env).print(), arg0_type.print(),
                                        arg1_type.print()));
 }
 
@@ -372,16 +426,17 @@ TypeState IR2_BranchDelay::propagate_types(const TypeState& input,
       output.get(m_var[0]->reg()) = TP_Type::make_from_ts(TypeSpec("symbol"));
       break;
     case Kind::SET_BINTEGER:
-      output.get(m_var[0]->reg()) = TP_Type::make_type_object(TypeSpec("binteger"));
+      output.get(m_var[0]->reg()) = TP_Type::make_type_no_virtual_object(TypeSpec("binteger"));
       break;
     case Kind::SET_PAIR:
-      output.get(m_var[0]->reg()) = TP_Type::make_type_object(TypeSpec("pair"));
+      output.get(m_var[0]->reg()) = TP_Type::make_type_no_virtual_object(TypeSpec("pair"));
       break;
     case Kind::NOP:
+    case Kind::NO_DELAY:
       break;
     default:
       throw std::runtime_error("Unhandled branch delay in type_prop: " +
-                               to_form(env.file->labels, &env).print());
+                               to_form(env.file->labels, env).print());
   }
   return output;
 }
@@ -406,6 +461,12 @@ TypeState SetVarOp::propagate_types_internal(const TypeState& input,
                                              const Env& env,
                                              DecompilerTypeSystem& dts) {
   TypeState result = input;
+  if (m_dst.reg().get_kind() == Reg::FPR && m_src.is_identity() && m_src.get_arg(0).is_int() &&
+      m_src.get_arg(0).get_int() == 0) {
+    // mtc fX, r0 should be a float type. GOAL was smart enough to do this.
+    result.get(m_dst.reg()) = TP_Type::make_from_ts("float");
+    return result;
+  }
   result.get(m_dst.reg()) = m_src.get_type(input, env, dts);
   return result;
 }
@@ -459,6 +520,12 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
         // this could technically hide loading a different type from inside of a static basic.
         return TP_Type::make_from_ts(dts.ts.make_typespec("uint"));
       }
+
+      auto label_name = env.file->labels.at(src.label()).name;
+      auto hint = env.label_types().find(label_name);
+      if (hint != env.label_types().end()) {
+        return TP_Type::make_from_ts(env.dts->parse_type_spec(hint->second.type_name));
+      }
     }
   }
 
@@ -468,9 +535,9 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
   IR2_RegOffset ro;
   if (get_as_reg_offset(m_src, &ro)) {
     auto& input_type = input.get(ro.reg);
-
-    if (input_type.kind == TP_Type::Kind::TYPE_OF_TYPE_OR_CHILD && ro.offset >= 16 &&
-        (ro.offset & 3) == 0 && m_size == 4 && m_kind == Kind::UNSIGNED) {
+    if ((input_type.kind == TP_Type::Kind::TYPE_OF_TYPE_OR_CHILD ||
+         input_type.kind == TP_Type::Kind::TYPE_OF_TYPE_NO_VIRTUAL) &&
+        ro.offset >= 16 && (ro.offset & 3) == 0 && m_size == 4 && m_kind == Kind::UNSIGNED) {
       // method get of fixed type
       auto type_name = input_type.get_type_objects_typespec().base_type();
       auto method_id = (ro.offset - 16) / 4;
@@ -480,7 +547,13 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
         // remember that we're an object new.
         return TP_Type::make_object_new(method_type);
       }
-      return TP_Type::make_from_ts(method_type);
+      if (method_id == GOAL_NEW_METHOD) {
+        return TP_Type::make_from_ts(method_type);
+      } else if (input_type.kind == TP_Type::Kind::TYPE_OF_TYPE_NO_VIRTUAL) {
+        return TP_Type::make_non_virtual_method(method_type);
+      } else {
+        return TP_Type::make_virtual_method(method_type);
+      }
     }
 
     if (input_type.kind == TP_Type::Kind::TYPESPEC && input_type.typespec() == TypeSpec("type") &&
@@ -490,11 +563,13 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
       auto method_info = dts.ts.lookup_method("object", method_id);
       if (method_id != GOAL_NEW_METHOD && method_id != GOAL_RELOC_METHOD) {
         // this can get us the wrong thing for `new` methods.  And maybe relocate?
-        return TP_Type::make_from_ts(method_info.type.substitute_for_method_call("object"));
+        return TP_Type::make_non_virtual_method(
+            method_info.type.substitute_for_method_call("object"));
       }
     }
 
-    if (input_type.typespec() == TypeSpec("pointer")) {
+    if (input_type.typespec() == TypeSpec("pointer") &&
+        input_type.kind != TP_Type::Kind::OBJECT_PLUS_PRODUCT_WITH_CONSTANT) {
       // we got a plain pointer. let's just assume we're loading an integer.
       // perhaps we should disable this feature by default on 4-byte loads if we're getting
       // lots of false positives for loading pointers from plain pointers.
@@ -563,7 +638,7 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
       //      load_path.push_back("type");
       //      load_path_set = true;
 
-      return TP_Type::make_type_object(input_type.typespec().base_type());
+      return TP_Type::make_type_allow_virtual_object(input_type.typespec().base_type());
     }
 
     if (input_type.kind == TP_Type::Kind::DYNAMIC_METHOD_ACCESS && ro.offset == 16) {
@@ -584,14 +659,6 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
     rd_in.offset = ro.offset;
     auto rd = dts.ts.reverse_field_lookup(rd_in);
 
-    // only error on failure if "pair" is disabled. otherwise it might be a pair.
-    if (!rd.success && !dts.type_prop_settings.allow_pair) {
-      printf("input type is %s, offset is %d, sign %d size %d\n", rd_in.base_type.print().c_str(),
-             rd_in.offset, rd_in.deref.value().sign_extend, rd_in.deref.value().size);
-      throw std::runtime_error(fmt::format("Could not get type of load: {}. Reverse Deref Failed.",
-                                           to_form(env.file->labels, &env).print()));
-    }
-
     if (rd.success) {
       //      load_path_set = true;
       //      load_path_addr_of = rd.addr_of;
@@ -600,6 +667,41 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
       //        load_path.push_back(x.print());
       //      }
       return TP_Type::make_from_ts(coerce_to_reg_type(rd.result_type));
+    }
+
+    if (input_type.typespec() == TypeSpec("pointer")) {
+      // we got a plain pointer. let's just assume we're loading an integer.
+      // perhaps we should disable this feature by default on 4-byte loads if we're getting
+      // lots of false positives for loading pointers from plain pointers.
+
+      switch (m_kind) {
+        case Kind::UNSIGNED:
+          switch (m_size) {
+            case 1:
+            case 2:
+            case 4:
+            case 8:
+              return TP_Type::make_from_ts(TypeSpec("uint"));
+            default:
+              break;
+          }
+          break;
+        case Kind::SIGNED:
+          switch (m_size) {
+            case 1:
+            case 2:
+            case 4:
+            case 8:
+              return TP_Type::make_from_ts(TypeSpec("int"));
+            default:
+              break;
+          }
+          break;
+        case Kind::FLOAT:
+          return TP_Type::make_from_ts(TypeSpec("float"));
+        default:
+          assert(false);
+      }
     }
 
     // rd failed, try as pair.
@@ -623,10 +725,10 @@ TP_Type LoadVarOp::get_src_type(const TypeState& input,
   }
 
   throw std::runtime_error(
-      fmt::format("Could not get type of load: {}. ", to_form(env.file->labels, &env).print()));
+      fmt::format("Could not get type of load: {}. ", to_form(env.file->labels, env).print()));
 
   throw std::runtime_error("LoadVarOp can't get_src_type: " +
-                           to_form(env.file->labels, &env).print());
+                           to_form(env.file->labels, env).print());
 }
 
 TypeState LoadVarOp::propagate_types_internal(const TypeState& input,
@@ -657,6 +759,7 @@ TypeState SpecialOp::propagate_types_internal(const TypeState& input,
       return input;
     default:
       assert(false);
+      return input;
   }
 }
 
@@ -668,6 +771,7 @@ TypeState CallOp::propagate_types_internal(const TypeState& input,
   const Reg::Gpr arg_regs[8] = {Reg::A0, Reg::A1, Reg::A2, Reg::A3,
                                 Reg::T0, Reg::T1, Reg::T2, Reg::T3};
 
+  m_is_virtual_method = false;
   TypeState end_types = input;
 
   auto in_tp = input.get(Register(Reg::GPR, Reg::T9));
@@ -681,6 +785,14 @@ TypeState CallOp::propagate_types_internal(const TypeState& input,
     m_call_type.get_arg(m_call_type.arg_count() - 1) =
         TypeSpec(dts.type_prop_settings.current_method_type);
     m_call_type_set = true;
+
+    m_read_regs.clear();
+    m_arg_vars.clear();
+    m_read_regs.emplace_back(Reg::GPR, Reg::T9);
+    for (int i = 0; i < int(m_call_type.arg_count()) - 1; i++) {
+      m_read_regs.emplace_back(Reg::GPR, arg_regs[i]);
+      m_arg_vars.push_back(RegisterAccess(AccessMode::READ, m_read_regs.back(), m_my_idx));
+    }
     return end_types;
   }
 
@@ -724,9 +836,11 @@ TypeState CallOp::propagate_types_internal(const TypeState& input,
 
       // we can also update register usage here.
       m_read_regs.clear();
+      m_arg_vars.clear();
       m_read_regs.emplace_back(Reg::GPR, Reg::T9);
       for (int i = 0; i < arg_count; i++) {
         m_read_regs.emplace_back(Reg::GPR, arg_regs[i]);
+        m_arg_vars.push_back(RegisterAccess(AccessMode::READ, m_read_regs.back(), m_my_idx));
       }
 
       return end_types;
@@ -742,10 +856,22 @@ TypeState CallOp::propagate_types_internal(const TypeState& input,
 
   // we can also update register usage here.
   m_read_regs.clear();
+  m_arg_vars.clear();
   m_read_regs.emplace_back(Reg::GPR, Reg::T9);
 
   for (uint32_t i = 0; i < in_type.arg_count() - 1; i++) {
     m_read_regs.emplace_back(Reg::GPR, arg_regs[i]);
+    m_arg_vars.push_back(RegisterAccess(AccessMode::READ, m_read_regs.back(), m_my_idx));
+    if (i == 0 && in_tp.kind == TP_Type::Kind::VIRTUAL_METHOD) {
+      m_read_regs.pop_back();
+      m_arg_vars.pop_back();
+      m_is_virtual_method = true;
+    }
+  }
+
+  m_write_regs.clear();
+  if (in_type.last_arg() != TypeSpec("none")) {
+    m_write_regs.emplace_back(Reg::GPR, Reg::V0);
   }
 
   return end_types;
@@ -766,6 +892,28 @@ TypeState ConditionalMoveFalseOp::propagate_types_internal(const TypeState& inpu
   }
 
   return result;
+}
+
+TypeState FunctionEndOp::propagate_types_internal(const TypeState& input,
+                                                  const Env&,
+                                                  DecompilerTypeSystem&) {
+  return input;
+}
+
+void FunctionEndOp::mark_function_as_no_return_value() {
+  m_read_regs.clear();
+  m_function_has_return_value = false;
+}
+
+TypeState AsmBranchOp::propagate_types_internal(const TypeState& input,
+                                                const Env&,
+                                                DecompilerTypeSystem&) {
+  // for now, just make everything uint
+  TypeState output = input;
+  for (auto x : m_write_regs) {
+    output.get(x) = TP_Type::make_from_ts("uint");
+  }
+  return output;
 }
 
 }  // namespace decompiler
