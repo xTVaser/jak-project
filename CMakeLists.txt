@@ -34,8 +34,12 @@ if (LINUX)
         -Wredundant-decls \
         -Wshadow \
         -Wsign-promo")
-elseif(UNIX)
+elseif(APPLE)
     message(STATUS "MacOS detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} \
+        -std=c++17 \
+        -stdlib=libc++")
 else ()
     set(CMAKE_CXX_FLAGS "/EHsc")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:10000000")

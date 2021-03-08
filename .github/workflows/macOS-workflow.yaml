@@ -15,8 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-10.15]
-        config: [Debug] # TODO - Eventually we need to make a Release Config
-        compiler: [clang, gcc]
+        config: [Debug]
+        compiler: [clang]
         experimental: [false]
 
 
