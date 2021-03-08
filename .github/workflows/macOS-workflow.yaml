@@ -68,16 +68,18 @@ jobs:
           echo "##[set-output name=artifact-metadata;]${ARTIFACT_NAME}"
 
       - name: Get Package Dependencies
-        run: brew install cmake ccache clang-format gcc lcov make nasm
+        run: brew install cmake ccache clang-format lcov make nasm
 
       - name:  CMake Generation
         # run: cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -B build -DCODE_COVERAGE=ON
         run: |
           if [ "${{ matrix.compiler }}" == 'clang' ]; then
+            export CXXFLAGS="-std=c++11 -stdlib=libc++"
             export CC=clang
             export CXX=clang++
             cmake -B build -DCODE_COVERAGE=ON -DASAN_BUILD=ON
           else
+            export CXXFLAGS="-std=c++11 -stdlib=libc++"
             export CC=gcc
             export CXX=g++
             cmake -B build -DCODE_COVERAGE=ON
