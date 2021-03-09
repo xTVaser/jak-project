@@ -497,7 +497,7 @@ Ptr<Function> make_stack_arg_function_from_c_win32(void* func) {
  * The implementation is to create a simple trampoline function which jumps to the C function.
  */
 Ptr<Function> make_function_from_c(void* func) {
-#ifdef __linux__
+#if defined(_linux) || defined(__APPLE__)
   return make_function_from_c_linux(func);
 #elif _WIN32
   return make_function_from_c_win32(func);
@@ -505,7 +505,7 @@ Ptr<Function> make_function_from_c(void* func) {
 }
 
 Ptr<Function> make_stack_arg_function_from_c(void* func) {
-#ifdef __linux__
+#if defined(_linux) || defined(__APPLE__)
   return make_stack_arg_function_from_c_linux(func);
 #elif _WIN32
   return make_stack_arg_function_from_c_win32(func);
