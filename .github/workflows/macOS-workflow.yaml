@@ -79,7 +79,7 @@ jobs:
             export CXX=clang++
             cmake -B build -DCODE_COVERAGE=ON -DASAN_BUILD=ON
           else
-            export CXXFLAGS="-std=c++17 -stdlib=libc++"
+            export CXXFLAGS="-std=c++17 -stdlib=libc++ -v"
             export CC=gcc
             export CXX=g++
             cmake -B build -DCODE_COVERAGE=ON
