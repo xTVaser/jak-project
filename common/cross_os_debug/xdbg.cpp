@@ -10,7 +10,7 @@
 #include "third-party/fmt/core.h"
 #include "xdbg.h"
 
-#if defined(__linux) || defined(__APPLE__)
+#ifdef __linux
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
@@ -287,7 +287,7 @@ bool cont_now(const ThreadID& tid) {
   return true;
 }
 
-#elif _WIN32
+#elif defined(_WIN32) || defined(__APPLE__)
 
 ThreadID::ThreadID() {}  // todo
 
