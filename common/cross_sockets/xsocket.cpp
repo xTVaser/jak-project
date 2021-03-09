@@ -3,7 +3,7 @@
  * Cross platform socket library used for the listener.
  */
 
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 #include <unistd.h>
@@ -36,7 +36,7 @@ void close_socket(int sock) {
   if (sock < 0) {
     return;
   }
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
   close(sock);
 #elif _WIN32
   closesocket(sock);
@@ -60,7 +60,7 @@ int set_socket_option(int socket, int level, int optname, const void* optval, in
 }
 
 int set_socket_timeout(int socket, long microSeconds) {
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
   struct timeval timeout = {};
   timeout.tv_sec = 0;
   timeout.tv_usec = microSeconds;
@@ -77,7 +77,7 @@ int set_socket_timeout(int socket, long microSeconds) {
 }
 
 int write_to_socket(int socket, const char* buf, int len) {
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
   return write(socket, buf, len);
 #elif _WIN32
   return send(socket, buf, len, 0);
@@ -85,7 +85,7 @@ int write_to_socket(int socket, const char* buf, int len) {
 }
 
 int read_from_socket(int socket, char* buf, int len) {
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
   return read(socket, buf, len);
 #elif _WIN32
   return recv(socket, buf, len, 0);
@@ -93,7 +93,7 @@ int read_from_socket(int socket, char* buf, int len) {
 }
 
 bool socket_timed_out() {
-#ifdef __linux
+#ifdef defined(__linux) || defined(__APPLE__)
   return errno == EAGAIN;
 #elif _WIN32
   auto err = WSAGetLastError();
