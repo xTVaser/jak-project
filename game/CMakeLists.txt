@@ -20,11 +20,15 @@ if(LINUX)
         -Wredundant-decls \
         -Wshadow \
         -Wsign-promo")
-ELSEIF(UNIX)
+ELSEIF(APPLE)
     message(STATUS "MacOS detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} \
+        -std=c++17 \
+        -stdlib=libc++")
 ELSE()
 	set(CMAKE_CXX_FLAGS "/EHsc")
-endif(LINUX)	
+endif()
 
 enable_language(ASM_NASM)
 set(CMAKE_ASM_NASM_SOURCE_FILE_EXTENSIONS ${CMAKE_ASM_NASM_SOURCE_FILE_EXTENSIONS} asm)
