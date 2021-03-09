@@ -49,16 +49,16 @@ void ReplWrapper::add_to_history(const std::string& line) {
 
 void ReplWrapper::save_history() {
   // NOTE - library doesn't seem unicode safe on windows
-  std::filesystem::path path = file_util::get_user_home_dir();
-  if (std::filesystem::exists(path)) {
+  fs::path path = file_util::get_user_home_dir();
+  if (fs::exists(path)) {
     repl.history_save((path / ".opengoal.repl.history").string());
   }
 }
 
 void ReplWrapper::load_history() {
   // NOTE - library doesn't seem unicode safe on windows
-  std::filesystem::path path = file_util::get_user_home_dir();
-  if (std::filesystem::exists(path)) {
+  fs::path path = file_util::get_user_home_dir();
+  if (fs::exists(path)) {
     repl.history_load((path / ".opengoal.repl.history").string());
   }
 }

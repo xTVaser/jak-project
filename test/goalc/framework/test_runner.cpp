@@ -13,7 +13,18 @@
 #include "goalc/compiler/Compiler.h"
 
 #include "common/util/FileUtil.h"
+// TODO - hopefully theres a way to hide this in one file...damn macOS being 10 years behind everything else
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
+#if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
+#define GHC_USE_STD_FS
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+#endif
+#ifndef GHC_USE_STD_FS
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 
 namespace GoalTest {
 
@@ -117,8 +128,8 @@ void runtime_with_kernel_no_debug_segment() {
 }
 
 void createDirIfAbsent(const std::string& path) {
-  if (!std::filesystem::is_directory(path) || !std::filesystem::exists(path)) {
-    std::filesystem::create_directory(path);
+  if (!fs::is_directory(path) || !fs::exists(path)) {
+    fs::create_directory(path);
   }
 }
 std::string getTemplateDir(const std::string& category) {

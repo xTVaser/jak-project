@@ -5,7 +5,18 @@
 
 #include "FileUtil.h"
 #include <iostream>
+// TODO - hopefully theres a way to hide this in one file...damn macOS being 10 years behind everything else
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
+#if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
+#define GHC_USE_STD_FS
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+#endif
+#ifndef GHC_USE_STD_FS
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 #include <cstdio> /* defines FILENAME_MAX */
 #include <fstream>
 #include <sstream>
@@ -25,14 +36,14 @@
 #endif
 
 namespace file_util {
-std::filesystem::path get_user_home_dir() {
+fs::path get_user_home_dir() {
 #ifdef _WIN32
   // NOTE - on older systems, this may case issues if it cannot be found!
   std::string home_dir = std::getenv("USERPROFILE");
-  return std::filesystem::path(home_dir);
+  return fs::path(home_dir);
 #else
   std::string home_dir = std::getenv("HOME");
-  return std::filesystem::path(home_dir);
+  return fs::path(home_dir);
 #endif
 }
 
@@ -77,8 +88,8 @@ std::string get_file_path(const std::vector<std::string>& input) {
 }
 
 bool create_dir_if_needed(const std::string& path) {
-  if (!std::filesystem::is_directory(path)) {
-    std::filesystem::create_directories(path);
+  if (!fs::is_directory(path)) {
+    fs::create_directories(path);
     return true;
   }
   return false;
@@ -323,7 +334,7 @@ void MakeISOName(char* dst, const char* src) {
 }
 
 void assert_file_exists(const char* path, const char* error_message) {
-  if (!std::filesystem::exists(path)) {
+  if (!fs::exists(path)) {
     fprintf(stderr, "File %s was not found: %s\n", path, error_message);
     assert(false);
   }

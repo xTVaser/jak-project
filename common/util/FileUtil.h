@@ -7,11 +7,22 @@
 
 #include <string>
 #include <vector>
+// TODO - hopefully theres a way to hide this in one file...damn macOS being 10 years behind everything else
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
+#if __has_include(<filesystem>) && (!defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500)
+#define GHC_USE_STD_FS
 #include <filesystem>
+namespace fs = std::filesystem;
+#endif
+#endif
+#ifndef GHC_USE_STD_FS
+#include <ghc/filesystem.hpp>
+namespace fs = ghc::filesystem;
+#endif
 #include "common/common_types.h"
 
 namespace file_util {
-std::filesystem::path get_user_home_dir();
+fs::path get_user_home_dir();
 std::string get_project_path();
 std::string get_file_path(const std::vector<std::string>& input);
 bool create_dir_if_needed(const std::string& path);

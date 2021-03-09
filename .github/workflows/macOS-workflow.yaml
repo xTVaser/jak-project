@@ -74,7 +74,7 @@ jobs:
         # run: cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -B build -DCODE_COVERAGE=ON
         run: |
           if [ "${{ matrix.compiler }}" == 'clang' ]; then
-            export CXXFLAGS="-std=c++17 -stdlib=libc++ -v"
+            export CXXFLAGS="-std=c++17 -stdlib=libc++"
             export CC=clang
             export CXX=clang++
             cmake -B build -DCODE_COVERAGE=ON -DASAN_BUILD=ON
