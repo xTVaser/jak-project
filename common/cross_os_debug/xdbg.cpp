@@ -25,7 +25,7 @@
 #endif
 
 namespace xdbg {
-#if defined(__linux) || defined(__APPLE__)
+#ifdef __linux
 
 /*!
  * In Linux, a ThreadID is just the pid_t of the thread.
@@ -287,6 +287,7 @@ bool cont_now(const ThreadID& tid) {
   return true;
 }
 
+// MacOS does not have sys/prctl
 #elif defined(_WIN32) || defined(__APPLE__)
 
 ThreadID::ThreadID() {}  // todo
