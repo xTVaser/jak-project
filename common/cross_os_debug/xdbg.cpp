@@ -10,7 +10,7 @@
 #include "third-party/fmt/core.h"
 #include "xdbg.h"
 
-#ifdef __linux
+#if defined(__linux) || defined(__APPLE__)
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
@@ -25,7 +25,7 @@
 #endif
 
 namespace xdbg {
-#ifdef __linux
+#if defined(__linux) || defined(__APPLE__)
 
 /*!
  * In Linux, a ThreadID is just the pid_t of the thread.
