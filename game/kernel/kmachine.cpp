@@ -40,7 +40,7 @@ OverlordDataSource isodrv;
 u32 modsrc;
 
 // Reboot IOP with IOP kernel from DVD/CD on boot
-u32 reboot;
+u32 reboot_iop;
 
 u8 pad_dma_buf[2 * SCE_PAD_DMA_BUFFER_SIZE];
 
@@ -49,7 +49,7 @@ const char* init_types[] = {"fakeiso", "deviso", "iso_cd"};
 void kmachine_init_globals() {
   isodrv = iso_cd;
   modsrc = 1;
-  reboot = 1;
+  reboot_iop = 1;
   memset(pad_dma_buf, 0, sizeof(pad_dma_buf));
 }
 
@@ -70,7 +70,7 @@ void InitParms(int argc, const char* const* argv) {
       Msg(6, "dkernel: cd mode\n");
       isodrv = iso_cd;  // use the actual DVD drive for data files
       modsrc = 1;       // use the DVD drive data for IOP modules
-      reboot = 1;       // Reboot the IOP (load new IOP runtime)
+      reboot_iop = 1;       // Reboot the IOP (load new IOP runtime)
     }
 
     // the "cddata" uses the DVD drive for everything but IOP modules.
@@ -78,7 +78,7 @@ void InitParms(int argc, const char* const* argv) {
       Msg(6, "dkernel: cddata mode\n");
       isodrv = iso_cd;  // tell IOP to use actual DVD drive for data files
       modsrc = 0;       // don't use DVD drive for IOP modules
-      reboot = 0;       // no need to reboot the IOP
+      reboot_iop = 0;       // no need to reboot the IOP
     }
 
     // the "deviso" mode is one of two modes for testing without the need for DVDs
@@ -86,7 +86,7 @@ void InitParms(int argc, const char* const* argv) {
       Msg(6, "dkernel: deviso mode\n");
       isodrv = deviso;  // IOP deviso mode
       modsrc = 0;       // no IOP module loading (there's no DVD to load from!)
-      reboot = 0;
+      reboot_iop = 0;
     }
 
     // the "fakeiso" mode is the other of two modes for testing without the need for DVDs
@@ -94,7 +94,7 @@ void InitParms(int argc, const char* const* argv) {
       Msg(6, "dkernel: fakeiso mode\n");
       isodrv = fakeiso;  // IOP fakeeiso mode
       modsrc = 0;        // no IOP module loading (there's no DVD to load from!)
-      reboot = 0;
+      reboot_iop = 0;
     }
 
     // an added mode to allow booting without a KERNEL.CGO for testing
@@ -168,12 +168,12 @@ void InitIOP() {
   // before doing anything with the I/O Processor, we need to set up SIF RPC
   sceSifInitRpc(0);
 
-  if ((isodrv == iso_cd) || modsrc || reboot) {
+  if ((isodrv == iso_cd) || modsrc || reboot_iop) {
     // we will need the DVD drive to bring up the IOP
     InitCD();
   }
 
-  if (!reboot) {
+  if (!reboot_iop) {
     // reboot with development IOP kernel
     lg::debug("Rebooting IOP...");
     while (!sceSifRebootIop("host0:/usr/local/sce/iop/modules/ioprp221.img")) {

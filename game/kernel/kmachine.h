@@ -46,7 +46,9 @@ extern OverlordDataSource isodrv;
 extern u32 modsrc;
 
 // Reboot IOP on start?
-extern u32 reboot;
+// 'reboot' is defined in macOS's unistd.h,
+// so we choose a different name despite 'reboot' being accurate to the PS2
+extern u32 reboot_iop;
 
 /*!
  * Initialize globals for kmachine.
