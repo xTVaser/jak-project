@@ -5,8 +5,6 @@ else ()
     cmake_minimum_required(VERSION 3.16)
 endif ()
 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 project(jak)
 include(CTest)
 if(NOT CMAKE_BUILD_TYPE)
@@ -74,6 +72,7 @@ include_directories(./)
 include_directories(SYSTEM third-party/inja)
 
 # build repl library
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 add_subdirectory(third-party/replxx EXCLUDE_FROM_ALL)
 
 # build common library
