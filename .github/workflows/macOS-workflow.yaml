@@ -70,7 +70,7 @@ jobs:
       - name: Get Package Dependencies
         run: |
           export HOMEBREW_NO_INSTALL_CLEANUP=1
-          brew install ccache lcov nasm
+          brew install nasm
 
       - name:  CMake Generation
         # run: cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -B build -DCODE_COVERAGE=ON
@@ -88,16 +88,6 @@ jobs:
 
       - name: Build Project
         working-directory: ./build
-        # env:
-        #   CCACHE_BASEDIR: ${GITHUB_WORKSPACE}
-        #   CCACHE_DIR: ${GITHUB_WORKSPACE}/.ccache
-        #   CCACHE_COMPRESS: "true"
-        #   CCACHE_COMPRESSLEVEL: "6"
-        #   CCACHE_MAXSIZE: "400M"
-        #   ccache -p
-        #   ccache -z
-        #   make -j4
-        #   ccache -s
         run: make -j4
 
       - name: Run Tests
