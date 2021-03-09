@@ -1071,7 +1071,7 @@ u64 method_set(u32 type_, u32 method_id, u32 method) {
 
 extern "C" {
 // defined in asm_funcs.asm
-#ifdef __linux__
+#if defined(_linux) || defined(__APPLE__)
 uint64_t _call_goal_asm_linux(u64 a0, u64 a1, u64 a2, void* fptr, void* st_ptr, void* offset);
 uint64_t _call_goal_on_stack_asm_linux(u64 rsp,
                                        u64 u0,
@@ -1094,7 +1094,7 @@ u64 call_goal(Ptr<Function> f, u64 a, u64 b, u64 c, u64 st, void* offset) {
   void* st_ptr = (void*)st;
 
   void* fptr = f.c();
-#ifdef __linux__
+#if defined(_linux) || defined(__APPLE__)
   return _call_goal_asm_linux(a, b, c, fptr, st_ptr, offset);
 #elif _WIN32
   return _call_goal_asm_win32(a, b, c, fptr, st_ptr, offset);
@@ -1108,7 +1108,7 @@ u64 call_goal_on_stack(Ptr<Function> f, u64 rsp, u64 st, void* offset) {
   void* st_ptr = (void*)st;
 
   void* fptr = f.c();
-#ifdef __linux__
+#if defined(_linux) || defined(__APPLE__)
   return _call_goal_on_stack_asm_linux(rsp, 0, 0, fptr, st_ptr, offset);
 #elif _WIN32
   return _call_goal_on_stack_asm_win32(rsp, fptr, st_ptr, offset);
