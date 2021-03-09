@@ -26,7 +26,7 @@ target_link_libraries(common fmt lzokay replxx)
 
 if(WIN32)
     target_link_libraries(common wsock32 ws2_32)
-else()
+elseif(LINUX)
     target_link_libraries(common stdc++fs)
 endif()
 
