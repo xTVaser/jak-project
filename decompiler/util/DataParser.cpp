@@ -2,6 +2,7 @@
 #include <cassert>
 #include "DataParser.h"
 #include "third-party/fmt/core.h"
+#include <unordered_map>
 
 /*
  * Allowable lines:

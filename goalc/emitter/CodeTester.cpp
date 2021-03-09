@@ -6,9 +6,7 @@
  * The CodeTester can't be used for tests requiring the full GOAL language/linking.
  */
 
-#ifdef __linux__
-#include <sys/mman.h>
-#elif __APPLE__
+#if defined(__linux) || defined(__APPLE__)
 #include <sys/mman.h>
 #elif _WIN32
 #include <third-party/mman/mman.h>

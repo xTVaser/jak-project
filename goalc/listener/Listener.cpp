@@ -3,7 +3,7 @@
  * The Listener can connect to a Deci2Server for debugging.
  */
 
-#ifdef __linux__
+#if defined(__linux) || defined(__APPLE__)
 #include <stdexcept>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
