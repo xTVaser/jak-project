@@ -7,11 +7,10 @@
             alt="OpenGOAL Logo"
             class="shrink mr-2"
             contain
-            src="opengoal-logo.png"
+            src="logo-text-colored.png"
             transition="scale-transition"
-            width="40"
+            width="150"
           />
-          OpenGOAL Tooling
         </v-btn>
       </div>
 
@@ -21,7 +20,7 @@
         <span class="mr-2">API Docs</span>
       </v-btn>
       <v-btn to="/configs" text>
-        <span class="mr-2">Modify Game Configs</span>
+        <span class="mr-2">Decompiler Configs</span>
       </v-btn>
 
       <v-spacer></v-spacer>
