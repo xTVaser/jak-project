@@ -1,0 +1,23 @@
+(deftype frame-stats (structure)
+  ((field-time uint64 2 :offset-assert 0)
+   (field      int32     :offset-assert 16)
+   )
+  :method-count-assert 9
+  :size-assert         #x14
+  :flag-assert         #x900000014
+  )
+
+(deftype screen-filter (basic)
+  ((draw? basic   :offset-assert 4)
+   (color uint32  :offset-assert 8)
+   )
+  :method-count-assert 10
+  :size-assert         #xc
+  :flag-assert         #xa0000000c
+  (:methods
+    (dummy-9 () none 9)
+    )
+  )
+
+(define-extern *dproc* process)
+(define-extern *display-strip-lines* int)

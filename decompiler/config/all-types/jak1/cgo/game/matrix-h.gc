@@ -1,0 +1,34 @@
+(deftype matrix (structure)
+  ((data   float 16 :offset-assert 0)
+   (vector vector 4  :inline :offset 0)
+   (quad   uint128 4  :offset 0)
+   )
+  :method-count-assert 10
+  :size-assert         #x40
+  :flag-assert         #xa00000040
+  (:methods
+    (transform-vectors! (_type_ (inline-array vector) (inline-array vector) int) none 9)
+    )
+  )
+
+(deftype matrix3 (structure)
+  ((data   float 12 :offset-assert 0)
+   (vector vector 3 :inline :offset 0)
+   (quad   uint128 3  :offset 0)
+   )
+  :method-count-assert 9
+  :size-assert         #x30
+  :flag-assert         #x900000030
+  )
+
+(deftype matrix4h (structure)
+  ((data     int16 16 :offset-assert 0)
+   (vector4h vector4h 4 :inline :offset 0)
+   (long     int64 4  :offset 0)
+   )
+  :method-count-assert 9
+  :size-assert         #x20
+  :flag-assert         #x900000020
+  )
+
+(define-extern matrix-copy! (function matrix matrix matrix))

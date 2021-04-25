@@ -1,0 +1,71 @@
+(deftype connectable (structure)
+  ((next0 connectable  :offset-assert 0)
+   (prev0 connectable  :offset-assert 4)
+   (next1 connectable  :offset-assert 8)
+   (prev1 connectable  :offset-assert 12)
+   )
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+(declare-type engine basic)
+(deftype connection (connectable)
+  ((param0 (function object object object object object)      :offset-assert 16)
+   (param1 basic         :offset-assert 20)
+   (param2 basic         :offset-assert 24)
+   (param3 basic         :offset-assert 28)
+   (quad   uint128     2 :offset 0)
+   )
+  :method-count-assert 14
+  :size-assert         #x20
+  :flag-assert         #xe00000020
+  ;; field param1 is a basic loaded with a signed load field param2 is a basic loaded with a signed load field param3 is a basic loaded with a signed load
+  (:methods
+    (print (connection) _type_ 2)
+    (get-engine (connection) engine 9)
+    (get-process (connection) process 10)
+    (belongs-to-engine? (connection engine) symbol 11)
+    (belongs-to-process? (connection process) symbol 12)
+    (move-to-dead (connection) connection 13)
+    )
+  )
+
+;; connect
+(deftype engine (basic)
+  ((name basic :offset-assert 4)
+   (length int16 :offset-assert 8)             ;; in use elts of the data array
+   (allocated-length int16 :offset-assert 10)  ;; size of the data array
+   (engine-time uint64 :offset-assert 16)      ;; frame that we last executed
+
+   ;; terminating nodes for the next0/prev0 linked lists
+   (alive-list connectable :inline :offset-assert 32)
+   (alive-list-end connectable :inline :offset-assert 48)
+   (dead-list connectable :inline :offset-assert 64)
+   (dead-list-end connectable :inline :offset-assert 80)
+
+   ;; storage for nodes. this is dynamically sized.
+   (data connection 1 :inline :offset-assert 96)
+   )
+  :method-count-assert 24
+  :size-assert         #x80
+  :flag-assert         #x1800000080
+  (:methods
+    (new (symbol type basic int) _type_ 0)
+    (inspect-all-connections (engine) engine 9)
+    (apply-to-connections (engine (function connectable none)) int 10)
+    (apply-to-connections-reverse (engine (function connectable none)) int 11)
+    (execute-connections (engine object) int 12)
+    (execute-connections-and-move-to-dead (engine object) int 13)
+    (execute-connections-if-needed (engine object) int 14)
+    (add-connection (engine process (function object object object object object) object object object) connection 15)
+    (remove-from-process (engine process) int 16)
+    (remove-matching (engine (function connection engine symbol)) int 17)
+    (remove-all (engine) int 18)
+    (remove-by-param1 (engine object) int 19)
+    (remove-by-param2 (engine int) int 20)
+    (get-first-connectable (engine) connectable 21)
+    (get-last-connectable (engine) connectable 22)
+    (unknown-1 (engine (pointer uint32)) uint 23)
+    )
+  )

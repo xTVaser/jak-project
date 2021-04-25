@@ -1,0 +1,2 @@
+(define-extern box-vector-inside? (function bounding-box vector symbol))
+(define-extern box-vector-enside? (function bounding-box vector symbol))

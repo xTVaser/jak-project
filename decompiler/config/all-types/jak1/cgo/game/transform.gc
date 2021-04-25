@@ -1,0 +1,3 @@
+(define-extern transform-matrix-calc! (function transform matrix matrix))
+(define-extern transform-matrix-parent-calc! (function transform matrix vector matrix))
+(define-extern trs-matrix-calc! (function trs matrix matrix))

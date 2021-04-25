@@ -1,0 +1,4 @@
+(define-extern looping-code (function symbol))
+(define-extern send-event-function (function process event-message-block object))
+(define-extern enter-state (function object object object object object object object))
+(define-extern inherit-state (function state state state))

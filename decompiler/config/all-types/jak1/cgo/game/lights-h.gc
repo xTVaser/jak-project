@@ -1,0 +1,94 @@
+;; lights-h
+(deftype vu-lights (structure)
+  ((direction uint128 3       :offset-assert 0)
+   (color     uint128 3       :offset-assert 48)
+   (ambient   vector  :inline :offset-assert 96)
+   )
+  :method-count-assert 9
+  :size-assert         #x70
+  :flag-assert         #x900000070
+  )
+
+;; lights-h
+(deftype light (structure)
+  ((direction  vector :inline :offset-assert 0)
+   (color      rgbaf  :inline :offset-assert 16)
+   (levels     vector :inline :offset-assert 32)
+   (level      float          :offset 32)
+   (sort-level float          :offset 36)
+   )
+  :method-count-assert 9
+  :size-assert         #x30
+  :flag-assert         #x900000030
+  )
+
+;; lights-h
+(deftype light-ellipse (structure)
+  ((matrix              matrix :inline :offset-assert 0)
+   (color               rgbaf  :inline :offset-assert 64)
+   (name                basic          :offset 12)
+   (decay-start         float          :offset 28)
+   (ambient-point-ratio float          :offset 44)
+   (level               float          :offset 60)
+   (func-symbol         basic          :offset 76)
+   (func                basic          :offset 76)
+   )
+  :method-count-assert 9
+  :size-assert         #x50
+  :flag-assert         #x900000050
+  )
+
+;; lights-h
+(deftype light-array (array)
+  ()
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+;; lights-h
+(deftype light-volume (basic)
+  ((light-array basic  :offset-assert 4)
+   )
+  :method-count-assert 9
+  :size-assert         #x8
+  :flag-assert         #x900000008
+  )
+
+;; lights-h
+(deftype light-volume-sphere (light-volume)
+  ((bsphere     sphere :inline :offset-assert 16)
+   )
+  :method-count-assert 9
+  :size-assert         #x20
+  :flag-assert         #x900000020
+  )
+
+;; lights-h
+(deftype light-volume-planes (light-volume)
+  ((planes      vertical-planes  :offset-assert 8)
+   )
+  :method-count-assert 9
+  :size-assert         #xc
+  :flag-assert         #x90000000c
+  )
+
+; todo
+(deftype light-volume-array (array)
+  ()
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+;; lights-h
+(deftype light-group (structure)
+  ((dir0 light :inline :offset-assert 0)
+   (dir1 light :inline :offset-assert 48)
+   (dir2 light :inline :offset-assert 96)
+   (ambi light :inline :offset-assert 144)
+   )
+  :method-count-assert 9
+  :size-assert         #xc0
+  :flag-assert         #x9000000c0
+  )

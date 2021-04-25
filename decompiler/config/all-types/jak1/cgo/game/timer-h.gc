@@ -1,0 +1,87 @@
+(defenum timer-clock-selection
+  :type uint8
+  (busclk 0)
+  (busclk/16 1)
+  (busclk/256 2)
+  (hblank 3)
+  )
+(deftype timer-mode (uint32)
+  ((clks  timer-clock-selection :offset 0 :size 2)
+   (gate  uint8 :offset 2 :size 1) ;; gate function enable
+   (gats  uint8 :offset 3 :size 1) ;; gate selection: 0 = hblank, 1 = vblank
+   ;; gate mode:
+   ;;  0: count while gate signal is low
+   ;;  1: start when gate signal rises
+   ;;  2: start when gate signal falls
+   ;;  3: start when gate signal rises/falls
+   (gatm  uint8 :offset 4 :size 2)
+   (zret  uint8 :offset 6 :size 1) ;; zero return: clear counter when equal to reference value
+   (cue   uint8 :offset 7 :size 1) ;; count-up enable
+   (cmpe  uint8 :offset 8 :size 1) ;; compare-interrupt enable
+   (ovfe  uint8 :offset 9 :size 1) ;; overflow-interrupt enable
+   (equf  uint8 :offset 10 :size 1) ;; equal-flag
+   (ovff  uint8 :offset 11 :size 1) ;; overflow-flag
+   )
+  :method-count-assert 9
+  :size-assert         #x4
+  :flag-assert         #x900000004
+  )
+
+(deftype timer-bank (structure)
+  ((count uint32      :offset 0)
+   (mode  timer-mode  :offset 16)
+   (comp  uint32      :offset 32)
+   )
+  :method-count-assert 9
+  :size-assert         #x24
+  :flag-assert         #x900000024
+  )
+
+(deftype timer-hold-bank (timer-bank)
+  ((hold  uint32  :offset 48)
+   )
+  :method-count-assert 9
+  :size-assert         #x34
+  :flag-assert         #x900000034
+  )
+
+(deftype stopwatch (basic)
+  ((prev-time-elapsed uint64  :offset-assert 8)
+   (start-time        uint64  :offset-assert 16)
+   (begin-level       int32   :offset-assert 24)
+   )
+  :method-count-assert 9
+  :size-assert         #x1c
+  :flag-assert         #x90000001c
+  )
+
+(define-extern *ticks-per-frame* int)
+(define-extern timer-init (function timer-bank timer-mode int))
+
+(deftype profile-frame (structure)
+  ((name       symbol  :offset-assert 0)
+   (time-stamp uint32  :offset-assert 4)
+   (color      rgba    :offset-assert 8)
+   )
+  :method-count-assert 9
+  :size-assert         #xc
+  :flag-assert         #x90000000c
+  )
+
+(declare-type dma-buffer basic)
+(deftype profile-bar (basic)
+  ((profile-frame-count int32        :offset-assert 4)
+   (cache-time          uint64       :offset-assert 8)
+   (data                profile-frame 1024 :inline :offset-assert 16)
+   )
+  :method-count-assert 14
+  :size-assert         #x4010
+  :flag-assert         #xe00004010
+  (:methods
+    (get-last-frame-time-stamp (_type_) uint 9)
+    (reset (_type_) _type_ 10)
+    (add-frame (_type_ symbol rgba) profile-frame 11)
+    (add-end-frame (_type_ symbol rgba) profile-frame 12)
+    (draw (_type_ dma-buffer int) float 13)
+    )
+  )

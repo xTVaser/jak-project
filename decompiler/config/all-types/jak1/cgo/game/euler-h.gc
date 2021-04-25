@@ -1,0 +1,9 @@
+(deftype euler-angles (vector)
+  ()
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+(define-extern EulNext (array int32))
+(define-extern EulSafe (array int32))

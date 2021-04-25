@@ -1,0 +1,308 @@
+(defenum process-mask
+    :bitfield #t :type uint32
+    (execute         0) ;; 1
+    (draw            1) ;; 2
+    (pause           2) ;; 4
+    (menu            3) ;; 8
+    (progress        4) ;; 16
+    (actor-pause     5) ;; 32
+    (sleep           6) ;; 64
+    (sleep-code      7) ;; 128
+    (process-tree    8) ;; 256        not an actual process, just a "tree node" for organization
+    (heap-shrunk     9) ;; 512
+    (going          10) ;; 1024
+    (movie          11) ;; 2048
+    (movie-subject  12) ;; 4096
+    (target         13) ;; 8192
+    (sidekick       14) ;; 16384
+    (crate          15) ;; 32768
+    (collectable    16) ;; 65536
+    (enemy          17) ;; 131072
+    (camera         18) ;; 262144
+    (platform       19) ;; 524288
+    (ambient        20) ;; 1048576
+    (entity         21) ;; 2097152
+    (projectile     22) ;; 4194304
+    (attackable     23) ;; 8388608
+    (death          24) ;; 16777216
+    )
+
+;; gkernel-h
+(deftype kernel-context (basic)
+  ((prevent-from-run   process-mask  :offset-assert 4)
+   (require-for-run    process-mask  :offset-assert 8)
+   (allow-to-run       process-mask  :offset-assert 12)
+   (next-pid           int32         :offset-assert 16)
+   (fast-stack-top     pointer       :offset-assert 20)
+   (current-process    basic         :offset-assert 24)
+   (relocating-process basic         :offset-assert 28)
+   (relocating-min     int32         :offset-assert 32)
+   (relocating-max     int32         :offset-assert 36)
+   (relocating-offset  int32         :offset-assert 40)
+   (low-memory-message basic         :offset-assert 44)
+   )
+  :method-count-assert 9
+  :size-assert         #x30
+  :flag-assert         #x900000030
+  )
+
+(declare-type process basic)
+(declare-type stack-frame basic)
+(declare-type cpu-thread basic)
+(declare-type state basic)
+(declare-type dead-pool basic)
+(declare-type event-message-block structure)
+
+;; gkernel-h
+(deftype thread (basic)
+  ((name         basic   :offset-assert 4)
+   (process      process :offset-assert 8)
+   (previous     thread  :offset-assert 12)
+   (suspend-hook (function cpu-thread none)   :offset-assert 16)
+   (resume-hook  (function cpu-thread none)   :offset-assert 20)
+   (pc           pointer :offset-assert 24)
+   (sp           pointer :offset-assert 28)
+   (stack-top    pointer :offset-assert 32)
+   (stack-size   int32   :offset-assert 36)
+   )
+
+  (:methods
+    (stack-size-set! (_type_ int) none 9)
+    (thread-suspend (_type_) none 10)
+    (thread-resume  (_type_) none 11)
+    )
+
+  :method-count-assert 12
+  :size-assert         #x28
+  :flag-assert         #xc00000028
+  )
+
+;; gkernel-h
+(deftype cpu-thread (thread)
+  (
+   ;;(rreg  uint64 8       :offset-assert 40)
+   ;;(freg  float 6        :offset-assert 104)
+   ;; changed from GOAL, see gkernel-h.gc
+   (rreg  uint64 7       :offset-assert 40)
+   (freg float 8)
+   (stack uint8 :dynamic :offset-assert 128)
+   )
+
+  (:methods
+    (new (symbol type process symbol int pointer) _type_ 0)
+    (thread-suspend (_type_) none 10)
+    (thread-resume  (_type_) none 11)
+    )
+
+  :method-count-assert 12
+  :size-assert         #x80
+  :flag-assert         #xc00000080
+  )
+
+;; gkernel-h
+(deftype process-tree (basic)
+  ((name basic :offset-assert 4)
+   (mask process-mask :offset-assert 8)
+   (parent (pointer process-tree) :offset-assert 12)
+   (brother (pointer process-tree) :offset-assert 16)
+   (child (pointer process-tree) :offset-assert 20)
+   (ppointer (pointer process-tree) :offset-assert 24)
+   (self process-tree :offset-assert 28)
+   )
+
+  (:methods
+    (new (symbol type basic) _type_ 0)
+    (activate (_type_ process-tree basic pointer) process-tree 9)
+    (deactivate  (_type_) none 10)
+    (dummy-method-11 () none 11)
+    (run-logic? (_type_) symbol 12)
+    (dummy-method () none 13)
+    )
+
+  :size-assert #x20
+  :method-count-assert 14
+  :no-runtime-type
+  )
+
+;; gkernel
+(deftype process (process-tree)
+  ((pool dead-pool :offset-assert #x20)
+   (status basic :offset-assert #x24)
+   (pid int32 :offset-assert #x28)
+   (main-thread cpu-thread :offset-assert #x2c)
+   (top-thread thread :offset-assert #x30)
+   (entity basic :offset-assert #x34)
+   (state state :offset-assert #x38)
+   (trans-hook function :offset-assert #x3c)
+   (post-hook function :offset-assert #x40)
+   (event-hook (function basic int basic event-message-block object) :offset-assert #x44)
+   (allocated-length int32 :offset-assert #x48)
+   (next-state state :offset-assert #x4c)
+   (heap-base pointer :offset-assert #x50)
+   (heap-top pointer :offset-assert #x54)
+   (heap-cur pointer :offset-assert #x58)
+   (stack-frame-top stack-frame :offset-assert #x5c)
+   (connection-list connectable :inline :offset-assert #x60)
+   (stack uint8 :dynamic :offset-assert #x70)
+   )
+
+
+  (:methods
+    (new (symbol type basic int) _type_ 0)
+    (activate (_type_ process-tree basic pointer) process-tree 9)
+    (deactivate  (process) none 10)
+    (dummy-method-11 () none 11)
+    (run-logic? (process) symbol 12)
+    (dummy-method () none 13)
+    )
+
+  :size-assert #x70
+  :method-count-assert 14
+  :no-runtime-type ;; already defined by kscheme. Don't do it again.
+  )
+
+;; gkernel-h
+(deftype dead-pool (process-tree)
+  (
+   ;; nothing new!
+   )
+  (:methods
+    (new (symbol type int int basic) _type_ 0)
+    (get-process (_type_ type int) process 14)
+    (return-process ( _type_ process) none 15)
+    )
+  :size-assert #x20
+  :method-count-assert 16
+  :flag-assert #x1000000020
+  )
+
+;; gkernel-h
+(deftype dead-pool-heap-rec (structure)
+  ((process process             :offset-assert 0)
+   (prev    dead-pool-heap-rec  :offset-assert 4)
+   (next    dead-pool-heap-rec  :offset-assert 8)
+   )
+  :pack-me
+  :method-count-assert 9
+  :size-assert         #xc
+  :flag-assert         #x90000000c
+  )
+
+;; gkernel-h
+(deftype dead-pool-heap (dead-pool)
+  ((allocated-length   int32                       :offset-assert 32)
+   (compact-time       uint32                      :offset-assert 36)
+   (compact-count-targ uint32                      :offset-assert 40)
+   (compact-count      uint32                      :offset-assert 44)
+   (fill-percent       float                       :offset-assert 48)
+   (first-gap          dead-pool-heap-rec          :offset-assert 52)
+   (first-shrink       dead-pool-heap-rec          :offset-assert 56)
+   (heap               kheap              :inline  :offset-assert 64)
+   (alive-list         dead-pool-heap-rec :inline  :offset-assert 80)
+   (last               dead-pool-heap-rec :offset #x54  :offset-assert 84)
+   (dead-list          dead-pool-heap-rec :inline  :offset-assert 92)
+   (process-list       dead-pool-heap-rec :inline :dynamic :offset-assert 104)
+   )
+
+  (:methods
+    (new (symbol type basic int int) _type_ 0)
+    (compact (dead-pool-heap int) none 16)
+    (shrink-heap (dead-pool-heap process) dead-pool-heap 17)
+    (churn (dead-pool-heap int) none 18)
+    (memory-used (dead-pool-heap) int 19)
+    (memory-total (dead-pool-heap) int 20)
+    (gap-size (dead-pool-heap dead-pool-heap-rec) int 21)
+    (gap-location (dead-pool-heap dead-pool-heap-rec) pointer 22)
+    (find-gap (dead-pool-heap dead-pool-heap-rec) dead-pool-heap-rec 23)
+    (find-gap-by-size (dead-pool-heap int) dead-pool-heap-rec 24)
+    (memory-free (dead-pool-heap) int 25)
+    (compact-time (dead-pool-heap) uint 26)
+    )
+
+  :method-count-assert 27
+  :size-assert         #x68
+  :flag-assert         #x1b00000068
+  )
+
+(deftype stack-frame (basic)
+  ((name basic :offset 4)
+   (next stack-frame :offset 8) ;; which way does this point?
+   )
+
+  :size-assert #xc
+  :method-count-assert 9
+  :flag-assert #x90000000c
+  )
+
+(deftype catch-frame (stack-frame)
+  ((sp   int32     :offset-assert 12)
+   (ra   int32     :offset-assert 16)
+   ;; changed from GOAL, see gkernel-h.gc
+   (freg float 10 :offset-assert 20)
+   (rreg uint128 7)
+   ;;(freg float 6 :offset-assert 20)
+   ;;(rreg uint128 8 :offset-assert 48)
+   )
+
+  (:methods
+    (new (symbol type symbol function (pointer uint64)) object 0)
+    )
+
+  :method-count-assert 9
+  :size-assert         #xb0
+  :flag-assert         #x9000000b0
+  )
+
+(deftype protect-frame (stack-frame)
+  ((exit (function object)  :offset-assert 12)
+   )
+  (:methods
+    (new (symbol type (function object)) protect-frame)
+    )
+
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+;; gkernel-h
+(deftype handle (uint64)
+  ((process (pointer process) :offset 0)
+   (pid int32 :offset 32)
+   (u64 uint64 :offset 0)
+   )
+  :flag-assert #x900000008
+  )
+
+;; gkernel-h
+(deftype state (protect-frame)
+  ((code  function  :offset-assert 16)
+   (trans (function object)  :offset-assert 20)
+   (post  function  :offset-assert 24)
+   (enter (function object object object object object object object)  :offset-assert 28)
+   (event (function basic int basic event-message-block object)     :offset-assert 32)
+   )
+  (:methods
+    (new (symbol type basic function
+          (function object)
+          (function object object object object object object object)
+          (function object)
+          (function basic int basic event-message-block object)) _type_ 0)
+    )
+  :method-count-assert 9
+  :size-assert         #x24
+  :flag-assert         #x900000024
+  )
+
+;; gkernel-h
+(deftype event-message-block (structure)
+  ((to         basic     :offset-assert 0)
+   (from       basic     :offset-assert 4)
+   (num-params int32     :offset-assert 8)
+   (message    basic     :offset-assert 12)
+   (param      uint64 7  :offset-assert 16)
+   )
+  :method-count-assert 9
+  :size-assert         #x48
+  :flag-assert         #x900000048
+  )

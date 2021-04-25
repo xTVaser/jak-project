@@ -1,0 +1,20 @@
+(deftype vif-disasm-element (structure)
+  ((mask    uint32   :offset-assert 0)
+   (tag     vif-cmd-32  :offset-assert 4)
+   (val     uint32   :offset-assert 8)
+   (print   uint32   :offset-assert 12)
+   (string1 string   :offset-assert 16)
+   (string2 string   :offset-assert 20)
+   )
+  :method-count-assert 9
+  :size-assert         #x18
+  :flag-assert         #x900000018
+  )
+
+(define-extern *vif-disasm-table* (array vif-disasm-element)) ;; unknown type
+;;(define-extern disasm-vif-tag (function (pointer uint32) int symbol int symbol))
+(define-extern disasm-dma-tag (function dma-tag symbol int))
+(define-extern disasm-vif-details (function symbol (pointer uint8) vif-cmd int symbol))
+(define-extern vif-disasm-element type)
+(define-extern *dma-disasm* symbol)
+(define-extern disasm-dma-list function)

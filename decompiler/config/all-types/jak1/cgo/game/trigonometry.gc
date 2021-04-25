@@ -1,0 +1,60 @@
+(deftype float-type (uint32)
+  ()
+  )
+
+(define-extern radmod (function float float))
+(define-extern deg- (function float float float))
+(define-extern deg-diff (function float float float))
+(define-extern deg-seek (function float float float float))
+(define-extern deg-seek-smooth (function float float float float float))
+(define-extern deg-lerp-clamp (function float float float float))
+(define-extern sin (function float float))
+(define-extern sin-rad (function float float))
+(define-extern *sin-poly-vec* vector)
+(define-extern *sin-poly-vec2* vector)
+(define-extern vector-sin-rad! (function vector vector vector))
+(define-extern cos-rad (function float float))
+(define-extern *cos-poly-vec* vector)
+(define-extern vector-cos-rad! (function vector vector vector))
+(define-extern vector-sincos-rad! (function vector vector vector int))
+(define-extern vector-sincos! (function vector vector vector int))
+(define-extern tan-rad (function float float))
+(define-extern vector-rad<-vector-deg! (function vector vector none))
+(define-extern vector-rad<-vector-deg/2! (function vector vector int))
+(define-extern atan0 (function float float float))
+(define-extern atan-series-rad (function float float))
+(define-extern atan-rad (function float float))
+(define-extern atan2-rad (function float float float))
+(define-extern acos-rad (function float float))
+(define-extern acos (function float float))
+
+(define-extern coserp (function float float float float))
+(define-extern sinerp-clamp (function float float float float))
+;;(define-extern exp-slead object) ;; unknown type
+(define-extern coserp180-clamp (function float float float float))
+ ;; unknown type
+(define-extern exp (function float float))
+
+
+
+(define-extern deg-seek (function float float float float))
+(define-extern coserp180 (function float float float float))
+(define-extern sign (function float float))
+(define-extern sinerp (function float float float float))
+;; unknown type
+(define-extern ease-in-out (function int int float))
+
+
+(define-extern asin (function float float))
+;;(define-extern sincos-table object) ;; unknown type
+;;(define-extern exp-strail object) ;; unknown type
+
+(define-extern coserp-clamp (function float float float float))
+(define-extern tan (function float float))
+
+;; ;; unknown type
+
+;;(define-extern binary-table object) ;; unknown type
+
+(define-extern sincos! (function (pointer float) float int))
+(define-extern sincos-rad! (function (pointer float) float int))

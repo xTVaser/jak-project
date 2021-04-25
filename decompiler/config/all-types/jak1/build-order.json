@@ -1,0 +1,95 @@
+[
+  {
+    "dir": "cgo/kernel",
+    "files": [
+      "types.gc",
+      "built-ins.gc",
+      "gcommon.gc",
+      "gkernel-h.gc",
+      "gkernel.gc",
+      "pskernel.gc",
+      "gstring.gc",
+      "dgo-h.gc",
+      "gstate.gc"
+    ]
+  },
+  {
+    "dir": "cgo/game",
+    "files": [
+      "math.gc",
+      "types-h.gc",
+      "vector-h.gc",
+      "bounding-box-h.gc",
+      "matrix-h.gc",
+      "quaternion-h.gc",
+      "euler-h.gc",
+      "transform-h.gc",
+      "geometry-h.gc",
+      "transformq-h.gc",
+      "bounding-box.gc",
+      "matrix.gc",
+      "transform.gc",
+      "quaternion.gc",
+      "euler.gc",
+      "geometry.gc",
+      "trigonometry.gc",
+      "gsound-h.gc",
+      "timer-h.gc",
+      "timer.gc",
+      "vif-h.gc",
+      "dma-h.gc",
+      "video-h.gc",
+      "vu1-user-h.gc",
+      "dma.gc",
+      "dma-buffer.gc",
+      "dma-disasm.gc",
+      "pad.gc",
+      "gs.gc",
+      "display-h.gc",
+      "display.gc",
+      "vector.gc",
+      "file-io.gc",
+      "loader-h.gc",
+      "texture-h.gc",
+      "level-h.gc",
+      "math-camera-h.gc",
+      "font-h.gc",
+      "decomp-h.gc",
+      "connect.gc",
+      "text-h.gc",
+      "settings-h.gc",
+      "capture.gc",
+      "memory-usage-h.gc",
+      "texture.gc",
+      "main-h.gc",
+      "mspace-h.gc",
+      "drawable-h.gc",
+      "drawable-inline-array-h.gc",
+      "draw-node-h.gc",
+      "drawable-actor-h.gc",
+      "drawable-ambient-h.gc",
+      "hint-control-h.gc",
+      "generic-h.gc",
+      "lights-h.gc",
+      "ocean-h.gc",
+      "sky-h.gc",
+      "glist-h.gc",
+      "glist.gc"
+    ]
+  },
+  {
+    "dir": "common",
+    "files": [
+      "common-types.gc",
+      "bea-types.gc",
+      "cit-types.gc",
+      "dar-types.gc"
+    ]
+  },
+  {
+    "dir": "symbols",
+    "files": [
+      "symbols.gc"
+    ]
+  }
+]

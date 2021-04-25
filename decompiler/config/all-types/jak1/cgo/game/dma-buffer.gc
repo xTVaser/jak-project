@@ -1,0 +1,61 @@
+(deftype dma-packet (structure)
+  ((dma  dma-tag   :offset-assert 0)
+   (vif0 vif-tag   :offset-assert 8)
+   (vif1 vif-tag   :offset-assert 12) ;; doesn't have to be a vif tag.
+   (quad uint128  :offset 0)
+   )
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+(deftype dma-packet-array (inline-array-class)
+  ()
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+(deftype dma-gif-packet (structure)
+  ((dma-vif dma-packet :inline :offset-assert 0)
+   (gif     uint64    2       :offset-assert 16) ;; guess
+   (quad    uint128    2       :offset 0)
+   )
+  :method-count-assert 9
+  :size-assert         #x20
+  :flag-assert         #x900000020
+  )
+
+(deftype dma-buffer (basic)
+  ((allocated-length int32     :offset-assert 4)
+   (base             pointer   :offset-assert 8)
+   (end              pointer    :offset-assert 12)
+   (data             uint64 1 :offset-assert 16) ;; weird, I guess this aligns the data?
+   (data-buffer      uint8 :dynamic :offset 16)
+   )
+  (:methods
+   (new (symbol type int) _type_  0)
+   )
+  :method-count-assert 9
+  :size-assert         #x18
+  :flag-assert         #x900000018
+  )
+
+;;(define-extern reset-path object) ;; unknown type
+;;(define-extern reset-graph object) ;; unknown type
+;;(define-extern dma-sync object) ;; unknown type
+;;(define-extern dma-packet-array object) ;; unknown type
+(define-extern dma-buffer-inplace-new (function dma-buffer int dma-buffer))
+(define-extern dma-buffer-length (function dma-buffer int))
+(define-extern dma-buffer-free (function dma-buffer int))
+
+;;(define-extern dma-gif-packet object) ;; unknown type
+
+(define-extern dma-buffer-add-vu-function (function dma-buffer vu-function int symbol))
+;;(define-extern dma-packet object) ;; unknown type
+;;(define-extern dma-buffer object) ;; unknown type
+(define-extern dma-buffer-send-chain (function dma-bank-source dma-buffer none))
+(define-extern dma-buffer-send (function dma-bank dma-buffer none))
+(define-extern dma-bucket-insert-tag (function dma-bucket int pointer (pointer dma-tag) pointer))
+(define-extern dma-buffer-add-buckets (function dma-buffer int none))
+(define-extern dma-buffer-patch-buckets (function dma-bucket int dma-bucket))

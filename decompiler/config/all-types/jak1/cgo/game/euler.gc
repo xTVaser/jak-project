@@ -1,0 +1,5 @@
+(define-extern set-eul! (function euler-angles float float float int euler-angles))
+(define-extern eul->matrix (function matrix euler-angles matrix))
+(define-extern matrix->eul (function euler-angles matrix int euler-angles))
+(define-extern eul->quat (function quaternion euler-angles quaternion))
+(define-extern quat->eul (function euler-angles quaternion int euler-angles))

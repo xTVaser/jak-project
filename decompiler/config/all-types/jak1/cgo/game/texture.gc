@@ -1,0 +1,11 @@
+; ;; texture
+; (deftype texture-page-dir (basic)
+;   ()
+;   :method-count-assert 10
+;   :size-assert         #x14
+;   :flag-assert         #xa00000014
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     )
+;   )

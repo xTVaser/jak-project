@@ -39,7 +39,6 @@
     "CGO/VILLAGEP.CGO",
     "CGO/WATER-AN.CGO"
   ],
-  "dgo_names_": ["CGO/KERNEL.CGO"],
 
   "object_file_names": [
     "TEXT/0COMMON.TXT",
@@ -250,7 +249,7 @@
     "STR/GRSOBBB.STR",
     "STR/SA3INTRO.STR"
   ],
-  "str_file_names_": [],
+
   "allowed_objects": ["gstate"],
 
   "type_casts_file": "decompiler/config/jak1_ntsc_black_label/type_casts.jsonc",

@@ -1,0 +1,1941 @@
+; ;; villagep-obs
+; (deftype warpgate (process-hidden)
+;   ((name             basic                 :offset-assert 4)
+;    (mask             uint32                :offset-assert 8)
+;    (parent           uint32                :offset-assert 12)
+;    (brother          uint32                :offset-assert 16)
+;    (child            uint32                :offset-assert 20)
+;    (ppointer         uint32                :offset-assert 24)
+;    (self             basic                 :offset-assert 28)
+;    (pool             basic                 :offset-assert 32)
+;    (status           basic                 :offset-assert 36)
+;    (pid              int32                 :offset-assert 40)
+;    (main-thread      basic                 :offset-assert 44)
+;    (top-thread       basic                 :offset-assert 48)
+;    (entity           basic                 :offset-assert 52)
+;    (state            basic                 :offset-assert 56)
+;    (trans-hook       basic                 :offset-assert 60)
+;    (post-hook        basic                 :offset-assert 64)
+;    (event-hook       basic                 :offset-assert 68)
+;    (allocated-length int32                 :offset-assert 72)
+;    (next-state       basic                 :offset-assert 76)
+;    (heap-base        uint32                :offset-assert 80)
+;    (heap-top         uint32                :offset-assert 84)
+;    (heap-cur         uint32                :offset-assert 88)
+;    (stack-frame-top  basic                 :offset-assert 92)
+;    (heap             kheap        :inline  :offset-assert 80)
+;    (connection-list  'connectable :inline  :offset-assert 96)
+;    (stack            UNKNOWN      :dynamic :offset-assert 112)
+;    )
+;   :method-count-assert 15
+;   :size-assert         #x70
+;   :flag-assert         #xf00000070
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     )
+;   )
+
+; ;; villagep-obs
+; (deftype warp-gate-switch (basebutton)
+;   ((~Twarp uint64  :offset-assert 256)
+;    )
+;   :method-count-assert 33
+;   :size-assert         #x108
+;   :flag-assert         #x2100a00108
+;   ;; inherited inspect of basebutton
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; villagep-obs
+; (deftype village-cam (process)
+;   ((~Troot       basic   :offset-assert 112)
+;    (~Trange      meters  :offset-assert 116)
+;    (~Tindex      int32   :offset-assert 120)
+;    (~Tstate-time uint64  :offset-assert 128)
+;    )
+;   :method-count-assert 15
+;   :size-assert         #x88
+;   :flag-assert         #xf00200088
+;   ;; inherited inspect of process
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     )
+;   )
+
+; ;; oracle
+; (deftype oracle (process-taskable)
+;   ((~Tfirst-task     uint8   :offset-assert 380)
+;    (~Tsecond-task    uint8   :offset-assert 381)
+;    (~Tleft-eye-cell  uint64  :offset-assert 384)
+;    (~Tright-eye-cell uint64  :offset-assert 392)
+;    )
+;   :method-count-assert 53
+;   :size-assert         #x190
+;   :flag-assert         #x3501200190
+;   ;; inherited inspect of process-taskable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; battlecontroller
+; (deftype battlecontroller-spawner (structure)
+;   ((path          basic   :offset-assert 0)
+;    (creature      uint64  :offset-assert 8)
+;    (trigger-actor basic   :offset-assert 16)
+;    (blocker-actor basic   :offset-assert 20)
+;    (state         int8    :offset-assert 24)
+;    (enabled       basic   :offset-assert 28)
+;    )
+;   :method-count-assert 9
+;   :size-assert         #x20
+;   :flag-assert         #x900000020
+;   )
+
+; ;; battlecontroller
+; (deftype battlecontroller-creature-type (structure)
+;   ((type2            basic  :offset-assert 0)
+;    (percent          float  :offset-assert 4)
+;    (pickup-percent   float  :offset-assert 8)
+;    (pickup-type      int32  :offset-assert 12)
+;    (max-pickup-count int8   :offset-assert 16)
+;    (pickup-count     int8   :offset-assert 17)
+;    )
+;   :method-count-assert 9
+;   :size-assert         #x12
+;   :flag-assert         #x900000012
+;   )
+
+; ;; battlecontroller
+; (deftype battlecontroller (process-drawable)
+;   ((~Tfinal-pickup-spawn-point    vector  :inline :offset-assert 176)
+;    (~Tactivate-distance           float           :offset-assert 192)
+;    (~Tmax-spawn-count             int16           :offset-assert 196)
+;    (~Tspawn-count                 int16           :offset-assert 198)
+;    (~Tdie-count                   int16           :offset-assert 200)
+;    (~Ttarget-count                int8            :offset-assert 202)
+;    (~Tspawner-count               int8            :offset-assert 203)
+;    (~Tcreature-type-count         int8            :offset-assert 204)
+;    (~Tspawner-array               UNKNOWN 8       :offset-assert 208)
+;    (~Tspawn-period                uint64          :offset-assert 464)
+;    (~Tpath-spawn                  basic           :offset-assert 472)
+;    (~Tcreature-type-array         UNKNOWN 4       :offset-assert 476)
+;    (~Tfinal-pickup-type           int32           :offset-assert 604)
+;    (~Tprespawn                    basic           :offset-assert 608)
+;    (~Tnoticed-player              basic           :offset-assert 612)
+;    (~Tcamera-on                   basic           :offset-assert 616)
+;    (~Tmisty-ambush-collision-hack basic           :offset-assert 620)
+;    (~Tdisable-ocean               basic           :offset-assert 624)
+;    (~Tdisable-near-ocean          basic           :offset-assert 628)
+;    (~Tdisable-mid-ocean           basic           :offset-assert 632)
+;    )
+;   :method-count-assert 29
+;   :size-assert         #x27c
+;   :flag-assert         #x1d0210027c
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     )
+;   )
+
+; ;; citadel-part
+; (deftype citb-part (UNKNOWN)
+;   ()
+;   :method-count-assert 0
+;   :size-assert         #x0
+;   :flag-assert         #x0
+;   ;;  not enough basic ops
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-section (process-drawable)
+;   ((~Tsync           sync-info :inline :offset-assert 176)
+;    (~Tcull-dir-local vector    :inline :offset-assert 192)
+;    (~Tcull-dot       float             :offset-assert 208)
+;    (~Trot-scale      float             :offset-assert 212)
+;    (~Ty-angle        float             :offset-assert 216)
+;    )
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm (citb-arm-section)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-shoulder (citb-arm-section)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-a (citb-arm)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-b (citb-arm)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-c (citb-arm)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-d (citb-arm)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-shoulder-a (citb-arm-shoulder)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-arm-shoulder-b (citb-arm-shoulder)
+;   ()
+;   :method-count-assert 23
+;   :size-assert         #xdc
+;   :flag-assert         #x17007000dc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-disc (process-drawable)
+;   ((~Tsync      sync-info :inline :offset-assert 176)
+;    (~Trot-scale float             :offset-assert 184)
+;    )
+;   :method-count-assert 22
+;   :size-assert         #xbc
+;   :flag-assert         #x16005000bc
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-disc-a (citb-disc)
+;   ()
+;   :method-count-assert 22
+;   :size-assert         #xbc
+;   :flag-assert         #x16005000bc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-disc-b (citb-disc)
+;   ()
+;   :method-count-assert 22
+;   :size-assert         #xbc
+;   :flag-assert         #x16005000bc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-disc-c (citb-disc)
+;   ()
+;   :method-count-assert 22
+;   :size-assert         #xbc
+;   :flag-assert         #x16005000bc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-disc-d (citb-disc)
+;   ()
+;   :method-count-assert 22
+;   :size-assert         #xbc
+;   :flag-assert         #x16005000bc
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-iris-door (eco-door)
+;   ()
+;   :method-count-assert 27
+;   :size-assert         #x104
+;   :flag-assert         #x1b00a00104
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-button (basebutton)
+;   ()
+;   :method-count-assert 32
+;   :size-assert         #x100
+;   :flag-assert         #x2000900100
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-launcher (plat)
+;   ((~Tlauncher uint32  :offset-assert 264)
+;    )
+;   :method-count-assert 33
+;   :size-assert         #x10c
+;   :flag-assert         #x2100a0010c
+;   ;; inherited inspect of plat
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-robotboss (process-drawable)
+;   ((~Tshield-on basic  :offset-assert 176)
+;    )
+;   :method-count-assert 20
+;   :size-assert         #xb4
+;   :flag-assert         #x14005000b4
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-coil (process-drawable)
+;   ((~Tpart-off basic  :offset-assert 176)
+;    )
+;   :method-count-assert 20
+;   :size-assert         #xb4
+;   :flag-assert         #x14005000b4
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-hose (process-drawable)
+;   ()
+;   :method-count-assert 20
+;   :size-assert         #xb0
+;   :flag-assert         #x14004000b0
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-chains (process-hidden)
+;   ((name             basic                 :offset-assert 4)
+;    (mask             uint32                :offset-assert 8)
+;    (parent           uint32                :offset-assert 12)
+;    (brother          uint32                :offset-assert 16)
+;    (child            uint32                :offset-assert 20)
+;    (ppointer         uint32                :offset-assert 24)
+;    (self             basic                 :offset-assert 28)
+;    (pool             basic                 :offset-assert 32)
+;    (status           basic                 :offset-assert 36)
+;    (pid              int32                 :offset-assert 40)
+;    (main-thread      basic                 :offset-assert 44)
+;    (top-thread       basic                 :offset-assert 48)
+;    (entity           basic                 :offset-assert 52)
+;    (state            basic                 :offset-assert 56)
+;    (trans-hook       basic                 :offset-assert 60)
+;    (post-hook        basic                 :offset-assert 64)
+;    (event-hook       basic                 :offset-assert 68)
+;    (allocated-length int32                 :offset-assert 72)
+;    (next-state       basic                 :offset-assert 76)
+;    (heap-base        uint32                :offset-assert 80)
+;    (heap-top         uint32                :offset-assert 84)
+;    (heap-cur         uint32                :offset-assert 88)
+;    (stack-frame-top  basic                 :offset-assert 92)
+;    (heap             kheap        :inline  :offset-assert 80)
+;    (connection-list  'connectable :inline  :offset-assert 96)
+;    (stack            UNKNOWN      :dynamic :offset-assert 112)
+;    )
+;   :method-count-assert 15
+;   :size-assert         #x70
+;   :flag-assert         #xf00000070
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-generator (process-drawable)
+;   ((~Tnormal-look     lod-set :inline :offset-assert 176)
+;    (~Tbroken-look     lod-set :inline :offset-assert 212)
+;    (~Tmushroom-pos    vector  :inline :offset-assert 256)
+;    (~Tmushroom        basic           :offset-assert 272)
+;    (~Tbirth-fuel-cell basic           :offset-assert 276)
+;    (~Ttrigger-others  basic           :offset-assert 280)
+;    (~Tpart-broken     basic           :offset-assert 284)
+;    (~Tpart-mushroom   basic           :offset-assert 288)
+;    )
+;   :method-count-assert 22
+;   :size-assert         #x124
+;   :flag-assert         #x1600c00124
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citadelcam (process-drawable)
+;   ()
+;   :method-count-assert 20
+;   :size-assert         #xb0
+;   :flag-assert         #x14004000b0
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citadel-obs
+; (deftype citb-battlecontroller (battlecontroller)
+;   ()
+;   :method-count-assert 29
+;   :size-assert         #x27c
+;   :flag-assert         #x1d0210027c
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-base-plat (process-drawable)
+;   ((~Tidle-distance float  :offset-assert 176)
+;    )
+;   :method-count-assert 25
+;   :size-assert         #xb4
+;   :flag-assert         #x19005000b4
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-plat-eco (plat-eco)
+;   ()
+;   :method-count-assert 33
+;   :size-assert         #x165
+;   :flag-assert         #x2101000165
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-plat (plat)
+;   ((~Ttrans-offset vector :inline :offset-assert 272)
+;    )
+;   :method-count-assert 33
+;   :size-assert         #x120
+;   :flag-assert         #x2100b00120
+;   ;; inherited inspect of plat
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-stair-plat (citb-base-plat)
+;   ((~Tidle-height float   :offset-assert 180)
+;    (~Trise-height float   :offset-assert 184)
+;    (~Tdelay       uint64  :offset-assert 192)
+;    (~Trise        basic   :offset-assert 200)
+;    )
+;   :method-count-assert 25
+;   :size-assert         #xcc
+;   :flag-assert         #x19006000cc
+;   ;; inherited inspect of citb-base-plat
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-chain-plat (rigid-body-platform)
+;   ((~Torig-trans   vector     :inline :offset-assert 736)
+;    (~Torig-quat    quaternion :inline :offset-assert 752)
+;    (~Tbeam-end     vector     :inline :offset-assert 768)
+;    (~Tfloat-offset float              :offset-assert 784)
+;    (~Tidle-offset  float              :offset-assert 788)
+;    )
+;   :method-count-assert 35
+;   :size-assert         #x318
+;   :flag-assert         #x2302b00318
+;   ;; inherited inspect of rigid-body-platform
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-rotatebox (citb-base-plat)
+;   ()
+;   :method-count-assert 25
+;   :size-assert         #xb4
+;   :flag-assert         #x19005000b4
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-donut (citb-base-plat)
+;   ((~Tsync sync-info :inline :offset-assert 180)
+;    )
+;   :method-count-assert 25
+;   :size-assert         #xbc
+;   :flag-assert         #x19005000bc
+;   ;; inherited inspect of citb-base-plat
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-stopbox (plat)
+;   ()
+;   :method-count-assert 33
+;   :size-assert         #x108
+;   :flag-assert         #x2100a00108
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-firehose (process-drawable)
+;   ((~Tidle-distance float             :offset-assert 176)
+;    (~Tsync          sync-info :inline :offset-assert 180)
+;    (~Tlast-sync     float             :offset-assert 188)
+;    (~Tblast-pos     vector    :inline :offset-assert 192)
+;    )
+;   :method-count-assert 20
+;   :size-assert         #xd0
+;   :flag-assert         #x14006000d0
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citb-plat
+; (deftype citb-exit-plat (plat-button)
+;   ((~Tidle-height float  :offset-assert 240)
+;    (~Trise-height float  :offset-assert 244)
+;    (~Tactivated   basic  :offset-assert 248)
+;    )
+;   :method-count-assert 33
+;   :size-assert         #xfc
+;   :flag-assert         #x21009000fc
+;   ;; inherited inspect of plat-button
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype citb-sagecage (process-drawable)
+;   ((~Tbar-array    UNKNOWN 12 :offset-assert 176)
+;    (~Tangle-offset float      :offset-assert 368)
+;    (~Tbars-on      basic      :offset-assert 372)
+;    (~Tcloning      basic      :offset-assert 376)
+;    )
+;   :method-count-assert 22
+;   :size-assert         #x17c
+;   :flag-assert         #x160110017c
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype citb-sage (process-taskable)
+;   ((~Tspawn-pos         vector :inline :offset-assert 384)
+;    (~Ttarget-pos        vector :inline :offset-assert 400)
+;    (~Tdir               vector :inline :offset-assert 416)
+;    (~Trot-y             float          :offset-assert 432)
+;    (~Trot-x             float          :offset-assert 436)
+;    (~Tidle-anim         int32          :offset-assert 440)
+;    (~Tattack-start-anim int32          :offset-assert 444)
+;    (~Tattack-anim       int32          :offset-assert 448)
+;    (~Tbeam-joint        int32          :offset-assert 452)
+;    (~Tcage              uint64         :offset-assert 456)
+;    (~Tpart-impact       basic          :offset-assert 464)
+;    (~Tbeam-on           basic          :offset-assert 468)
+;    (~Tresolution-anim   basic          :offset-assert 472)
+;    (~Tsound-name        basic          :offset-assert 476)
+;    (~Tsound-id          uint32         :offset-assert 480)
+;    (~Talt-actor         basic          :offset-assert 484)
+;    )
+;   :method-count-assert 53
+;   :size-assert         #x1e8
+;   :flag-assert         #x35018001e8
+;   ;; inherited inspect of process-taskable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype red-sagecage (citb-sage)
+;   ()
+;   :method-count-assert 53
+;   :size-assert         #x1e8
+;   :flag-assert         #x35018001e8
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype blue-sagecage (citb-sage)
+;   ()
+;   :method-count-assert 53
+;   :size-assert         #x1e8
+;   :flag-assert         #x35018001e8
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype yellow-sagecage (citb-sage)
+;   ()
+;   :method-count-assert 53
+;   :size-assert         #x1e8
+;   :flag-assert         #x35018001e8
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; citadel-sages
+; (deftype green-sagecage (citb-sage)
+;   ((~Twhich-movie int32   :offset-assert 488)
+;    (~Tevilbro     uint64  :offset-assert 496)
+;    (~Tevilsis     uint64  :offset-assert 504)
+;    (~Trobotboss   uint64  :offset-assert 512)
+;    (~Texitplat    uint64  :offset-assert 520)
+;    )
+;   :method-count-assert 53
+;   :size-assert         #x210
+;   :flag-assert         #x3501a00210
+;   ;; inherited inspect of citb-sage
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )
+
+; ;; snow-bunny
+; (deftype snow-bunny (nav-enemy)
+;   ((~Tpatrol-rand-distraction int32          :offset-assert 400)
+;    (~Tbase-hop-dist           float          :offset-assert 404)
+;    (~Thalfway-dist            float          :offset-assert 408)
+;    (~Tretreat-timeout         float          :offset-assert 412)
+;    (~Tgnd-popup               float          :offset-assert 416)
+;    (~Tjump-height-min         float          :offset-assert 420)
+;    (~Tjump-height-factor      float          :offset-assert 424)
+;    (~Tjump-anim-start-frame   float          :offset-assert 428)
+;    (~Tdefense                 uint64         :offset-assert 432)
+;    (~Tretreat-timeout-time    uint64         :offset-assert 440)
+;    (~Tlast-nondangerous-time  uint64         :offset-assert 448)
+;    (~Tpatrol-hop-failed?      basic          :offset-assert 456)
+;    (~Tshould-retreat?         basic          :offset-assert 460)
+;    (~Tgot-jump-event?         basic          :offset-assert 464)
+;    (~Tusing-jump-event?       basic          :offset-assert 468)
+;    (~Tjump-anim               int8           :offset-assert 472)
+;    (~Tnotice-land-anim        int8           :offset-assert 473)
+;    (~Tattack-anim             int8           :offset-assert 474)
+;    (~Tfinal-dest              vector :inline :offset-assert 480)
+;    (~Tjump-event-dest         vector :inline :offset-assert 496)
+;    )
+;   :method-count-assert 77
+;   :size-assert         #x200
+;   :flag-assert         #x4d01900200
+;   ;; inherited inspect of nav-enemy
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     (dummy-53 () none 53)
+;     (dummy-54 () none 54)
+;     (dummy-55 () none 55)
+;     (dummy-56 () none 56)
+;     (dummy-57 () none 57)
+;     (dummy-58 () none 58)
+;     (dummy-59 () none 59)
+;     (dummy-60 () none 60)
+;     (dummy-61 () none 61)
+;     (dummy-62 () none 62)
+;     (dummy-63 () none 63)
+;     (dummy-64 () none 64)
+;     (dummy-65 () none 65)
+;     (dummy-66 () none 66)
+;     (dummy-67 () none 67)
+;     (dummy-68 () none 68)
+;     (dummy-69 () none 69)
+;     (dummy-70 () none 70)
+;     (dummy-71 () none 71)
+;     (dummy-72 () none 72)
+;     (dummy-73 () none 73)
+;     (dummy-74 () none 74)
+;     (dummy-75 () none 75)
+;     (dummy-76 () none 76)
+;     )
+;   )
+
+; ;; snow-bunny
+; (deftype snow-bunny-retreat-work (structure)
+;   ((found-best        basic          :offset-assert 0)
+;    (using-jump-event? basic          :offset-assert 4)
+;    (best-travel-dist  float          :offset-assert 8)
+;    (best-dest         vector :inline :offset-assert 16)
+;    (away-vec          vector :inline :offset-assert 32)
+;    )
+;   :method-count-assert 9
+;   :size-assert         #x30
+;   :flag-assert         #x900000030
+;   )
+
+; ;; citb-bunny
+; (deftype citb-bunny (snow-bunny)
+;   ()
+;   :method-count-assert 77
+;   :size-assert         #x200
+;   :flag-assert         #x4d01900200
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     (dummy-53 () none 53)
+;     (dummy-54 () none 54)
+;     (dummy-55 () none 55)
+;     (dummy-56 () none 56)
+;     (dummy-57 () none 57)
+;     (dummy-58 () none 58)
+;     (dummy-59 () none 59)
+;     (dummy-60 () none 60)
+;     (dummy-61 () none 61)
+;     (dummy-62 () none 62)
+;     (dummy-63 () none 63)
+;     (dummy-64 () none 64)
+;     (dummy-65 () none 65)
+;     (dummy-66 () none 66)
+;     (dummy-67 () none 67)
+;     (dummy-68 () none 68)
+;     (dummy-69 () none 69)
+;     (dummy-70 () none 70)
+;     (dummy-71 () none 71)
+;     (dummy-72 () none 72)
+;     (dummy-73 () none 73)
+;     (dummy-74 () none 74)
+;     (dummy-75 () none 75)
+;     (dummy-76 () none 76)
+;     )
+;   )
+
+; ;; citb-drop-plat-CIT
+; (deftype drop-plat (process-drawable)
+;   ((~Tspin-axis  vector :inline :offset-assert 176)
+;    (~Tspin-angle float          :offset-assert 192)
+;    (~Tspin-speed float          :offset-assert 196)
+;    (~Tinterp     float          :offset-assert 200)
+;    (~Tduration   uint64         :offset-assert 208)
+;    (~Tdelay      uint64         :offset-assert 216)
+;    (~Tcolor      int8           :offset-assert 224)
+;    )
+;   :method-count-assert 22
+;   :size-assert         #xe1
+;   :flag-assert         #x16008000e1
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citb-drop-plat-CIT
+; (deftype handle-inline-array (inline-array-class)
+;   ((length           int32            :offset-assert 4)
+;    (allocated-length int32            :offset-assert 8)
+;    (data             UNKNOWN :dynamic :offset-assert 16)
+;    )
+;   :method-count-assert 9
+;   :size-assert         #x10
+;   :flag-assert         #x900000010
+;   )
+
+; ;; citb-drop-plat-CIT
+; (deftype citb-drop-plat (process-drawable)
+;   ((~Tx-count           int32          :offset-assert 176)
+;    (~Tz-count           int32          :offset-assert 180)
+;    (~Tchild-count       int32          :offset-assert 184)
+;    (~Tchild-array       basic          :offset-assert 188)
+;    (~Tchild-color-array uint32         :offset-assert 192)
+;    (~Tx-dir             vector :inline :offset-assert 208)
+;    (~Tz-dir             vector :inline :offset-assert 224)
+;    (~Torigin            vector :inline :offset-assert 240)
+;    (~Tx-spacing         float          :offset-assert 256)
+;    (~Tz-spacing         float          :offset-assert 260)
+;    (~Tidle-distance     float          :offset-assert 264)
+;    (~Tduration          uint64         :offset-assert 272)
+;    (~Tdrop-time         uint64         :offset-assert 280)
+;    )
+;   :method-count-assert 20
+;   :size-assert         #x120
+;   :flag-assert         #x1400b00120
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; citb-drop-plat-L1
+; (deftype drop-plat (process-drawable)
+;   ((~Tspin-axis  vector :inline :offset-assert 176)
+;    (~Tspin-angle float          :offset-assert 192)
+;    (~Tspin-speed float          :offset-assert 196)
+;    (~Tinterp     float          :offset-assert 200)
+;    (~Tduration   uint64         :offset-assert 208)
+;    (~Tdelay      uint64         :offset-assert 216)
+;    (~Tcolor      int8           :offset-assert 224)
+;    )
+;   :method-count-assert 22
+;   :size-assert         #xe1
+;   :flag-assert         #x16008000e1
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     )
+;   )
+
+; ;; citb-drop-plat-L1
+; (deftype handle-inline-array (inline-array-class)
+;   ((length           int32            :offset-assert 4)
+;    (allocated-length int32            :offset-assert 8)
+;    (data             UNKNOWN :dynamic :offset-assert 16)
+;    )
+;   :method-count-assert 9
+;   :size-assert         #x10
+;   :flag-assert         #x900000010
+;   )
+
+; ;; citb-drop-plat-L1
+; (deftype citb-drop-plat (process-drawable)
+;   ((~Tx-count           int32          :offset-assert 176)
+;    (~Tz-count           int32          :offset-assert 180)
+;    (~Tchild-count       int32          :offset-assert 184)
+;    (~Tchild-array       basic          :offset-assert 188)
+;    (~Tchild-color-array uint32         :offset-assert 192)
+;    (~Tx-dir             vector :inline :offset-assert 208)
+;    (~Tz-dir             vector :inline :offset-assert 224)
+;    (~Torigin            vector :inline :offset-assert 240)
+;    (~Tx-spacing         float          :offset-assert 256)
+;    (~Tz-spacing         float          :offset-assert 260)
+;    (~Tidle-distance     float          :offset-assert 264)
+;    (~Tduration          uint64         :offset-assert 272)
+;    (~Tdrop-time         uint64         :offset-assert 280)
+;    )
+;   :method-count-assert 20
+;   :size-assert         #x120
+;   :flag-assert         #x1400b00120
+;   ;; inherited inspect of process-drawable
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     )
+;   )
+
+; ;; assistant-citadel
+; (deftype assistant-lavatube-end (process-taskable)
+;   ()
+;   :method-count-assert 53
+;   :size-assert         #x17c
+;   :flag-assert         #x350110017c
+;   ;;  not enough basic ops
+;   (:methods
+;     (dummy-9 () none 9)
+;     (dummy-10 () none 10)
+;     (dummy-11 () none 11)
+;     (dummy-12 () none 12)
+;     (dummy-13 () none 13)
+;     (dummy-14 () none 14)
+;     (dummy-15 () none 15)
+;     (dummy-16 () none 16)
+;     (dummy-17 () none 17)
+;     (dummy-18 () none 18)
+;     (dummy-19 () none 19)
+;     (dummy-20 () none 20)
+;     (dummy-21 () none 21)
+;     (dummy-22 () none 22)
+;     (dummy-23 () none 23)
+;     (dummy-24 () none 24)
+;     (dummy-25 () none 25)
+;     (dummy-26 () none 26)
+;     (dummy-27 () none 27)
+;     (dummy-28 () none 28)
+;     (dummy-29 () none 29)
+;     (dummy-30 () none 30)
+;     (dummy-31 () none 31)
+;     (dummy-32 () none 32)
+;     (dummy-33 () none 33)
+;     (dummy-34 () none 34)
+;     (dummy-35 () none 35)
+;     (dummy-36 () none 36)
+;     (dummy-37 () none 37)
+;     (dummy-38 () none 38)
+;     (dummy-39 () none 39)
+;     (dummy-40 () none 40)
+;     (dummy-41 () none 41)
+;     (dummy-42 () none 42)
+;     (dummy-43 () none 43)
+;     (dummy-44 () none 44)
+;     (dummy-45 () none 45)
+;     (dummy-46 () none 46)
+;     (dummy-47 () none 47)
+;     (dummy-48 () none 48)
+;     (dummy-49 () none 49)
+;     (dummy-50 () none 50)
+;     (dummy-51 () none 51)
+;     (dummy-52 () none 52)
+;     )
+;   )

@@ -1,0 +1,69 @@
+(deftype hw-cpad (basic)
+  ((valid   uint8      :offset-assert 4)
+   (status  uint8      :offset-assert 5)
+   (button0 uint16     :offset-assert 6)
+   (rightx  uint8      :offset-assert 8)
+   (righty  uint8      :offset-assert 9)
+   (leftx   uint8      :offset-assert 10)
+   (lefty   uint8      :offset-assert 11)
+   (abutton uint8 12 :offset-assert 12)
+   (dummy   uint8 12 :offset-assert 24)
+   )
+  :method-count-assert 9
+  :size-assert         #x24
+  :flag-assert         #x900000024
+  )
+
+(deftype cpad-info (hw-cpad)
+  ((number             int32      :offset-assert 36)
+   (cpad-file          int32      :offset-assert 40)
+   (button0-abs        uint32 3  :offset-assert 44) ;; guess
+   (button0-shadow-abs uint32 1  :offset-assert 56) ;; guess
+   (button0-rel        uint32 3  :offset-assert 60) ;; guess
+   (stick0-dir         float      :offset-assert 72)
+   (stick0-speed       float      :offset-assert 76)
+   (new-pad            int32      :offset-assert 80)
+   (state              int32      :offset-assert 84)
+   (align              uint8 6  :offset-assert 88)
+   (direct             uint8 6  :offset-assert 94)
+   (buzz-val           uint8 2  :offset-assert 100)
+   (buzz-time          uint64 2  :offset-assert 104)
+   (buzz               basic      :offset-assert 120)
+   (buzz-act           int32      :offset-assert 124)
+   (change-time        uint64     :offset-assert 128)
+   )
+  (:methods
+    (new (symbol type int) _type_ 0)
+    )
+  :method-count-assert 9
+  :size-assert         #x88
+  :flag-assert         #x900000088
+  )
+
+(deftype cpad-list (basic)
+  ((num-cpads int32     :offset-assert 4)
+   (cpads     cpad-info 2 :offset-assert 8) ;; guess
+   )
+  (:methods
+    (new (symbol type) _type_ 0))
+  :method-count-assert 9
+  :size-assert         #x10
+  :flag-assert         #x900000010
+  )
+
+;; in the kernel.
+(define-extern cpad-open (function cpad-info int cpad-info))
+(define-extern cpad-get-data (function cpad-info cpad-info))
+
+
+(define-extern cpad-set-buzz! (function cpad-info int int int none))
+(define-extern *cpad-debug* symbol)
+(define-extern analog-input (function int float float float float float))
+(define-extern buzz-stop! (function int none))
+;;(define-extern cpad-info object) ;; unknown type
+;;(define-extern hw-cpad object) ;; unknown type
+(define-extern cpad-invalid! (function cpad-info cpad-info))
+;;(define-extern cpad-list object) ;; unknown type
+(define-extern *cheat-mode* symbol) ;; bool
+(define-extern *cpad-list* cpad-list)
+(define-extern service-cpads (function cpad-list))

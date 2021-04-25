@@ -1,0 +1,109 @@
+(define-extern *kernel-version* binteger)
+(define-extern *irx-version* binteger)
+(define-extern *kernel-boot-mode* symbol)
+(define-extern *kernel-boot-level* symbol)
+(define-extern *deci-count* int)
+(define-extern *last-loado-length* int)
+(define-extern *last-loado-global-usage* int)
+(define-extern *last-loado-debug-usage* int)
+(define-extern *kernel-packages* pair)
+(define-extern load-package (function string kheap pair))
+(define-extern unload-package (function string pair))
+(define-extern *kernel-context* kernel-context)
+(define-extern *dram-stack* (pointer uint8))
+(define-extern *null-kernel-context* kernel-context)
+
+(define-extern remove-exit (function stack-frame))
+(define-extern stream<-process-mask (function object int object))
+(define-extern *master-mode* symbol)
+(define-extern *pause-lock* symbol)
+(define-extern inspect-process-heap (function process symbol))
+(define-extern *kernel-sp* pointer)
+(define-extern return-from-thread (function none))
+(define-extern return-from-thread-dead (function none))
+(define-extern reset-and-call (function thread function object))
+
+(define-extern *debug-dead-pool* dead-pool-heap)
+(define-extern *null-process* process)
+(define-extern *vis-boot* basic)
+
+(define-extern *global-search-name* basic)
+(define-extern *global-search-count* int)
+(define-extern process-by-name (function object process-tree process))
+(define-extern process-not-name (function object process-tree process))
+(define-extern process-count (function process-tree int))
+(define-extern kill-by-name (function object process-tree symbol))
+(define-extern kill-by-type (function object process-tree symbol))
+(define-extern kill-not-name (function object process-tree symbol))
+(define-extern kill-not-type (function object process-tree symbol))
+
+(define-extern iterate-process-tree (function process-tree (function object object) kernel-context object))
+(define-extern search-process-tree (function process-tree (function process-tree object) process))
+(define-extern execute-process-tree (function process-tree (function object object) kernel-context object))
+
+(define-extern previous-brother (function process-tree object))
+(define-extern change-parent (function process-tree process-tree process-tree))
+(define-extern change-brother (function process-tree process-tree object))
+(define-extern change-to-last-brother (function process-tree process-tree))
+
+(define-extern *active-pool* process-tree)
+(define-extern kernel-dispatcher (function object))
+(define-extern inspect-process-tree (function process-tree int int symbol process-tree))
+
+(define-extern throw-dispatch (function catch-frame object none))
+(define-extern run-function-in-process (function process function object object object object object object object))
+(define-extern throw (function symbol object int))
+(define-extern set-to-run (function cpu-thread function object object object object object object pointer))
+(define-extern set-to-run-bootstrap (function none))
+(define-extern entity-deactivate-handler (function process object none))
+
+
+(define-extern stack-frame type)
+(define-extern state type)
+(define-extern dead-pool-heap-rec type)
+(define-extern dead-pool type)
+(define-extern catch-frame type)
+(define-extern thread type)
+(define-extern handle type)
+(define-extern cpu-thread type)
+(define-extern dead-pool-heap type)
+(define-extern kernel-context type)
+(define-extern protect-frame type)
+(define-extern event-message-block type)
+(define-extern process-tree type)
+(define-extern *listener-process* process)
+(define-extern *entity-pool* process-tree)
+(define-extern *default-pool* process-tree)
+(define-extern malloc (function symbol int pointer)) ;; from kernel-defs.gc
+(define-extern *camera-pool* process-tree)
+
+(define-extern *nk-dead-pool* dead-pool-heap)
+
+(define-extern *pickup-dead-pool* dead-pool)
+(define-extern *camera-master-dead-pool* dead-pool)
+(define-extern *camera-dead-pool* dead-pool)
+(define-extern process type)
+(define-extern dead-state state)
+(define-extern *16k-dead-pool* dead-pool)
+(define-extern *target-pool* process-tree)
+(define-extern *active-pool* process-tree)
+(define-extern *target-dead-pool* dead-pool)
+(define-extern *4k-dead-pool* dead-pool)
+(define-extern *default-dead-pool* dead-pool)
+(define-extern *8k-dead-pool* dead-pool)
+(define-extern *display-pool* process-tree)
+
+(define-extern #f symbol)
+;;(define-extern *stdcon0* object) ;; unknown type
+;;(define-extern *listener-function* object) ;; unknown type
+;;(define-extern *stdcon1* object) ;; unknown type
+;;(define-extern initialize object) ;; unknown type
+
+;;(define-extern *debug-draw-pauseable* object) ;; unknown type
+;;(define-extern _empty_ object) ;; unknown type
+;;(define-extern running object) ;; unknown type
+;;(define-extern *enable-method-set* object) ;; unknown type
+;;(define-extern post object) ;; unknown type
+;;(define-extern dead object) ;; unknown type
+
+(define-extern *dead-pool-list* pair)
