@@ -21,6 +21,7 @@
 - [ASan Build](#asan-build)
   - [On Windows / Visual Studio](#on-windows--visual-studio)
 <!-- tocstop -->
+
 ## Project Description
 
 This project is to port Jak 1 (NTSC, "black label" version) to PC. Over 99% of this game is written in GOAL, a custom Lisp language developed by Naughty Dog. Our strategy is:
@@ -30,7 +31,7 @@ This project is to port Jak 1 (NTSC, "black label" version) to PC. Over 99% of t
 - create tools to repack game assets into a format that our port uses.
 
 Our objectives are:
-- make the port a "native application" on x86-64, with high performance. It shouldn't emulated, interpreted, or transpiled. 
+- make the port a "native application" on x86-64, with high performance. It shouldn't emulated, interpreted, or transpiled.
 - Our GOAL compiler's performance should be around the same as unoptimized C.
 - try to match things from the original game and development as possible. For example, the original GOAL compiler supported live modification of code while the game is running, so we do the same, even though it's not required for just porting the game.
 - support modifications. It should be possible to make edits to the code without everything else breaking.
