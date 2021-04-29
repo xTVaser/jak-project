@@ -22,6 +22,9 @@
           <v-btn v-if="inElectron() == true" to="/decompiler-configs" text>
             <span class="mr-2">Decompiler Configs</span>
           </v-btn>
+          <v-btn v-if="inElectron() == true" to="/generate-types" text>
+            <span class="mr-2">Generate Types</span>
+          </v-btn>
 
           <v-spacer></v-spacer>
 

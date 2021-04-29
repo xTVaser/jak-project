@@ -28,7 +28,15 @@ if (userAgent.indexOf("electron/") > -1) {
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/DecompilerConfigs.vue')
-  })
+  });
+  routes.push({
+    path: '/generate-types',
+    name: 'Generate Types',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/GenerateTypes.vue')
+  });
 }
 
 const router = new VueRouter({

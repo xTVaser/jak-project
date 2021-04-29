@@ -72,9 +72,9 @@
       "generic-h.gc",
       "lights-h.gc",
       "ocean-h.gc",
-      "sky-h.gc",
       "glist-h.gc",
-      "glist.gc"
+      "glist.gc",
+      "the-rest.gc"
     ]
   },
   {
