@@ -17,9 +17,9 @@
           <v-spacer></v-spacer>
 
           <v-btn href="/api-docs.html" text>
-            <span class="mr-2">API Docs</span>
+            <span class="mr-2">Documentation</span>
           </v-btn>
-          <v-btn v-if="inElectron() == 'true'" to="/decompiler-configs" text>
+          <v-btn v-if="inElectron() == true" to="/decompiler-configs" text>
             <span class="mr-2">Decompiler Configs</span>
           </v-btn>
 
@@ -34,12 +34,6 @@
             <v-icon>mdi-github</v-icon>
           </v-btn>
 
-          <!-- <v-checkbox class="pt-3"
-            v-model="$vuetify.theme.dark"
-            color="purple"
-            off-icon="mdi-theme-light-dark"
-            on-icon="mdi-theme-light-dark"
-          ></v-checkbox> -->
         </v-row>
       </v-container>
     </v-app-bar>

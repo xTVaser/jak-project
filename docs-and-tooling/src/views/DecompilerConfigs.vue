@@ -106,13 +106,8 @@
       </v-row>
       <v-row justify="center">
         <v-col cols="auto" align="center">
-          <v-btn>
+          <v-btn @click="save()">
             Save
-          </v-btn>
-        </v-col>
-        <v-col cols="auto" align="center">
-          <v-btn>
-            Save As
           </v-btn>
         </v-col>
       </v-row>
@@ -367,6 +362,9 @@ export default {
       return new File([], path.basename(fullPath), {
         type: "text/plain"
       });
+    },
+    save: function() {
+      fs.writeFileSync(this.filePath, JSON.stringify(this.fileContent, null, 2));
     }
   }
 };
