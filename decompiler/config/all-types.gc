@@ -5395,9 +5395,9 @@
   (:methods
     (dummy-9 (_type_) _type_ 9) ;; probably login or init.
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -5413,9 +5413,9 @@
   :flag-assert         #x1200000024
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -5458,9 +5458,9 @@
   :flag-assert         #x1200000020
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -5489,9 +5489,9 @@
   ;; field distance is a float printed as hex?
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -5563,9 +5563,9 @@
   :flag-assert         #x1200000020
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -5601,9 +5601,9 @@
   :flag-assert         #x1300000020
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -8649,9 +8649,9 @@
   :flag-assert         #x1200000040
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -10954,9 +10954,9 @@
   :size-assert         #x20
   :flag-assert         #x1200000020
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -10971,9 +10971,9 @@
   :size-assert         #x44
   :flag-assert         #x1200000044
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -11560,9 +11560,9 @@
   :flag-assert         #x1200000070
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -11606,9 +11606,9 @@
   :flag-assert         #x1200000020
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -11626,9 +11626,9 @@
   :flag-assert         #x1200000050
   (:methods
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -11661,11 +11661,10 @@
   :size-assert         #x20
   :flag-assert         #x1200000020
   (:methods
-    
     (dummy-10 (_type_) int 10)
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-16 (_type_ object object) object 16)
@@ -11773,7 +11772,6 @@
    (length                    uint32        6       :offset-assert 6452)
    (prototypes                uint32                 :offset-assert 6476)
    ;;(bucket-ptr                uint32                 :offset-assert 6404) appears twice
-   
    (start-bank                uint8        20        :offset 6484)
    (buffer-index              uint32                 :offset-assert 6504)
    (current-spr               uint32                 :offset-assert 6508)
@@ -11847,9 +11845,9 @@
   :size-assert         #x40
   :flag-assert         #x1200000040
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -11866,9 +11864,9 @@
   :size-assert         #x40
   :flag-assert         #x1200000040
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -11883,9 +11881,9 @@
   :size-assert         #x64
   :flag-assert         #x1200000064
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -11900,9 +11898,9 @@
   :size-assert         #x24
   :flag-assert         #x1200000024
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -11917,9 +11915,9 @@
   :size-assert         #x64
   :flag-assert         #x1200000064
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -12030,9 +12028,7 @@
    (length          uint32      :offset-assert 10240)
    (dma-buffer      basic       :offset-assert 10244)
    (this-frag-count uint32      :offset-assert 10248)
-   
    (next            uint32 4   :offset 10256)
-   
    (geometry        uint32 4   :offset-assert 10272)
    (frag-count      uint8 4   :offset-assert 10288)
    )
@@ -12108,9 +12104,9 @@
   :size-assert         #x40
   :flag-assert         #x1200000040
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -12124,9 +12120,9 @@
   :size-assert         #x64
   :flag-assert         #x1200000064
   (:methods
-    (dummy-11 () none 11)
-    (dummy-12 () none 12)
-    (dummy-13 () none 13)
+    (dummy-11 (_type_) none 11)
+    (dummy-12 (_type_) none 12)
+    (dummy-13 (_type_) none 13)
     (dummy-14 () none 14)
     (dummy-15 () none 15)
     (dummy-17 () none 17)
@@ -17161,7 +17157,7 @@
 
 ;; - Symbols
 
-(define-extern sphere-cull function)
+(define-extern sphere-cull (function vector symbol))
 
 
 ;; ----------------------
