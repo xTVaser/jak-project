@@ -468,6 +468,9 @@
     "nassoc",
     "nassoce",
     "lookup-level-info",
-    "(method 21 level-group)"
+    "(method 21 level-group)",
+    "debug-menu-context-default-selection",
+    "debug-menu-rebuild",
+    "debug-menu-func-decode"
   ]
 }
