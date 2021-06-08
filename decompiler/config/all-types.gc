@@ -18686,7 +18686,6 @@
 (define-extern target-print-stats function)
 (define-extern activate-hud function)
 (define-extern reset-target-state function)
-(define-extern init-sidekick function)
 (define-extern target-generic-event-handler function)
 (define-extern level-setup function)
 (define-extern target-exit function)
@@ -18739,13 +18738,14 @@
 ;; - Symbols
 
 (define-extern cspace<-cspace+quaternion! function)
-(define-extern starts function)
+(define-extern init-sidekick (function none))
+(define-extern starts (function object))
 
 ;; - Unknowns
 
-;;(define-extern *sidekick-sg* object) ;; unknown type
-;;(define-extern sidekick-clone object) ;; unknown type
-;;(define-extern *sidekick-remap* object) ;; unknown type
+(define-extern *sidekick-sg* float) ;; unknown type
+(define-extern sidekick-clone state) ;; unknown type
+(define-extern *sidekick-remap* pair) ;; unknown type
 
 
 ;; ----------------------
