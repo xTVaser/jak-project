@@ -526,5 +526,10 @@
   ],
   "entity": [
    ["L324", "float", true]
+  ],
+
+  "camera": [
+    ["L279", "float", true],
+    ["L323", "float", true]
   ]
 }
