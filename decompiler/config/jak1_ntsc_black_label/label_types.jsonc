@@ -531,5 +531,9 @@
   "camera": [
     ["L279", "float", true],
     ["L323", "float", true]
+  ],
+
+  "vol-h": [
+    ["L13", "float", true]
   ]
 }
