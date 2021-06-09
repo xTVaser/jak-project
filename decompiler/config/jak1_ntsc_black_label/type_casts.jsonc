@@ -565,5 +565,9 @@
 
   "debug-menu-func-decode": [
     [13, "v0", "pair"]
+  ],
+
+  "(method 9 prototype-array-tie)": [
+    [5, "s4", "prototype-array-tie"]
   ]
 }
