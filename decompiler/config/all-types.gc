@@ -17030,10 +17030,10 @@
 (define-extern update-sound-banks function)
 (define-extern load-vis-info function)
 (define-extern *print-login* symbol) ;; unknown type
-(define-extern on function)
+(define-extern on (function symbol none))
 (define-extern level-update-after-load function)
 (define-extern add-bsp-drawable function)
-(define-extern bg function)
+(define-extern bg (function symbol none)) ;; NOTE - did not confirm return type
 (define-extern show-level function)
 
 ;; - Unknowns
@@ -19261,7 +19261,7 @@
 (define-extern hide-progress-screen function)
 (define-extern *screen-filter* screen-filter)
 (define-extern main-cheats function)
-(define-extern off function)
+(define-extern off (function none none))
 
 ;; - Unknowns
 
