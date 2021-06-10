@@ -4372,7 +4372,6 @@
   )
 
 (declare-type bsp-header basic)
-
 (deftype level (basic)
   ((name                      basic           :offset-assert 4)
    (load-name                 basic           :offset-assert 8)
@@ -14586,7 +14585,7 @@
 
 ;; - Unknowns
 
-;;(define-extern *test-shrub* object) ;; unknown type
+(define-extern *test-shrub* shrubbery)
 
 
 ;; ----------------------
@@ -15563,7 +15562,7 @@
 
 ;; - Unknowns
 
-;;(define-extern shrub-vu1-block object) ;; unknown type
+(define-extern shrub-vu1-block vu-code-block) ;; unknown type
 
 
 ;; ----------------------
