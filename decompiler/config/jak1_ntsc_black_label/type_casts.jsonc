@@ -547,8 +547,7 @@
   ],
 
   "(method 0 vol-control)": [
-    [[9, 13], "t9", "(function object object)"],
-    [[17, 26], "gp", "vol-control"]
+    [[9, 14], "t9", "(function object object)"]
   ],
 
   "debug-menu-item-var-update-display-str": [
