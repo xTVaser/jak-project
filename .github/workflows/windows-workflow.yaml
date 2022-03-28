@@ -33,7 +33,7 @@ jobs:
       BUILDCACHE_COMPRESS_LEVEL: 19
       BUILDCACHE_DIRECT_MODE: true
       BUILDCACHE_LOG_FILE: ${{ github.workspace }}/buildcache.log
-      BUILDCACHE_DEBUG: 2 # optional: If you need more logging?
+      BUILDCACHE_DEBUG: 1 # optional: If you need more logging?
 
     steps:
       - name: Checkout Repository
