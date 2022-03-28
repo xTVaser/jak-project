@@ -5,7 +5,7 @@ name: Windows
 on:
   push:
     branches:
-      - master
+      - '*'
   pull_request:
     branches:
       - master
@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [windows-2022]
         config: [Release]
-        compiler: [msvc, clang]
+        compiler: [clang]
         experimental: [false]
 
     name: ${{ matrix.config }}-${{ matrix.compiler }}
@@ -33,20 +33,11 @@ jobs:
       BUILDCACHE_COMPRESS_LEVEL: 19
       BUILDCACHE_DIRECT_MODE: true
       BUILDCACHE_LOG_FILE: ${{ github.workspace }}/buildcache.log
+      BUILDCACHE_DEBUG: 2 # optional: If you need more logging?
 
     steps:
-      # NOTE - useful for debugging
-      # - name: Dump GitHub context
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}
-      #   run: |
-      #     echo "$GITHUB_CONTEXT"
-
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Checkout Submodules
-        run: git submodule update --init --recursive -j 2
 
       - name: Install Dependencies
         run: Choco-Install -PackageName nasm
@@ -82,3 +73,10 @@ jobs:
         env:
           NEXT_DIR: ${{ github.workspace }}
         run: ./build/bin/goalc-test.exe --gtest_color=yes --gtest_filter="-*MANUAL_TEST*"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        continue-on-error: true
+        with:
+          name: buildcache-logs
+          path: ${{ github.workspace }}/buildcache.log
