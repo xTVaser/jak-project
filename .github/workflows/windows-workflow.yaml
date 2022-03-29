@@ -83,9 +83,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') && matrix.compiler == 'clang'
         run: |
           mkdir -p ./ci-artifacts/
-          cp ./bin/decompiler.exe ./ci-artifacts/windows-decompiler.exe
-          cp ./bin/gk.exe ./ci-artifacts/windows-gk.exe
-          cp ./bin/goalc.exe ./ci-artifacts/windows-goalc.exe
+          cp ./build/bin/decompiler.exe ./ci-artifacts/windows-decompiler.exe
+          cp ./build/bin/gk.exe ./ci-artifacts/windows-gk.exe
+          cp ./build/bin/goalc.exe ./ci-artifacts/windows-goalc.exe
           ls ./ci-artifacts/
 
       - name: Upload Assets and Potential Publish Release
