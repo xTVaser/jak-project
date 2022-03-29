@@ -15,7 +15,7 @@ on:
 
 jobs:
   cut-release:
-    if: github.repository == 'open-goal/jak-project'
+    # if: github.repository == 'open-goal/jak-project'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
