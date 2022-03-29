@@ -114,6 +114,6 @@ jobs:
           ASSET_EXTENSION: bin
           TAG_TO_SEARCH_FOR: ${{ github.REF }}
         run: |
-          cd ./.github/workflows/scripts/releases/upload-release-artifacts
+          cd ./.github/scripts/releases/upload-release-artifacts
           npm ci
           node index.js
