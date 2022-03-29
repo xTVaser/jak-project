@@ -76,7 +76,7 @@ jobs:
 
       - name: Build Project
         working-directory: ./build
-        run: make -j4 && ls -r ./build
+        run: make -j4 && ls -r ./
 
       - name: Run Tests
         if: matrix.compiler == 'clang'
