@@ -76,7 +76,7 @@ jobs:
 
       - name: Build Project
         working-directory: ./build
-        run: make -j4 && ls -R -l ./decompiler
+        run: make -j4
 
       - name: Run Tests
         if: matrix.compiler == 'clang'
@@ -100,9 +100,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/') && matrix.compiler == 'clang'
         run: |
           mkdir -p ./ci-artifacts/
-          cp ./build/decompiler ./ci-artifacts/linux-decompiler.exe.bin
-          cp ./build/gk ./ci-artifacts/linux-gk.bin
-          cp ./build/goalc ./ci-artifacts/linux-goalc.bin
+          cp ./build/decompiler/decompiler ./ci-artifacts/linux-decompiler.exe.bin
+          cp ./build/gk/gk ./ci-artifacts/linux-gk.bin
+          cp ./build/goalc/goalc ./ci-artifacts/linux-goalc.bin
           chmod +x ./ci-artifacts/*.bin
           ls -l ./ci-artifacts/
 
