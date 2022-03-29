@@ -101,7 +101,7 @@ jobs:
         run: |
           mkdir -p ./ci-artifacts/
           cp ./build/decompiler/decompiler ./ci-artifacts/linux-decompiler.exe.bin
-          cp ./build/gk/gk ./ci-artifacts/linux-gk.bin
+          cp ./build/game/gk ./ci-artifacts/linux-gk.bin
           cp ./build/goalc/goalc ./ci-artifacts/linux-goalc.bin
           chmod +x ./ci-artifacts/*.bin
           ls -l ./ci-artifacts/
