@@ -5,7 +5,7 @@ Octokit.plugin(throttling);
 Octokit.plugin(retry);
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
-  userAgent: 'open-goal/jak-project',
+  userAgent: 'xTVaser/jak-project',
   log: {
     debug: () => { },
     info: () => { },
@@ -40,7 +40,7 @@ console.log(`Searching in - ${assetDir}`);
 console.log(`Searching for tag - ${tagToSearchFor}`);
 
 const { data: recentReleases } = await octokit.rest.repos.listReleases({
-  owner: "open-goal",
+  owner: "xTVaser",
   repo: "jak-project",
   per_page: 100
 });
@@ -60,7 +60,7 @@ if (release == undefined) {
 
 // Upload any assets we need to, don't upload assets that are already there!
 const { data: releaseAssetsPre } = await octokit.rest.repos.listReleaseAssets({
-  owner: "open-goal",
+  owner: "xTVaser",
   repo: "jak-project",
   release_id: release.id,
   per_page: 100
@@ -85,7 +85,7 @@ glob(assetDir + `/**/*${process.env.ASSET_EXTENSION}`, {}, async (err, files) =>
 
     var assetBytes = fs.readFileSync(files[i], null);
     const { data: uploadAsset } = await octokit.rest.repos.uploadReleaseAsset({
-      owner: "open-goal",
+      owner: "xTVaser",
       repo: "jak-project",
       release_id: release.id,
       name: `opengoal-${release.tag_name}-${path.basename(files[i])}`,
@@ -103,7 +103,7 @@ await new Promise(resolve => setTimeout(resolve, 10 * 1000));
 
 // Poll the release, and check to see if it's ready to be published
 const { data: releaseAssetsPost } = await octokit.rest.repos.listReleaseAssets({
-  owner: "open-goal",
+  owner: "xTVaser",
   repo: "jak-project",
   release_id: release.id,
   per_page: 100
@@ -133,7 +133,7 @@ console.log(expectedAssets);
 
 if (Object.values(expectedAssets).every(Boolean)) {
   await octokit.rest.repos.updateRelease({
-    owner: "open-goal",
+    owner: "xTVaser",
     repo: "jak-project",
     release_id: release.id,
     draft: false
