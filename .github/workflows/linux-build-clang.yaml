@@ -1,4 +1,4 @@
-name: Linux Build Clang
+name: 🐧 Linux Build Clang
 
 on:
   workflow_call:

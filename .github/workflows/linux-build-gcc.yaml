@@ -1,4 +1,4 @@
-name: Linux Build GCC
+name: 🐧 Linux Build GCC
 
 on:
   workflow_call:

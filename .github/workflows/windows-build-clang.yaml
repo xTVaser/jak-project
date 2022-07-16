@@ -1,4 +1,4 @@
-name: Windows Build Clang
+name: 🖥️ Windows Build Clang
 
 on:
   workflow_call:
