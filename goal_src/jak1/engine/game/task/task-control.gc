@@ -4071,40 +4071,43 @@
             )
           )
         )
+              ;; the task controls for our custom level tasks.
+      ;; I'm not very sure how this array in general works,
+      ;; but adding a dummy task here is needed to make the rest of our custom tasks work
+      (new 'static 'task-control
+        :current-stage -1
+        :stage (new 'static 'boxed-array :type task-cstage
+          (new 'static 'task-cstage
+            :game-task (game-task dummy)
+            :status (task-status need-hint)
+            :flags (task-flags closed-by-default)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task dummy)
+            :status (task-status need-introduction)
+            :flags (task-flags has-entity)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task dummy)
+            :status (task-status need-reminder)
+            :flags (task-flags has-entity)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task dummy)
+            :status (task-status need-resolution)
+            :flags (task-flags has-entity)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          )
+        )
         ;;New Tasks added for speedrun autosplitter
       (new 'static 'task-control
         :current-stage -1
         :stage (new 'static 'boxed-array :type task-cstage
           (new 'static 'task-cstage
-            :game-task (game-task speedrun-lavatube-LTS)
-            :status (task-status need-hint)
-            :flags (task-flags has-entity closed-by-default)
-            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
-            )
-          (new 'static 'task-cstage
-            :game-task (game-task speedrun-lavatube-LTS)
-            :status (task-status need-introduction)
-            :flags (task-flags has-entity closed-by-default)
-            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
-            )
-          (new 'static 'task-cstage
-            :game-task (game-task speedrun-lavatube-LTS)
-            :status (task-status need-reminder)
-            :flags (task-flags has-entity)
-            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
-            )
-          (new 'static 'task-cstage
-            :game-task (game-task speedrun-lavatube-LTS)
-            :status (task-status need-resolution)
-            :flags (task-flags has-entity)
-            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
-            )
-          )
-        )
-      (new 'static 'task-control
-        :current-stage -1
-        :stage (new 'static 'boxed-array :type task-cstage
-          (new 'static 'task-cstage
             :game-task (game-task speedrun-misty-boat-firstcutscene)
             :status (task-status need-hint)
             :flags (task-flags has-entity closed-by-default)
@@ -4211,6 +4214,35 @@
             )
           (new 'static 'task-cstage
             :game-task (game-task speedrun-ogre-racerscutscene)
+            :status (task-status need-resolution)
+            :flags (task-flags has-entity)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          )
+        )
+      (new 'static 'task-control
+        :current-stage -1
+        :stage (new 'static 'boxed-array :type task-cstage
+          (new 'static 'task-cstage
+            :game-task (game-task speedrun-lavatube-LTS)
+            :status (task-status need-hint)
+            :flags (task-flags has-entity closed-by-default)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task speedrun-lavatube-LTS)
+            :status (task-status need-introduction)
+            :flags (task-flags has-entity closed-by-default)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task speedrun-lavatube-LTS)
+            :status (task-status need-reminder)
+            :flags (task-flags has-entity)
+            :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
+            )
+          (new 'static 'task-cstage
+            :game-task (game-task speedrun-lavatube-LTS)
             :status (task-status need-resolution)
             :flags (task-flags has-entity)
             :condition (lambda :behavior process-taskable ((arg0 task-control)) #t)
