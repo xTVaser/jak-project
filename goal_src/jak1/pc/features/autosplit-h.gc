@@ -131,6 +131,8 @@
    (current-continue-point string)
    (current-level-name string)
    (current-cutscene-name string)
+   (speedrun-misty-boat-firstcutscene uint8)
+   (speedrun-misty-boat-secondcutscene uint8)
    ;; end marker just to make things look nice in a memory view
    (end-marker uint8 4)))
 

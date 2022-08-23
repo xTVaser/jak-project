@@ -145,8 +145,11 @@
 
 
   ;;cutscene related tasks
-  (if (autosplit-cutscene? "fishermans-boat-ride-to-misty" (gametask speedrun-misty-boat-firstcutscene))))
-  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-firstcutscene) (if (task-closed? (game-task speedrun-misty-boat-firstcutscene) (task-status need-resolution)) 1 0))
+  (if (autosplit-cutscene? "fishermans-boat-ride-to-misty" (gametask speedrun-misty-boat-firstcutscene))
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-firstcutscene) (if (task-closed? (game-task speedrun-misty-boat-firstcutscene) (task-status need-resolution)) 1 0)))
+  (none)
+  (if (autosplit-cutscene? "fishermans-boat-ride-to-village1" (gametask speedrun-misty-boat-secondcutscene))
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-secondcutscene) (if (task-closed? (game-task speedrun-misty-boat-secondcutscene) (task-status need-resolution)) 1 0))))
   ;; end
   (none)
   
