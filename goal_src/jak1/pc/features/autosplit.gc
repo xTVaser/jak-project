@@ -15,6 +15,10 @@
   (set! (-> *autosplit-info-jak1* num-power-cells) (the int (-> *game-info* fuel)))
   (set! (-> *autosplit-info-jak1* num-orbs) (the int (-> *game-info* money-total)))
   (set! (-> *autosplit-info-jak1* num-scout-flies) (the int (-> *game-info* buzzer-total)))
+  (set! (-> *autosplit-info-jak1* current-continue-point) (-> (-> *game-info* current-continue) name) ) 
+  (set! (-> *autosplit-info-jak1* current-level-name) (symbol->string (-> (level-get-target-inside *level*) name)))
+  (set! (-> *autosplit-info-jak1* current-cutscene-name) (-> *art-control* active-stream))
+
 
   ;; loading/cutscene related flags
   (set! (-> *autosplit-info-jak1* in-cutscene?) (-> *pc-settings* movie?))

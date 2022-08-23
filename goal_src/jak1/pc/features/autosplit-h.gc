@@ -128,9 +128,13 @@
    (int-finalboss-movies uint8)
    (unk-finalboss-movies uint8)
    (int-jungle-fishgame uint8)
+   (current-continue-point string)
+   (current-level-name string)
+   (current-cutscene-name string)
    ;; end marker just to make things look nice in a memory view
    (end-marker uint8 4)))
 
 (define-extern *autosplit-info-jak1* autosplit-info-jak1)
 (define-extern update-autosplit-info-jak1 (function none))
 (define-extern update-autosplit-jak1-new-game (function none))
+
