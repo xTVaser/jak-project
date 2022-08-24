@@ -138,6 +138,7 @@
    (current-level-name string)
    (current-cutscene-name string)
 ))
+(define-extern *current-info-jak1* current-info-jak1)
 (define-extern *autosplit-info-jak1* autosplit-info-jak1)
 (define-extern update-autosplit-info-jak1 (function none))
 (define-extern update-autosplit-jak1-new-game (function none))
