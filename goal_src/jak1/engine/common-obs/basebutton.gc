@@ -523,6 +523,8 @@
       )
     (set-blackout-frames (seconds 0.05))
     (start 'play (get-continue-by-name *game-info* (-> *warp-info* arg0)))
+    (if (string= (-> *warp-info* arg0) "village1-warp")
+    (close-specific-task! (game-task speedrun-training-usewarpgate) (task-status need-resolution)))
     (logior! (-> self mask) (process-mask sleep))
     (suspend)
     0

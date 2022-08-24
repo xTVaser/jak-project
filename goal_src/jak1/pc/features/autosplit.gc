@@ -2,6 +2,7 @@
 (in-package goal)
 
 (define *autosplit-info-jak1* (new 'static 'autosplit-info-jak1))
+(define *current-info-jak1* (new 'static 'current-info-jak1))
 ;; Setup markers
 (charp<-string (-> *autosplit-info-jak1* marker) "UnLiStEdStRaTs_JaK1")
 (charp<-string (-> *autosplit-info-jak1* end-marker) "end")
@@ -9,12 +10,19 @@
 (charp<-string (-> *autosplit-info-jak1* padding-stats) "padding-stats!")
 (charp<-string (-> *autosplit-info-jak1* padding-controls) "padding-controls!")
 
+(defun close-task-target-cutscene? ((targetCutscene string) (taskToClose game-task))
+(if (string= (-> *current-info-jak1* current-cutscene-name) (the-as string targetCutscene)) (close-specific-task! taskToClose (task-status need-resolution))))
+
 
 (defun update-autosplit-info-jak1 ()
   ;; general statistics
   (set! (-> *autosplit-info-jak1* num-power-cells) (the int (-> *game-info* fuel)))
   (set! (-> *autosplit-info-jak1* num-orbs) (the int (-> *game-info* money-total)))
   (set! (-> *autosplit-info-jak1* num-scout-flies) (the int (-> *game-info* buzzer-total)))
+  (set! (-> *current-info-jak1* current-continue-point) (-> (-> *game-info* current-continue) name) ) 
+  (set! (-> *current-info-jak1* current-level-name) (symbol->string (-> (level-get-target-inside *level*) name)))
+  (set! (-> *current-info-jak1* current-cutscene-name) (if (movie?) (-> *art-control* active-stream) "NoCutscene"))
+
 
   ;; loading/cutscene related flags
   (set! (-> *autosplit-info-jak1* in-cutscene?) (-> *pc-settings* movie?))
@@ -131,9 +139,18 @@
   (set! (-> *autosplit-info-jak1* int-finalboss-movies) (if (task-closed? (game-task finalboss-movies) (task-status need-introduction)) 1 0))
   (set! (-> *autosplit-info-jak1* unk-finalboss-movies) (if (task-closed? (game-task finalboss-movies) (task-status unknown)) 1 0))
   (set! (-> *autosplit-info-jak1* int-jungle-fishgame) (if (task-closed? (game-task jungle-fishgame) (task-status need-introduction)) 1 0))
+  (set! (-> *autosplit-info-jak1* res-jungle-fishgame) (if (task-closed? (game-task jungle-fishgame) (task-status need-reward-speech)) 1 0))
 
+
+  ;;cutscene related tasks
+  (close-task-target-cutscene? "fishermans-boat-ride-to-misty" (game-task speedrun-misty-boat-firstcutscene))
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-firstcutscene) (if (task-closed? (game-task speedrun-misty-boat-firstcutscene) (task-status need-resolution)) 1 0))
+  
+  (close-task-target-cutscene? "fishermans-boat-ride-to-village1" (game-task speedrun-misty-boat-secondcutscene)) 
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-secondcutscene) (if (task-closed? (game-task speedrun-misty-boat-secondcutscene) (task-status need-resolution)) 1 0))
   ;; end
   (none))
+  
 
 
 (defun update-autosplit-jak1-new-game ()
