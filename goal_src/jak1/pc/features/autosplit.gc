@@ -9,21 +9,19 @@
 (charp<-string (-> *autosplit-info-jak1* padding-stats) "padding-stats!")
 (charp<-string (-> *autosplit-info-jak1* padding-controls) "padding-controls!")
 
-(defun autosplit-cutscene? ((string cutsceneToSplitOn) (game-task gametask))
-(if (string= (-> *autosplit-info-jak1* current-cutscene-name) cutsceneToSplitOn)
-(begin
-(close-specific-task! gametask (task-status need-resolution))
-#t)
-)
-#f)
+
+(defun close-task-target-cutscene? ((string targetCutscene) (game-task taskToClose))
+(if (string= (-> *current-info-jak1* current-cutscene-name) (the-as string targetCutscene)) (close-specific-task! taskToClose (task-status need-resolution))))
+
+
 (defun update-autosplit-info-jak1 ()
   ;; general statistics
   (set! (-> *autosplit-info-jak1* num-power-cells) (the int (-> *game-info* fuel)))
   (set! (-> *autosplit-info-jak1* num-orbs) (the int (-> *game-info* money-total)))
   (set! (-> *autosplit-info-jak1* num-scout-flies) (the int (-> *game-info* buzzer-total)))
-  (set! (-> *autosplit-info-jak1* current-continue-point) (-> (-> *game-info* current-continue) name) ) 
-  (set! (-> *autosplit-info-jak1* current-level-name) (symbol->string (-> (level-get-target-inside *level*) name)))
-  (set! (-> *autosplit-info-jak1* current-cutscene-name) (-> *art-control* active-stream))
+  (set! (-> *current-info-jak1* current-continue-point) (-> (-> *game-info* current-continue) name) ) 
+  (set! (-> *current-info-jak1* current-level-name) (symbol->string (-> (level-get-target-inside *level*) name)))
+  (set! (-> *current-info-jak1* current-cutscene-name) (-> *art-control* active-stream))
 
 
   ;; loading/cutscene related flags
@@ -145,11 +143,11 @@
 
 
   ;;cutscene related tasks
-  (if (autosplit-cutscene? "fishermans-boat-ride-to-misty" (gametask speedrun-misty-boat-firstcutscene))
-  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-firstcutscene) (if (task-closed? (game-task speedrun-misty-boat-firstcutscene) (task-status need-resolution)) 1 0)))
-  (none)
-  (if (autosplit-cutscene? "fishermans-boat-ride-to-village1" (gametask speedrun-misty-boat-secondcutscene))
-  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-secondcutscene) (if (task-closed? (game-task speedrun-misty-boat-secondcutscene) (task-status need-resolution)) 1 0))))
+  (close-task-target-cutscene? ("fishermans-boat-ride-to-misty")(game-task speedrun-misty-boat-firstcutscene))
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-firstcutscene) (if (task-closed? (game-task speedrun-misty-boat-firstcutscene) (task-status need-resolution)) 1 0))
+  
+  (close-task-target-cutscene? ("fishermans-boat-ride-to-village1")(game-task speedrun-misty-boat-secondcutscene)) 
+  (set! (-> *autosplit-info-jak1* speedrun-misty-boat-secondcutscene) (if (task-closed? (game-task speedrun-misty-boat-secondcutscene) (task-status need-resolution)) 1 0)))
   ;; end
   (none)
   
