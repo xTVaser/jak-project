@@ -3,10 +3,10 @@
 
 ;; definition of type nav-branch
 (deftype nav-branch (structure)
-  ((node              int32    2 :offset-assert   0)
+  ((node              uint32   2 :offset-assert   0)
    (src-node          nav-node   :offset          0)
    (dest-node         nav-node   :offset          4)
-   (temp-dest-node-id int32      :offset          4)
+   (temp-dest-node-id uint32     :offset          4)
    (speed-limit       uint8      :offset-assert   8)
    (density           uint8      :offset-assert   9)
    (clock-type        uint8      :offset-assert  10)

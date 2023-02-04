@@ -1215,7 +1215,7 @@
         (gp-0 (-> obj nav-mesh-addr sphere-hash))
         )
     (clear-objects! gp-0)
-    (set! (-> gp-0 bucket-array) (the-as (pointer grid-hash-word) (-> obj hash-buckets-addr)))
+    (set! (-> gp-0 bucket-array) (the-as (inline-array vector4w) (-> obj hash-buckets-addr)))
     (set! (-> gp-0 sphere-array) (the-as (inline-array sphere) (-> obj hash-sphere-addr)))
     (when *target*
       (let ((a1-0 (new 'stack-no-clear 'nav-vertex)))
@@ -1510,13 +1510,17 @@
       (do-sphere-lookups s4-0)
       (when (nonzero? (-> s4-0 output-sphere-hash))
         (let ((s3-0 (-> s4-0 nav-mesh-addr sphere-hash)))
-          (quad-copy! (-> s3-0 mem-bucket-array) (-> s3-0 bucket-array) (/ (-> s3-0 bucket-memory-size) 16))
+          (quad-copy!
+            (-> s3-0 mem-bucket-array)
+            (the-as pointer (-> s3-0 bucket-array))
+            (/ (-> s3-0 bucket-memory-size) 16)
+            )
           (quad-copy!
             (the-as pointer (-> s3-0 mem-sphere-array))
             (the-as pointer (-> s3-0 sphere-array))
             (-> s3-0 object-count)
             )
-          (set! (-> s3-0 bucket-array) (-> s3-0 mem-bucket-array))
+          (set! (-> s3-0 bucket-array) (the-as (inline-array vector4w) (-> s3-0 mem-bucket-array)))
           (set! (-> s3-0 sphere-array) (the-as (inline-array sphere) (-> s3-0 mem-sphere-array)))
           )
         )

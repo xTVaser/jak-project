@@ -18626,6 +18626,7 @@
   (alpha-enable 0)
   )
 
+(declare-type city-level-info structure)
 (deftype bsp-header (drawable)
   (
    ;; TYPE                                                          0
@@ -18672,9 +18673,8 @@
    (collide-hash             collide-hash                :offset-assert 196)
    ;; 200 is some array
    ;; 204 is maybe that array's length
-   (wind-array-length int32 :offset 204)
-   ;; 208 is a structure of some sort - (method 97 vehicle)
-   (bsp-header-jkh1b23       clock :offset 208)
+   (wind-array-length        int32                       :offset 204)
+   (city-level-info          city-level-info             :offset 208)
    (vis-spheres              vector-array                       :offset 216)
    (region-tree              drawable-tree-region-prim          :offset 252)
 
@@ -23087,7 +23087,7 @@
    (axis-scale          float      3        :offset-assert 16)
    (dimension-array     int8       3          :offset-assert 28)
    (vertical-cell-count int8                  :offset-assert 31)
-   (bucket-array        (pointer grid-hash-word)                :offset-assert 32)
+   (bucket-array        (inline-array vector4w)                :offset-assert 32)
    (box-min             float       3        :offset-assert 36)
    (box-max             float       3        :offset-assert 48)
    (object-count        int16                 :offset-assert 60)
@@ -48475,10 +48475,10 @@
 
 (declare-type nav-node structure)
 (deftype nav-branch (structure)
-  ((node              int32    2 :offset-assert   0)
-   (src-node          nav-node      :offset          0)
+  ((node              uint32    2 :offset-assert   0)
+   (src-node          nav-node      :offset          0) ;; should these be the types or...an index?
    (dest-node         nav-node      :offset          4)
-   (temp-dest-node-id int32      :offset          4)
+   (temp-dest-node-id uint32      :offset          4)
    (speed-limit       uint8      :offset-assert   8)
    (density           uint8      :offset-assert   9)
    (clock-type        uint8      :offset-assert  10)
@@ -48687,7 +48687,7 @@
 (deftype vis-cell (structure)
   (
     (sphere sphere :inline :offset-assert 0)
-    (segment-array (inline-array nav-segment) :offset-assert 16)
+    (segment-array (inline-array nav-segment) :offset-assert 16) ;; is this an array...or is it an index?
     (vis-id uint16 :offset-assert 20)
     (id uint16 :offset-assert 22)
     (incoming-segment-count int8 :offset-assert 24)
@@ -48767,7 +48767,7 @@
    (cell-array     (inline-array vis-cell)            :offset-assert 64)
    (segment-count  int16             :offset-assert 68)
    (cell-count     uint16            :offset-assert 70)
-   (segment-array  uint32            :offset-assert 72)
+   (segment-array  (inline-array nav-segment)            :offset-assert 72)
    (nav-graph      nav-graph             :offset-assert 76)
    (camera-ceiling meters            :offset-assert 80)
    (pad-array      int8   56      :offset-assert 84)
@@ -48983,12 +48983,12 @@
     (traffic-tracker-method-11 (_type_) none 11)
     (traffic-tracker-method-12 (_type_ uint handle) none 12)
     (traffic-tracker-method-13 (_type_ int) handle 13)
-    (traffic-tracker-method-14 (_type_ int handle) none 14)
+    (traffic-tracker-method-14 (_type_ uint handle) none 14)
     (traffic-tracker-method-15 (_type_ int) handle 15)
     (traffic-tracker-method-16 (_type_ int handle) handle 16)
-    (traffic-tracker-method-17 (_type_ int handle) none 17)
+    (deactivate-object (_type_ uint symbol) none 17)
     (traffic-tracker-method-18 (_type_ process) none 18)
-    (traffic-tracker-method-19 (_type_ handle) none 19)
+    (traffic-tracker-method-19 (_type_ symbol) none 19)
     (traffic-tracker-method-20 (_type_ int symbol) none 20)
     (traffic-tracker-method-21 (_type_ traffic-object-spawn-params) none 21)
     (traffic-tracker-method-22 (_type_ int nav-segment float) none 22)
@@ -49002,7 +49002,7 @@
 (declare-type traffic-find-segment-struct structure)
 (deftype traffic-engine (basic)
   ((object-hash            spatial-hash                       :offset-assert 4) ;; either spatial-hash is wrong, or this is wrong
-   (manager                uint64                      :offset-assert 8)
+   (manager                handle                      :offset-assert 8)
    (inv-density-factor     float                       :offset-assert 16)
    (sync-clock             uint8                       :offset-assert 20)
    (sync-mask-8            uint8                       :offset-assert 21)
@@ -49076,7 +49076,7 @@
     (get-traffic-guard-change-to-type "TODO - guard-type should be an enum" (_type_ int) uint 56)
     (set-guard-target-count-range (_type_ int int int) none 57)
     (set-object-auto-activate (_type_ object object) none 58)
-    (traffic-engine-method-59 (_type_ object int) none 59)
+    (traffic-engine-method-59 (_type_ process int) none 59)
     (kill-traffic-sphere (_type_ sphere) none 60)
     (level-loaded (_type_ level) none 61)
     (level-killed (_type_ level) none 62)
@@ -51472,7 +51472,7 @@
 (define-extern *traffic-suppress-activation* symbol)
 (define-extern *mysql-nav-graph* mysql-nav-graph)
 (define-extern *traffic-rigid-body-queue* rigid-body-queue)
-(define-extern get-level-nav-graph-by-id (function object symbol))
+(define-extern get-level-nav-graph-by-id (function object nav-graph))
 (define-extern add-debug-line-arrow "Does nothing!" (function none))
 (define-extern traffic-los-clear? (function vector vector symbol))
 (define-extern *guard-target-spots* (array vector))

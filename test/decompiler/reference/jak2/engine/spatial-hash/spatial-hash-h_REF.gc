@@ -41,7 +41,7 @@
    (axis-scale          float                    3       :offset-assert  16)
    (dimension-array     int8                     3       :offset-assert  28)
    (vertical-cell-count int8                             :offset-assert  31)
-   (bucket-array        (pointer grid-hash-word)         :offset-assert  32)
+   (bucket-array        (inline-array vector4w)          :offset-assert  32)
    (box-min             float                    3       :offset-assert  36)
    (box-max             float                    3       :offset-assert  48)
    (object-count        int16                            :offset-assert  60)
