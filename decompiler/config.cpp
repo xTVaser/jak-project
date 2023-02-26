@@ -11,6 +11,52 @@
 
 namespace decompiler {
 
+using json = nlohmann::json;
+
+void to_json(json& j, const RegisterTypeCast& obj) {
+  j = json{{"atomic_op_idx", obj.atomic_op_idx},
+           {"reg", obj.reg.to_string()},
+           {"type_name", obj.type_name}};
+}
+
+void to_json(json& j, const StackTypeCast& obj) {
+  j = json{{"stack_offset", obj.stack_offset}, {"type_name", obj.type_name}};
+}
+
+void to_json(json& j, const StackStructureHint& obj) {
+  j = json{{"element_type", obj.element_type},
+           {"container_type", obj.container_type},
+           {"container_size", obj.container_size},
+           {"stack_offset", obj.stack_offset}};
+}
+
+void to_json(json& j, const LabelConfigInfo& obj) {
+  j = json{{"is_value", obj.is_value},
+           {"type_name", obj.type_name},
+           {"array_size", obj.array_size ? obj.array_size.value() : -1}};
+}
+
+void to_json(json& j, const CondWithElseLengthHack& obj) {
+  j = json{{"max_length_by_start_block", obj.max_length_by_start_block}};
+}
+
+void to_json(json& j, const DecompileHacks& obj) {
+  j = json{
+      {"types_with_bad_inspect_methods", obj.types_with_bad_inspect_methods},
+      {"no_type_analysis_functions_by_name", obj.no_type_analysis_functions_by_name},
+      {"hint_inline_assembly_functions", obj.hint_inline_assembly_functions},
+      {"asm_functions_by_name", obj.asm_functions_by_name},
+      {"pair_functions_by_name", obj.pair_functions_by_name},
+      {"cond_with_else_len_by_func_name", obj.cond_with_else_len_by_func_name},
+      {"reject_cond_to_value", obj.reject_cond_to_value},
+      {"blocks_ending_in_asm_branch_by_func_name", obj.blocks_ending_in_asm_branch_by_func_name},
+      {"format_ops_with_dynamic_string_by_func_name",
+       obj.format_ops_with_dynamic_string_by_func_name},
+      {"mips2c_functions_by_name", obj.mips2c_functions_by_name},
+      {"mips2c_jump_table_functions", obj.mips2c_jump_table_functions},
+      {"missing_textures_by_level", obj.missing_textures_by_level}};
+}
+
 namespace {
 /*!
  * Read an entry from cfg containing the name of a json file, and parse that file.

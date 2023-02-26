@@ -83,7 +83,7 @@ tasks:
   # DECOMPILING
   decomp:
     cmds:
-      - "{{.DECOMP_BIN_RELEASE_DIR}}/decompiler \"./decompiler/config/{{.DECOMP_CONFIG}}\" \"./iso_data\" \"./decompiler_out\" --version \"{{.DECOMP_CONFIG_VERSION}}\" --config-override '{\"decompile_code\": true, \"levels_extract\": false}'"
+      - "{{.DECOMP_BIN_RELEASE_DIR}}/decompiler \"./decompiler/config/{{.DECOMP_CONFIG}}\" \"./iso_data\" \"./decompiler_out\" --version jp --config-override '{\"decompile_code\": true, \"levels_extract\": false}'"
   decomp-file:
     cmds:
       - "{{.DECOMP_BIN_RELEASE_DIR}}/decompiler \"./decompiler/config/{{.DECOMP_CONFIG}}\" \"./iso_data\" \"./decompiler_out\" --version \"{{.DECOMP_CONFIG_VERSION}}\" --config-override '{\"decompile_code\": true, \"levels_extract\": false, \"allowed_objects\": [\"{{.FILE}}\"]}'"

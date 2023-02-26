@@ -13,17 +13,24 @@
 #include "decompiler/Disasm/Register.h"
 #include "decompiler/data/game_text.h"
 
+#include "third-party/json.hpp"
+
 namespace decompiler {
+using json = nlohmann::json;
 struct RegisterTypeCast {
   int atomic_op_idx = -1;
   Register reg;
   std::string type_name;
 };
 
+void to_json(json& j, const RegisterTypeCast& obj);
+
 struct StackTypeCast {
   int stack_offset = -1;
   std::string type_name;
 };
+
+void to_json(json& j, const StackTypeCast& obj);
 
 struct LabelConfigInfo {
   // if the label is a "value" type, it will be loaded directly into a register.
@@ -43,6 +50,8 @@ struct LabelConfigInfo {
   // For a boxed array (array x), the size will be figured out automatically
   std::optional<int> array_size;
 };
+
+void to_json(json& j, const LabelConfigInfo& obj);
 
 struct LocalVarOverride {
   std::string name;
@@ -66,9 +75,13 @@ struct StackStructureHint {
   int stack_offset = 0;     // where it's located on the stack (relative to sp after prologue)
 };
 
+void to_json(json& j, const StackStructureHint& obj);
+
 struct CondWithElseLengthHack {
   std::unordered_map<std::string, int> max_length_by_start_block;
 };
+
+void to_json(json& j, const CondWithElseLengthHack& obj);
 
 struct DecompileHacks {
   std::unordered_set<std::string> types_with_bad_inspect_methods;
@@ -85,6 +98,8 @@ struct DecompileHacks {
   std::unordered_map<std::string, std::vector<int>> mips2c_jump_table_functions;
   std::unordered_map<std::string, std::vector<std::pair<int, int>>> missing_textures_by_level;
 };
+
+void to_json(json& j, const DecompileHacks& obj);
 
 struct ObjectPatchInfo {
   u32 crc;

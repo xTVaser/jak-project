@@ -73,6 +73,26 @@ int main(int argc, char** argv) {
     return 1;
   }
 
+  // Dump the relevant configs
+  file_util::write_text_file(std::string("./jp-anon.jsonc"),
+                             json(config.anon_function_types_by_obj_by_id).dump());
+  file_util::write_text_file(std::string("./jp-hacks.jsonc"),
+                             json(config.hacks).dump());
+  file_util::write_text_file(std::string("./jp-labels.jsonc"),
+                             json(config.label_types).dump());
+  file_util::write_text_file(std::string("./jp-labels.jsonc"),
+                             json(config.label_types).dump());
+  file_util::write_text_file(std::string("./jp-stack.jsonc"),
+                             json(config.stack_structure_hints_by_function).dump());
+  file_util::write_text_file(std::string("./jp-stack-types.jsonc"),
+                             json(config.stack_type_casts_by_function_by_stack_offset).dump());
+  file_util::write_text_file(std::string("./jp-reg-types.jsonc"),
+                             json(config.register_type_casts_by_function_by_atomic_op_idx).dump());
+  file_util::write_text_file(std::string("./jp-vars.jsonc"),
+                             json(config.function_arg_names).dump());
+
+  return 0;
+
   // Check if any banned objects are also in the allowed objects list
   // if so, throw an error as this can be a confusing situation
   auto intersection = set_util::intersection(config.allowed_objects, config.banned_objects);

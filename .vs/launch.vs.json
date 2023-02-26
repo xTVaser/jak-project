@@ -162,7 +162,7 @@
         "${workspaceRoot}/iso_data",
         "${workspaceRoot}/decompiler_out",
         "--version",
-        "ntsc_v1"
+        "ntsc_v2"
       ]
     },
     {
