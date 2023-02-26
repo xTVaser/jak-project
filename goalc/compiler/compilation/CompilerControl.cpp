@@ -656,13 +656,28 @@ Val* Compiler::compile_gen_docs(const goos::Object& form, const goos::Object& re
     }
     std::optional<Docs::DefinitionLocation> def_loc;
     const auto& goos_info = m_goos.reader.db.get_short_info_for(sym_info.src_form());
+    std::string file_doc_key;
     if (goos_info) {
       Docs::DefinitionLocation new_def_loc;
-      new_def_loc.filename = file_util::convert_to_unix_path_separators(file_util::split_path_at(
-          goos_info->filename, {"goal_src", version_to_game_name(m_version)}));
+
+      // TODO - temporary hack until goal_src's shared code is actually properly figured out
+      // check for the goal_src path and split on that
+      // Anticipate a `common` folder so things aren't suddenly broken again
+      auto file_path = file_util::convert_to_unix_path_separators(goos_info->filename);
+      if (str_util::contains(file_path, "goal_src/jak1")) {
+        file_path = file_util::split_path_at(file_path, {"goal_src", "jak1"});
+      } else if (str_util::contains(file_path, "goal_src/jak2")) {
+        file_path = file_util::split_path_at(file_path, {"goal_src", "jak2"});
+      } else if (str_util::contains(file_path, "goal_src/common")) {
+        file_path = file_util::split_path_at(file_path, {"goal_src", "common"});
+      }
+      file_doc_key = file_path;
+      new_def_loc.filename = file_path;
       new_def_loc.line_idx = goos_info->line_idx_to_display;
       new_def_loc.char_idx = goos_info->pos_in_line;
       def_loc = new_def_loc;
+    } else {
+      file_doc_key = "unknown";
     }
 
     Docs::SymbolDocumentation sym_doc;
@@ -678,13 +693,6 @@ Val* Compiler::compile_gen_docs(const goos::Object& form, const goos::Object& re
     }
 
     Docs::FileDocumentation file_doc;
-    std::string file_doc_key;
-    if (!goos_info) {
-      file_doc_key = "unknown";
-    } else {
-      file_doc_key = file_util::convert_to_unix_path_separators(
-          file_util::split_path_at(goos_info->filename, {"goal_src"}));
-    }
 
     if (file_docs.count(file_doc_key) != 0) {
       file_doc = file_docs.at(file_doc_key);
