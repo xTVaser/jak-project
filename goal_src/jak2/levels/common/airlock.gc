@@ -221,24 +221,45 @@
     )
   )
 
+;; this is the script it's running below for palace-door-1
+;; (when (or (task-closed? "palace-sneak-in-introduction")
+;;           (and (not (send-event self 'front))
+;;                (< (send-event self 'distance) 400.0000)))
+;;       '(palshaft))
+
+;; (when (or (task-closed? "palace-sneak-in-introduction") (and (not (send-event "palace-door-1" 'front)) (< (send-event "palace-door-1" 'distance) 400.0000))) '(palshaft))
+
 (defmethod destination-loaded? com-airlock ((obj com-airlock) (display? symbol))
   (let ((level-list (the-as pair (script-eval (-> obj level-name))))
         (borrow-lev-name #f)
         )
     (cond
       ((not (the-as object level-list))
+       (format 0 "destination-loaded? ~A a~%" (-> obj name))
        (if display?
            'unknown
            #f
            )
        )
+
+
+
+
+
+
+
+
+
+
       (display?
+        (format 0 "destination-loaded? ~A b~%" (-> obj name))
         (let* ((level-list-iter level-list)
                (lev-name (car (the-as object level-list-iter)))
                )
           (while (not (null? (the-as object level-list-iter)))
             (let ((v1-4 (level-status *level* (the-as symbol lev-name))))
-              (if (not (or (= v1-4 'loaded) (= v1-4 'active)))
+              (when (not (or (= v1-4 'loaded) (= v1-4 'active)))
+                  (format 0 "destination-loaded? ~A A~%" (-> obj name))
                   (return #f)
                   )
               )
@@ -249,20 +270,25 @@
             (set! lev-name (car level-list-iter))
             )
           )
+        (format 0 "destination-loaded? ~A ba~%" (-> obj name))
         (when borrow-lev-name
           (let ((v1-17 (level-status *level* borrow-lev-name)))
-            (if (not (or (= v1-17 'loaded) (= v1-17 'active)))
+            (when (not (or (= v1-17 'loaded) (= v1-17 'active)))
+                (format 0 "destination-loaded? ~A B~%" (-> obj name))
                 (return #f)
                 )
             )
           )
+        (format 0 "destination-loaded? ~A bc~%" (-> obj name))
         (if (!= display? 'display)
             (return #t)
             )
+        (format 0 "destination-loaded? ~A bd~%" (-> obj name))
         (let ((a1-7 (car (the-as object level-list))))
           (while (not (null? (the-as object level-list)))
             (let ((v1-26 (level-get *level* (the-as symbol a1-7))))
-              (if (not (and v1-26 (= (-> v1-26 status) 'active) (-> v1-26 display?)))
+              (when (not (and v1-26 (= (-> v1-26 status) 'active) (-> v1-26 display?)))
+                  (format 0 "destination-loaded? ~A C~%" (-> obj name))
                   (return #f)
                   )
               )
@@ -270,9 +296,20 @@
             (set! a1-7 (car level-list))
             )
           )
+        (format 0 "destination-loaded? ~A be~%" (-> obj name))
         #t
         )
+
+
+
+
+
+
+
+
+
       (else
+        (format 0 "destination-loaded? ~A c~%" (-> obj name))
         (let* ((v1-33 (the-as object level-list))
                (a0-11 (car v1-33))
                )
@@ -283,6 +320,7 @@
                   )
               )
             #t
+            (format 0 "destination-loaded? ~A D~%" (-> obj name))
             (return #f)
             (label cfg-50)
             (set! v1-33 (cdr v1-33))
@@ -406,17 +444,20 @@
              )
          )
         (('distance)
+         (format 0 "Airlock ~A distance ~D~%" (-> self name) (* (the int (check-crossing-distance self (target-pos 0) #f)) 8))
          (* (the int (check-crossing-distance self (target-pos 0) #f)) 8)
          )
         )
       )
     )
   :enter (behavior ((arg0 symbol))
+    (format 0 "Airlock ~A enter ~A~%" (-> self name) arg0)
     (#when PC_PORT (set! (-> self clock) (-> self parent 0 clock)))
     (set! (-> self visible-move?) #f)
     (none)
     )
   :exit (behavior ()
+    (format 0 "Airlock ~A exit~%" (-> self name))
     (when (nonzero? (-> self sound-id))
       (let ((v1-2 (the-as sound-rpc-set-param (get-sound-buffer-entry))))
         (set! (-> v1-2 command) (sound-command set-param))
@@ -452,9 +493,11 @@
     (when (and (want-cross-airlock? self) (begin
                                             (let ((gp-0 (res-lump-struct (-> self entity) 'on-activate structure)))
                                               (if gp-0
+                                                  (format 0 "evaling some script ~A~%" (-> self name))
                                                   (script-eval (the-as pair gp-0))
                                                   )
                                               )
+                                            (format 0 "hello world? ~A ~A ~%" (-> self name) (destination-loaded? self #f))
                                             (destination-loaded? self #f)
                                             )
                )
@@ -471,11 +514,13 @@
         (set! (-> self sound-id) (new 'static 'sound-id))
         0
         )
+      (format 0 "Airlock ~A trans~%" (-> self name))
       (go-virtual open #f)
       )
     (none)
     )
   :code (behavior ((arg0 symbol))
+    (format 0 "Airlock ~A code ~A~%" (-> self name) arg0)
     (process-entity-status! self (entity-perm-status subtask-complete) #f)
     (when (not arg0)
       (if (and (-> self sound-close)

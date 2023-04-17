@@ -31,16 +31,32 @@
     )
   )
 
+
+
+
+
+
+
+
 (defun command-get-float ((arg0 object) (arg1 float))
+  (set! arg0 (sext32 (the int arg0)))
+  (format 0 "CGF: ~X(bint:~A|bfloat:~A) ~X~%" arg0 (type? arg0 binteger) (type? arg0 bfloat) arg1)
+  (format 0 "top level - arg0 as int = ~X~%" (the-as int arg0))
   (cond
     ((null? arg0)
      (empty)
      arg1
      )
     ((type? arg0 binteger)
-     (the float (/ (the-as int arg0) 8))
+     (format 0 "arg0 as int = ~X~%" (the-as int arg0))
+     (format 0 "arg0 as int / 8 = ~X~%" (/ (the-as int arg0) 8))
+     (let ((ret (the float (/ (the-as int arg0) 8))))
+      (format 0 "returning as float = ~X~%" ret)
+      ret
+      )
      )
     ((type? arg0 bfloat)
+     (format 0 "returning bfloat data = ~X~%" (-> (the-as bfloat arg0) data))
      (-> (the-as bfloat arg0) data)
      )
     (else

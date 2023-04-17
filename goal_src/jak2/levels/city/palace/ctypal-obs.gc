@@ -88,6 +88,7 @@ This commonly includes things such as:
 - collision information
 - loading the skeleton group / bones
 - sounds"
+  (format 0 "palace-door init-from-entity!~%")
   (stack-size-set! (-> obj main-thread) 1024)
   (let ((s5-0 (new 'process 'collide-shape obj (collide-list-enum usually-hit-by-player))))
     (set! (-> s5-0 penetrated-by) (penetrate))
