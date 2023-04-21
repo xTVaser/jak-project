@@ -61,7 +61,7 @@ class OpenGlDebugGui {
   }
 
   bool small_profiler = false;
-  bool record_events = false;
+  bool record_events = true;
   bool dump_events = false;
   bool want_reboot_in_debug = false;
 

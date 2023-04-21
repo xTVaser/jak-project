@@ -175,77 +175,97 @@ static std::shared_ptr<GfxDisplay> gl_make_display(int width,
                                                    GfxSettings& /*settings*/,
                                                    GameVersion game_version,
                                                    bool is_main) {
+  prof().instant_event("ROOT");
+  prof().begin_event("startup::glfw::create_window");
   GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
 
   if (!window) {
     lg::error("gl_make_display failed - Could not create display window");
     return NULL;
   }
+  prof().end_event();
 
+  prof().begin_event("startup::glfw::create_context");
   glfwMakeContextCurrent(window);
-  if (!gl_inited) {
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    if (!gladLoadGL()) {
-      lg::error("GL init fail");
-      return NULL;
+  prof().end_event();
+  {
+    auto p = scoped_prof("startup::glfw::glad_init");
+    if (!gl_inited) {
+      gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+      if (!gladLoadGL()) {
+        lg::error("GL init fail");
+        return NULL;
+      }
+      g_gfx_data = std::make_unique<GraphicsData>(game_version);
+
+      gl_inited = true;
     }
-    g_gfx_data = std::make_unique<GraphicsData>(game_version);
-
-    gl_inited = true;
   }
 
-  // window icon
-  std::string image_path =
-      (file_util::get_jak_project_dir() / "game" / "assets" / "appicon.png").string();
+  {
+    auto p = scoped_prof("startup::glfw::window_extras");
 
-  GLFWimage images[1];
-  auto load_result = stbi_load(image_path.c_str(), &images[0].width, &images[0].height, 0, 4);
-  if (load_result) {
-    images[0].pixels = load_result;  // rgba channels
-    glfwSetWindowIcon(window, 1, images);
-    stbi_image_free(images[0].pixels);
-  } else {
-    lg::error("Could not load icon for OpenGL window");
+    // window icon
+    std::string image_path =
+        (file_util::get_jak_project_dir() / "game" / "assets" / "appicon.png").string();
+
+    GLFWimage images[1];
+    auto load_result = stbi_load(image_path.c_str(), &images[0].width, &images[0].height, 0, 4);
+    if (load_result) {
+      images[0].pixels = load_result;  // rgba channels
+      glfwSetWindowIcon(window, 1, images);
+      stbi_image_free(images[0].pixels);
+    } else {
+      lg::error("Could not load icon for OpenGL window");
+    }
   }
 
-  SetGlobalGLFWCallbacks();
-  Pad::initialize();
+  {
+    auto p = scoped_prof("startup::glfw::init_callbacks_pad");
+    SetGlobalGLFWCallbacks();
+    Pad::initialize();
+  }
 
   if (HasError()) {
     lg::error("gl_make_display error");
     return NULL;
   }
 
+  prof().begin_event("startup::glfw::create_GLDisplay");
   auto display = std::make_shared<GLDisplay>(window, is_main);
   display->set_imgui_visible(Gfx::g_debug_settings.show_imgui);
   display->update_cursor_visibility(window, display->is_imgui_visible());
+  prof().end_event();
   // lg::debug("init display #x{:x}", (uintptr_t)display);
 
   // setup imgui
+  {
+    auto p = scoped_prof("startup::glfw::init_imgui");
 
-  // check that version of the library is okay
-  IMGUI_CHECKVERSION();
+    // check that version of the library is okay
+    IMGUI_CHECKVERSION();
 
-  // this does initialization for stuff like the font data
-  ImGui::CreateContext();
+    // this does initialization for stuff like the font data
+    ImGui::CreateContext();
 
-  // Init ImGui settings
-  g_gfx_data->imgui_filename = file_util::get_file_path({"imgui.ini"});
-  g_gfx_data->imgui_log_filename = file_util::get_file_path({"imgui_log.txt"});
-  ImGuiIO& io = ImGui::GetIO();
-  io.IniFilename = g_gfx_data->imgui_filename.c_str();
-  io.LogFilename = g_gfx_data->imgui_log_filename.c_str();
+    // Init ImGui settings
+    g_gfx_data->imgui_filename = file_util::get_file_path({"imgui.ini"});
+    g_gfx_data->imgui_log_filename = file_util::get_file_path({"imgui_log.txt"});
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = g_gfx_data->imgui_filename.c_str();
+    io.LogFilename = g_gfx_data->imgui_log_filename.c_str();
 
-  // set up to get inputs for this window
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
+    // set up to get inputs for this window
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
 
-  // NOTE: imgui's setup calls functions that may fail intentionally, and attempts to disable error
-  // reporting so these errors are invisible. But it does not work, and some weird X11 default
-  // cursor error is set here that we clear.
-  glfwGetError(NULL);
+    // NOTE: imgui's setup calls functions that may fail intentionally, and attempts to disable
+    // error reporting so these errors are invisible. But it does not work, and some weird X11
+    // default cursor error is set here that we clear.
+    glfwGetError(NULL);
 
-  // set up the renderer
-  ImGui_ImplOpenGL3_Init("#version 430");
+    // set up the renderer
+    ImGui_ImplOpenGL3_Init("#version 430");
+  }
 
   return std::static_pointer_cast<GfxDisplay>(display);
 }
@@ -741,19 +761,9 @@ void update_global_profiler() {
     prof().set_enable(false);
     g_gfx_data->debug_gui.dump_events = false;
 
-    auto dir_path = file_util::get_jak_project_dir() / "profile_data";
-    fs::create_directories(dir_path);
-
-    if (fs::exists(dir_path / "prof.json")) {
-      int file_index = 1;
-      auto file_path = dir_path / fmt::format("prof{}.json", file_index);
-      while (!fs::exists(file_path)) {
-        file_path = dir_path / fmt::format("prof{}.json", ++file_index);
-      }
-      prof().dump_to_json(file_path.string());
-    } else {
-      prof().dump_to_json((dir_path / "prof.json").string());
-    }
+    auto file_path = file_util::get_jak_project_dir() / "profile_data" / "prof.json";
+    file_util::create_dir_if_needed_for_file(file_path);
+    prof().dump_to_json(file_path.string());
   }
   prof().set_enable(g_gfx_data->debug_gui.record_events);
 }

@@ -18,6 +18,7 @@
 #include "game/common/game_common_types.h"
 
 #include "third-party/CLI11.hpp"
+#include <common/global_profiler/GlobalProfiler.h>
 
 #ifdef _WIN32
 extern "C" {
@@ -159,6 +160,8 @@ int main(int argc, char** argv) {
                  "Remaining arguments (after '--') that are passed-through to the game itself");
   app.allow_extras();
   CLI11_PARSE(app, argc, argv);
+
+  prof().set_enable(true);
 
   // Create struct with all non-kmachine handled args to pass to the runtime
   GameLaunchOptions game_options;
