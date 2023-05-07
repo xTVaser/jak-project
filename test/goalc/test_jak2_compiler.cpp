@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "test/goalc/framework/test_runner.h"
+#include <common/util/Timer.h>
 
 // Tests for Jak 2's compiler/runtime, without game-specific code (ENGINE/GAME)
 
@@ -53,4 +54,12 @@ TEST_F(Jak2GoalcTests, All) {
                            "zero: 0\n"
                            "parent of type: basic structure object object\n"
                            "array: asdf #f\n0\n"});
+}
+
+TEST_F(Jak2GoalcTests, DraftPerformanceTest) {
+  runner->run_static_test(testCategory, "defpart-test.gc", {"1535540\n"});
+  Timer timer;
+  timer.start();
+  runner->run_static_test(testCategory, "defpart-test-test.gc", {"87035220\n"});
+  fmt::print("it took - {}us\n", timer.getUs());
 }
