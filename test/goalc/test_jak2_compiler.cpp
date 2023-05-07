@@ -1,3 +1,5 @@
+#include <common/util/Timer.h>
+
 #include "gtest/gtest.h"
 #include "test/goalc/framework/test_runner.h"
 
@@ -53,4 +55,12 @@ TEST_F(Jak2GoalcTests, All) {
                            "zero: 0\n"
                            "parent of type: basic structure object object\n"
                            "array: asdf #f\n0\n"});
+}
+
+TEST_F(Jak2GoalcTests, DraftPerformanceTest) {
+  runner->run_static_test(testCategory, "defpart-test.gc", {"1535844\n"});
+  Timer timer;
+  timer.start();
+  runner->run_static_test(testCategory, "defpart-test-test.gc", {"87033668\n"});
+  fmt::print("it took - {}us\n", timer.getUs());
 }

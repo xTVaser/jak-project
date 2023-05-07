@@ -1,6 +1,7 @@
 #include "common/goos/ParseHelpers.h"
 #include "common/type_system/deftype.h"
 #include "common/util/json_util.h"
+#include <common/util/Timer.h>
 
 #include "goalc/compiler/Compiler.h"
 #include "goalc/compiler/IR.h"
@@ -58,9 +59,9 @@ std::vector<std::string> Compiler::run_test_from_file(const std::string& source_
     if (!connect_to_target()) {
       throw std::runtime_error("Compiler::run_test_from_file couldn't connect!");
     }
-
     auto code = m_goos.reader.read_from_file({source_code});
     auto compiled = compile_object_file("test-code", code, true);
+
     if (compiled->is_empty()) {
       return {};
     }
