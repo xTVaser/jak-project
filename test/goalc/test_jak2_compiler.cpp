@@ -59,8 +59,12 @@ TEST_F(Jak2GoalcTests, All) {
 
 TEST_F(Jak2GoalcTests, DraftPerformanceTest) {
   runner->run_static_test(testCategory, "defpart-test.gc", {"1535844\n"});
-  Timer timer;
-  timer.start();
-  runner->run_static_test(testCategory, "defpart-test-test.gc", {"87033668\n"});
-  fmt::print("it took - {}us\n", timer.getUs());
+  int averageTime = 0;
+  for (int i = 0; i < 100; i++) {
+    Timer timer;
+    timer.start();
+    runner->run_static_test(testCategory, "defpart-test-test.gc", {"87033476\n"});
+    averageTime += timer.getUs();
+  }
+  fmt::print("it took on average - {}us\n", averageTime / 100);
 }

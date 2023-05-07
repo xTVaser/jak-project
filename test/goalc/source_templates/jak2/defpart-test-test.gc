@@ -1,5 +1,6 @@
 (defpart 675
-  :init-specs ((:texture (new 'static 'texture-id :index #x46 :page #xc))
+  :init-specs (
+    (:texture (new 'static 'texture-id :index #x46 :page #xc))
     (:birth-func 'birth-func-set-quat)
     (:num 1.0)
     (:scale-x (meters 2))
