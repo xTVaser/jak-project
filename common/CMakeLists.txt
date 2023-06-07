@@ -24,7 +24,6 @@ write_revision_h()
 add_library(common
         audio/audio_formats.cpp
         cross_os_debug/xdbg.cpp
-        cross_sockets/XSocket.cpp
         cross_sockets/XSocketClient.cpp
         cross_sockets/XSocketServer.cpp
         custom_data/pack_helpers.cpp
@@ -83,7 +82,7 @@ add_library(common
         versions/versions.cpp
 )
 
-target_link_libraries(common fmt lzokay replxx libzstd_static tree-sitter)
+target_link_libraries(common fmt lzokay replxx libzstd_static tree-sitter sockpp)
 
 if(WIN32)
     target_link_libraries(common wsock32 ws2_32 windowsapp)

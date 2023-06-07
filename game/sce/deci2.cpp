@@ -116,7 +116,7 @@ s32 sceDeci2ExRecv(s32 s, void* buf, u16 len) {
     memcpy(buf, protocols[s - 1].recv_buffer, len);
     return len;
   } else {
-    printf("[DECI2] Error: ExRecv %d, only %d available!\n", len, avail);
+    lg::error("[DECI2]: ExRecv {}, only {} available!", len, avail);
     return -1;
   }
 }

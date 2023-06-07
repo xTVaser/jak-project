@@ -6,7 +6,16 @@
 #include <vector>
 
 #include "common/common_types.h"
-#include "common/cross_sockets/XSocket.h"
+
+// clang-format off
+#if _WIN32
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <WinSock2.h>
+#include "sockpp/tcp_acceptor.h"
+#endif
+// clang-format on
 
 /// @brief A cross platform generic socket server implementation
 class XSocketServer {
@@ -28,9 +37,8 @@ class XSocketServer {
   virtual void post_init() = 0;
 
  protected:
-  int tcp_port;
-  struct sockaddr_in addr = {};
-  int listening_socket = -1;
+  int16_t tcp_port;
+  sockpp::tcp_acceptor acceptor;
   std::vector<char> buffer;
 
   bool server_initialized = false;

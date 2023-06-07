@@ -2,20 +2,10 @@
 
 #include <string>
 
-#include "common/cross_sockets/XSocket.h"
-
-// clang-format off
-#ifdef _WIN32
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#endif
 #include "common/repl/nrepl/ReplServer.h"
+#include <common/log/log.h>
 
 #include "third-party/fmt/core.h"
-// clang-format on
 
 XSocketClient::XSocketClient(int _tcp_port) {
   tcp_port = _tcp_port;
@@ -23,34 +13,23 @@ XSocketClient::XSocketClient(int _tcp_port) {
 
 XSocketClient::~XSocketClient() {
   disconnect();
-  client_socket = -1;
 }
 
 void XSocketClient::disconnect() {
-  close_socket(client_socket);
-  client_socket = -1;
+  if (tcp_conn) {
+    tcp_conn.close();
+  }
 }
 
 bool XSocketClient::connect() {
+  sockpp::initialize();
   // Open Socket
-  client_socket = open_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-  if (client_socket < 0) {
-    // TODO - log
-    disconnect();
+  if (!tcp_conn.connect(sockpp::inet_address("127.0.0.1", tcp_port))) {
+    lg::error("[XSocketClient:{}] could not connect", tcp_port);
     return false;
   }
 
-  addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  addr.sin_port = htons(tcp_port);
-
-  // Connect to server
-  int result = connect_socket(client_socket, (sockaddr*)&addr, sizeof(addr));
-  if (result == -1) {
-    // TODO - log and close
-    disconnect();
-    return false;
-  }
+  lg::info("[XSocketClient:{}] connected", tcp_port);
 
   return true;
 }

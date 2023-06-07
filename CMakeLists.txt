@@ -185,6 +185,19 @@ include_directories(third-party/tree-sitter/tree-sitter/lib/include)
 include_directories(third-party/tree-sitter/tree-sitter-opengoal/include)
 add_subdirectory(third-party/tree-sitter EXCLUDE_FROM_ALL)
 
+# sockpp library
+if(STATICALLY_LINK)
+    message(STATUS "Statically linking sockpp")
+    option(SOCKPP_BUILD_SHARED "" OFF)
+    option(SOCKPP_BUILD_STATIC "" ON)
+else()
+    message(STATUS "dynamically linking sockpp")
+    option(SOCKPP_BUILD_SHARED "" ON)
+    option(SOCKPP_BUILD_STATIC "" OFF)
+endif()
+include_directories(third-party/sockpp/include)
+add_subdirectory(third-party/sockpp EXCLUDE_FROM_ALL)
+
 # build common library
 add_subdirectory(common)
 

@@ -4,25 +4,14 @@
  * Works with deci2.cpp (sceDeci2) to implement the networking on target
  */
 
-// clang-format off
 #include "Deci2Server.h"
 
-#include "common/cross_sockets/XSocket.h"
-#include "common/versions/versions.h"
 #include "common/listener_common.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
+#include "common/versions/versions.h"
 
 #include "third-party/fmt/core.h"
-
-#ifdef _WIN32
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#endif
-#include "common/log/log.h"
-// clang-format on
 
 Deci2Server::~Deci2Server() {
   // Cleanup the accept thread
@@ -33,8 +22,7 @@ Deci2Server::~Deci2Server() {
     accept_thread.join();
     accept_thread_running = false;
   }
-
-  close_socket(accepted_socket);
+  accepted_socket.close();
 }
 
 void Deci2Server::post_init() {
@@ -45,14 +33,21 @@ void Deci2Server::post_init() {
 }
 
 void Deci2Server::accept_thread_func() {
-  socklen_t addr_len = sizeof(addr);
   while (!kill_accept_thread) {
-    accepted_socket = select_and_accept_socket(listening_socket, (sockaddr*)&addr, &addr_len,
-                                               100000);  // 0.1 second timeout
-    if (accepted_socket >= 0) {
-      set_socket_timeout(accepted_socket, 100000);
+    std::chrono::milliseconds timeout(100);
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
+    sockpp::inet_address peer;
+    while (std::chrono::steady_clock::now() < deadline) {
+      accepted_socket = acceptor.accept(&peer);
+      if (accepted_socket) {
+        break;
+      }
+    }
+    if (accepted_socket) {
+      lg::info("[DECI2:{}]: Received connection from {}", tcp_port, peer.to_string());
+      accepted_socket.write_timeout(std::chrono::microseconds(100000));  // TODO - check error
       u32 versions[2] = {versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR};
-      write_to_socket(accepted_socket, (char*)&versions, 8);  // todo, check result?
+      accepted_socket.write_n((char*)&versions, 8);  // TODO - check error
       client_connected = true;
       return;
     }
@@ -103,23 +98,21 @@ void Deci2Server::read_data() {
     return;
   }
 
+  int bytes_read = 0;
   int desired_size = (int)sizeof(Deci2Header);
-  int got = 0;
 
-  while (got < desired_size) {
-    ASSERT(got + desired_size < (int)buffer.size());
-    auto x = read_from_socket(accepted_socket, buffer.data() + got, desired_size - got);
+  while (bytes_read != desired_size) {
+    bytes_read = accepted_socket.read_n(buffer.data(), desired_size);  // TODO check error
     if (want_exit_callback()) {
       return;
     }
-    got += x > 0 ? x : 0;
   }
 
   auto* hdr = (Deci2Header*)(buffer.data());
-  fprintf(stderr, "[DECI2] Got message: %d %d 0x%x %c -> %c\n", hdr->len, hdr->rsvd, hdr->proto,
-          hdr->src, hdr->dst);
+  lg::debug("[DECI2:{}]: Got message: {} {} {:x} {} -> {}", tcp_port, hdr->len, hdr->rsvd,
+            hdr->proto, hdr->src, hdr->dst);
 
-  hdr->rsvd = got;
+  hdr->rsvd = bytes_read;
 
   // see what protocol we got:
   lock();
@@ -129,14 +122,14 @@ void Deci2Server::read_data() {
     auto& prot = d2_drivers[i];
     if (prot.active && prot.protocol) {
       if (handler != -1) {
-        printf("[DECI2] Warning: more than on protocol handler for this message!\n");
+        lg::warn("[DECI2:{}] Warning: more than on protocol handler for this message!", tcp_port);
       }
       handler = i;
     }
   }
 
   if (handler == -1) {
-    printf("[DECI2] Warning: no handler for this message, ignoring...\n");
+    lg::warn("[DECI2] Warning: no handler for this message, ignoring...", tcp_port);
     unlock();
     return;
   }
@@ -157,14 +150,12 @@ void Deci2Server::read_data() {
     }
 
     // receive from network
-    if (hdr->rsvd < hdr->len) {
-      auto x = read_from_socket(accepted_socket, buffer.data() + hdr->rsvd, hdr->len - hdr->rsvd);
-      if (want_exit_callback()) {
-        return;
-      }
-      got += x > 0 ? x : 0;
-      hdr->rsvd = got;
+    int bytes = accepted_socket.read_n(buffer.data() + hdr->rsvd,
+                                       hdr->len - hdr->rsvd);  // TODO check error
+    if (want_exit_callback()) {
+      return;
     }
+    hdr->rsvd += bytes;
   }
 
   (driver.handler)(DECI2_READDONE, 0, driver.opt);
@@ -174,16 +165,12 @@ void Deci2Server::read_data() {
 void Deci2Server::send_data(void* buf, u16 len) {
   lock();
   if (!client_connected) {
-    printf("[DECI2] send while not connected, not sending!\n");
+    lg::warn("[DECI2:{}] send while not connected, not sending!", tcp_port);
   } else {
-    uint16_t prog = 0;
-    while (prog < len) {
-      int wrote = write_to_socket(accepted_socket, (char*)(buf) + prog, len - prog);
-      prog += wrote;
-      if (!client_connected || want_exit_callback()) {
-        unlock();
-        return;
-      }
+    accepted_socket.write_n(buf, len);  // TODO - check error
+    if (!client_connected || want_exit_callback()) {
+      unlock();
+      return;
     }
   }
   unlock();

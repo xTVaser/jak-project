@@ -6,6 +6,8 @@
 
 #include "common/cross_sockets/XSocketServer.h"
 
+#include "sockpp/tcp_socket.h"
+
 /// @brief Basic implementation of a DECI2 server.
 /// Works with deci2.cpp(sceDeci2) to implement the networking on target
 class Deci2Server : public XSocketServer {
@@ -36,7 +38,7 @@ class Deci2Server : public XSocketServer {
   Deci2Driver* d2_drivers = nullptr;
   int* d2_driver_count = nullptr;
 
-  int accepted_socket = -1;
+  sockpp::tcp_socket accepted_socket;
   bool kill_accept_thread = false;
   bool accept_thread_running = false;
 
