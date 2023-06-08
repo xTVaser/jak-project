@@ -7,9 +7,9 @@
 
 #include "third-party/fmt/core.h"
 
-XTCPSocketClient::XTCPSocketClient(int _tcp_port) {
-  tcp_port = _tcp_port;
-}
+XTCPSocketClient::XTCPSocketClient(int _tcp_port) : tcp_port(_tcp_port) {}
+
+XTCPSocketClient::XTCPSocketClient(std::string _ip, int _tcp_port) : ip(_ip), tcp_port(_tcp_port) {}
 
 XTCPSocketClient::~XTCPSocketClient() {
   disconnect();
@@ -24,7 +24,7 @@ void XTCPSocketClient::disconnect() {
 bool XTCPSocketClient::connect() {
   sockpp::initialize();
   // Open Socket
-  if (!tcp_conn.connect(sockpp::inet_address("127.0.0.1", tcp_port))) {
+  if (!tcp_conn.connect(sockpp::inet_address(ip, tcp_port))) {
     lg::error("[XTCPSocketClient:{}] could not connect", tcp_port);
     return false;
   }

@@ -3,22 +3,7 @@
  * The Listener can connect to a Deci2Server for debugging.
  */
 
-// clang-format off
-#ifdef __linux__
-#include <stdexcept>
-
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <unistd.h>
-#elif _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-
-// remove the evil windows min/max macros!
-#undef min
-#undef max
-#endif
+#include "Listener.h"
 
 #include <algorithm>
 #include <chrono>
@@ -26,15 +11,12 @@
 #include <stdexcept>
 #include <thread>
 
-#include "common/cross_sockets/XSocket.h"
+#include "common/cross_sockets/XSocketCommon.h"
+#include "common/log/log.h"
 #include "common/util/Assert.h"
 #include "common/versions/versions.h"
-#include "common/log/log.h"
-
-#include "Listener.h"
 
 #include "third-party/fmt/core.h"
-// clang-format on
 
 using namespace versions;
 constexpr bool debug_listener = false;
@@ -49,9 +31,7 @@ Listener::~Listener() {
   disconnect();
 
   delete[] m_buffer;
-  if (listen_socket >= 0) {
-    close_socket(listen_socket);
-  }
+  listen_socket->disconnect();
 }
 
 /*!
@@ -96,87 +76,43 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
     return true;
   }
 
+  // disconnect old socket
   disconnect();
-
-  if (listen_socket >= 0) {
-    close_socket(listen_socket);
+  if (listen_socket) {
+    listen_socket->disconnect();
   }
 
-  // construct socket
-  listen_socket = open_socket(AF_INET, SOCK_STREAM, 0);
-  if (listen_socket < 0) {
-    printf("[Listener] Failed to create socket.\n");
-    listen_socket = -1;
+  // establish socket connection
+  listen_socket = std::make_unique<XTCPSocketClient>(ip, port);
+  bool valid_socket = listen_socket->connect();  // TODO - connect with timeout
+
+  if (!valid_socket) {
+    printf("[Listener] Failed to create socket and connect.\n");
     return false;
   }
 
-  if (set_socket_timeout(listen_socket, 500000) < 0) {
-    close_socket(listen_socket);
-    listen_socket = -1;
-    return false;
-  }
-
+  // Set timeouts and options
+  // todo check errors
+  listen_socket->tcp_conn.read_timeout(std::chrono::microseconds(500000));
+  listen_socket->tcp_conn.write_timeout(std::chrono::microseconds(500000));
   // set nodelay, which makes small rapid messages faster, but large messages slower
   int one = 1;
-  if (set_socket_option(listen_socket, TCP_SOCKET_LEVEL, TCP_NODELAY, &one, sizeof(one))) {
-    close_socket(listen_socket);
-    listen_socket = -1;
-    return false;
-  }
-
-  // setup address
-  sockaddr_in server_address = {};
-  server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(port);
-  if (inet_pton(AF_INET, ip.c_str(), &server_address.sin_addr) <= 0) {
-    printf("[Listener] Invalid IP address.\n");
-    close_socket(listen_socket);
-    listen_socket = -1;
-    return false;
-  }
-
-  // connect!
-  int rv, i;
-  for (i = 0; i < n_tries; i++) {
-    rv = connect(listen_socket, (sockaddr*)&server_address, sizeof(server_address));
-    if (rv >= 0) {
-      break;
-    }
-    std::this_thread::sleep_for(std::chrono::microseconds(100000));
-  }
-  if (rv < 0) {
-    printf("[Listener] Failed to connect\n");
-    close_socket(listen_socket);
-    listen_socket = -1;
-    return false;
-  } else {
-    printf("[Listener] Socket connected established! (took %d tries). Waiting for version...\n", i);
-  }
+  listen_socket->tcp_conn.set_option(xsockets::TCP_SOCKET_LEVEL, TCP_NODELAY, &one, sizeof(one));
 
   // get the GOAL version number, to make sure we connected to the right thing
   int32_t version_buffer[2] = {-1, -1};
-  int read_tries = 0;
-  int prog = 0;
-  bool ok = true;
-  while (prog < 8) {
-    auto r = read_from_socket(listen_socket, (char*)version_buffer + prog, 8 - prog);
-    std::this_thread::sleep_for(std::chrono::microseconds(100000));
-    prog += r > 0 ? r : 0;
-    read_tries++;
-    if (read_tries > 50) {
-      ok = false;
-      break;
-    }
-  }
-  if (!ok) {
-    printf("[Listener] Failed to get version number\n");
-    close_socket(listen_socket);
-    listen_socket = -1;
+
+  // TODO - bump timeout for only this?
+  auto read_bytes = listen_socket->tcp_conn.read_n((char*)version_buffer, 8);
+  if (read_bytes == -1) {
+    printf("[Listener] Failed to get version number, disconnecting\n");
+    listen_socket->disconnect();
     return false;
   }
 
   printf("Got version %d.%d", version_buffer[0], version_buffer[1]);
   if (version_buffer[0] == GOAL_VERSION_MAJOR && version_buffer[1] == GOAL_VERSION_MINOR) {
+    printf("[Listener] Socket connected established! (took TODO ms). Waiting for version...\n");
     printf(" OK!\n");
     m_connected = true;
     rcv_thread = std::thread(&Listener::receive_func, this);
@@ -184,8 +120,7 @@ bool Listener::connect_to_target(int n_tries, const std::string& ip, int port) {
     return true;
   } else {
     printf(", expected %d.%d. Cannot connect.\n", GOAL_VERSION_MAJOR, GOAL_VERSION_MINOR);
-    close_socket(listen_socket);
-    listen_socket = -1;
+    listen_socket->disconnect();
     return false;
   }
 
@@ -204,11 +139,12 @@ void Listener::receive_func() {
     u32 rcvd_desired = sizeof(ListenerMessageHeader);
     char buff[sizeof(ListenerMessageHeader)];
     while (rcvd < rcvd_desired) {
-      auto got = read_from_socket(listen_socket, buff + rcvd, rcvd_desired - rcvd);
+      auto got = listen_socket->tcp_conn.read_n(buff + rcvd, rcvd_desired - rcvd);
       rcvd += got > 0 ? got : 0;
 
       // kick us out if we got a bogus read result
-      if (got == 0 || (got == -1 && !socket_timed_out())) {
+      if (got == 0 ||
+          (got == -1 && !xsockets::socket_timed_out(listen_socket->tcp_conn.last_error()))) {
         m_connected = false;
       }
 
@@ -246,8 +182,8 @@ void Listener::receive_func() {
           while (rcvd < hdr->deci2_header.len) {
             if (!m_connected)
               return;
-            int got = read_from_socket(listen_socket, ack_recv_buff + ack_recv_prog,
-                                       hdr->deci2_header.len - rcvd);
+            int got = listen_socket->tcp_conn.read_n(ack_recv_buff + ack_recv_prog,
+                                                     hdr->deci2_header.len - rcvd);
             got = got > 0 ? got : 0;
             rcvd += got;
             ack_recv_prog += got;
@@ -278,11 +214,12 @@ void Listener::receive_func() {
           }
 
           int got =
-              read_from_socket(listen_socket, str_buff + msg_prog, hdr->deci2_header.len - rcvd);
+              listen_socket->tcp_conn.read_n(str_buff + msg_prog, hdr->deci2_header.len - rcvd);
           got = got > 0 ? got : 0;
           rcvd += got;
           msg_prog += got;
-          if (got == 0 || (got == -1 && !socket_timed_out())) {
+          if (got == 0 ||
+              (got == -1 && !xsockets::socket_timed_out(listen_socket->tcp_conn.last_error()))) {
             m_connected = false;
           }
         }
@@ -406,7 +343,7 @@ void Listener::send_reset(bool shutdown) {
   header->msg_id = last_sent_id;
   send_buffer(sizeof(ListenerMessageHeader));
   disconnect();
-  close_socket(listen_socket);
+  listen_socket->disconnect();
   printf("[Listener] Closed connection to target\n");
 }
 
@@ -448,7 +385,7 @@ void Listener::send_buffer(int sz) {
   waiting_for_ack = true;
   while (wrote < sz) {
     auto to_send = std::min(512, sz - wrote);
-    auto x = write_to_socket(listen_socket, m_buffer + wrote, to_send);
+    auto x = listen_socket->tcp_conn.write_n(m_buffer + wrote, to_send);
     wrote += x > 0 ? x : 0;
   }
 

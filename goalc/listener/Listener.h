@@ -5,23 +5,23 @@
  * The Listener can connect to a Deci2Server for debugging.
  */
 
-// clang-format off
-#ifndef JAK1_LISTENER_H
-#define JAK1_LISTENER_H
-
 #include <mutex>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <vector>
 
+#include "MemoryMap.h"
+
 #include "common/common_types.h"
 #include "common/cross_os_debug/xdbg.h"
-#include "common/versions/versions.h"
 #include "common/listener_common.h"
+#include "common/versions/versions.h"
 
 #include "goalc/debugger/Debugger.h"
-#include "MemoryMap.h"
+
+// clang-format off
+#include "common/cross_sockets/XTCPSocketClient.h"
 // clang-format on
 
 namespace listener {
@@ -47,17 +47,16 @@ class Listener {
 
  private:
   void add_load(const std::string& name, const LoadEntry& le);
-  void do_unload(const std::string& name);
 
   void send_buffer(int sz);
   bool wait_for_ack();
   void handle_output_message(const char* msg);
 
   int m_default_port = DECI2_PORT;
-  char* m_buffer = nullptr;             //! buffer for incoming messages
-  bool m_connected = false;             //! do we think we are connected?
-  bool receive_thread_running = false;  //! is the receive thread unjoined?
-  int listen_socket = -1;               //! socket
+  char* m_buffer = nullptr;  //! buffer for incoming messages
+  bool m_connected = false;  //! do we think we are connected? TODO - replace this with a function
+  bool receive_thread_running = false;              //! is the receive thread unjoined?
+  std::unique_ptr<XTCPSocketClient> listen_socket;  //! socket
   bool got_ack = false;
   bool waiting_for_ack = false;
 
@@ -76,5 +75,3 @@ class Listener {
   uint64_t last_recvd_id = 0;
 };
 }  // namespace listener
-
-#endif  // JAK1_LISTENER_H

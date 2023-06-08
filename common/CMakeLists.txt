@@ -24,7 +24,7 @@ write_revision_h()
 add_library(common
         audio/audio_formats.cpp
         cross_os_debug/xdbg.cpp
-        cross_sockets/XSocket.cpp
+        
         cross_sockets/XTCPSocketClient.cpp
         cross_sockets/XTCPSocketServer.cpp
         custom_data/pack_helpers.cpp
@@ -80,7 +80,7 @@ add_library(common
         util/term_util.cpp
         util/Timer.cpp
         util/unicode_util.cpp
-        versions/versions.cpp)
+        versions/versions.cpp "cross_sockets/XSocketCommon.h")
 
 target_link_libraries(common fmt lzokay replxx libzstd_static tree-sitter sockpp)
 

@@ -1,5 +1,10 @@
 #pragma once
 
+#if _WIN32
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <functional>
 #include <mutex>
 #include <thread>
@@ -7,15 +12,7 @@
 
 #include "common/common_types.h"
 
-// clang-format off
-#if _WIN32
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinSock2.h>
 #include "sockpp/tcp_acceptor.h"
-#endif
-// clang-format on
 
 /// @brief A cross platform generic socket server implementation
 class XTCPSocketServer {
