@@ -3,7 +3,7 @@
 #include <optional>
 #include <set>
 
-#include "common/cross_sockets/XSocketServer.h"
+#include "common/cross_sockets/XTCPSocketServer.h"
 
 enum ReplServerMessageType { PING = 0, EVAL = 10, SHUTDOWN = 20 };
 
@@ -12,9 +12,9 @@ struct ReplServerHeader {
   u32 type;
 };
 
-class ReplServer : public XSocketServer {
+class ReplServer : public XTCPSocketServer {
  public:
-  using XSocketServer::XSocketServer;
+  using XTCPSocketServer::XTCPSocketServer;
   virtual ~ReplServer();
 
   void post_init() override;
@@ -22,10 +22,15 @@ class ReplServer : public XSocketServer {
   std::optional<std::string> get_msg();
 
  private:
-  int max_clients = 50;
+  int max_clients = 100;
   std::vector<char> header_buffer = std::vector<char>((int)sizeof(ReplServerHeader));
-  fd_set read_sockets;
-  std::set<int> client_sockets = {};
 
-  void ping_response(int socket);
+  std::vector<std::unique_ptr<sockpp::tcp_socket>> client_sockets = {};
+  bool kill_accept_thread = false;
+  bool accept_thread_running = false;
+  std::thread accept_thread;
+  std::mutex server_mutex;
+
+  void accept_thread_func();
+  bool ping_response(std::unique_ptr<sockpp::tcp_socket>& socket);
 };

@@ -1,151 +1,111 @@
-// clang-format off
+
 #include "ReplServer.h"
 
-#include "common/cross_sockets/XSocket.h"
+#include "common/cross_sockets/XTCPSocketServer.h"
+#include "common/log/log.h"
 #include "common/versions/versions.h"
 
 #include "third-party/fmt/core.h"
 
-#ifdef _WIN32
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#endif
-// clang-format on
-
-// TODO - basically REPL to listen and inject commands into a running REPL
-// - we will need a C++ side client as well which will let us communicate with the repl via for
-// example, ImgUI
-//
-// TODO - The server also needs to eventually return the result of the evaluation
-
+// TODO - The server needs to eventually return the result of the evaluation
 ReplServer::~ReplServer() {
+  // Cleanup the accept thread
+  if (accept_thread_running) {
+    kill_accept_thread = true;
+    // NOTE - if we don't want to wait for the roundtrip timeout to exit the game gracefully
+    // we should just terminate the thread forcefully
+    accept_thread.join();
+    accept_thread_running = false;
+  }
   // Close all our client sockets!
-  for (const int& sock : client_sockets) {
-    close_socket(sock);
+  for (auto& sock : client_sockets) {
+    sock->close();
   }
 }
 
 void ReplServer::post_init() {
   // Add the listening socket to our set of sockets
-  fmt::print("[nREPL:{}:{}] awaiting connections\n", tcp_port, listening_socket);
+  lg::info("[nREPL:{}:{}] awaiting connections", tcp_port, acceptor.address().to_string());
+  accept_thread_running = true;
+  kill_accept_thread = false;
+  accept_thread = std::thread(&ReplServer::accept_thread_func, this);
 }
 
-void ReplServer::ping_response(int socket) {
+bool ReplServer::ping_response(std::unique_ptr<sockpp::tcp_socket>& socket) {
   std::string ping = fmt::format("Connected to OpenGOAL v{}.{} nREPL!",
                                  versions::GOAL_VERSION_MAJOR, versions::GOAL_VERSION_MINOR);
-  auto resp = write_to_socket(socket, ping.c_str(), ping.size());
-  if (resp == -1) {
-    fmt::print("[nREPL:{}] Client Disconnected: {}\n", tcp_port, inet_ntoa(addr.sin_addr),
-               ntohs(addr.sin_port), socket);
-    close_socket(socket);
-    client_sockets.erase(socket);
+  const auto ok = socket->write(ping);
+  if (ok == -1) {
+    lg::info("[nREPL:{}] Client Disconnected: {}", tcp_port, socket->address().to_string());
+    socket->close();
+    return false;
+  }
+  return true;
+}
+
+void ReplServer::accept_thread_func() {
+  while (!kill_accept_thread) {
+    std::chrono::milliseconds timeout(100);
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
+    while (std::chrono::steady_clock::now() < deadline) {
+      sockpp::inet_address peer;
+      auto client_socket = acceptor.accept(&peer);
+      if (client_socket) {
+        auto sock_ptr = std::make_unique<sockpp::tcp_socket>(std::move(client_socket));
+        client_socket.read_timeout(std::chrono::microseconds(100000));   // TODO - check error
+        client_socket.write_timeout(std::chrono::microseconds(100000));  // TODO - check error
+        const auto success = ping_response(sock_ptr);
+        if (!success) {
+          client_socket.close();
+        } else {
+          server_mutex.lock();
+          if (client_sockets.size() == max_clients) {
+            client_sockets.erase(client_sockets.begin());
+          }
+          client_sockets.push_back(std::move(sock_ptr));
+          lg::info("[nREPL:{}]: Established connection to {}", tcp_port, peer.to_string());
+          server_mutex.unlock();
+        }
+      }
+    }
   }
 }
 
 std::optional<std::string> ReplServer::get_msg() {
-  // Clear the sockets we are listening on
-  FD_ZERO(&read_sockets);
-
-  // Add the server's main listening socket (where we accept clients from)
-  FD_SET(listening_socket, &read_sockets);
-
-  int max_sd = listening_socket;
-  for (const int& sock : client_sockets) {
-    if (sock > max_sd) {
-      max_sd = sock;
-    }
-    if (sock > 0) {
-      FD_SET(sock, &read_sockets);
-    }
-  }
-
-  // Wait for activity on _something_, with a timeout so we don't get stuck here on exit.
-  struct timeval timeout;
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 100000;
-  auto activity = select(max_sd + 1, &read_sockets, NULL, NULL, &timeout);
-
-  if (activity < 0) {  // TODO - || error!
-    return std::nullopt;
-  }
-
-  // If something happened on the master socket - it's a new connection
-  if (FD_ISSET(listening_socket, &read_sockets)) {
-    socklen_t addr_len = sizeof(addr);
-    auto new_socket = accept_socket(listening_socket, (sockaddr*)&addr, &addr_len);
-    if (new_socket < 0) {
-      // TODO - handle error
-    } else {
-      fmt::print("[nREPL:{}]: New socket connection: {}:{}:{}\n", tcp_port,
-                 inet_ntoa(addr.sin_addr), ntohs(addr.sin_port), new_socket);
-
-      // Say hello
-      ping_response(new_socket);
-      // Track the new socket
-      if ((int)client_sockets.size() < max_clients) {
-        client_sockets.insert(new_socket);
-      } else {
-        // TODO - Respond with NO
-      }
-    }
-  }
-
-  // otherwise (and no matter what) check all the clients to see if they have sent us anything
-  // else its some IO operation on some other socket
-  //
+  server_mutex.lock();
+  std::optional<std::string> result;
+  // Iterate through our client sockets, see if anyone has sent us a message
   // RACE - the first client wins
+  for (auto it = client_sockets.begin(); it != client_sockets.end();) {
+    auto req_bytes = it->get()->read_n(header_buffer.data(), header_buffer.size());
+    if (req_bytes == -1) {
+      // Disconnect
+      lg::error("[nREPL:{}] Client Disconnected: {}", tcp_port, it->get()->address().to_string());
+      it->get()->close();
+      it = client_sockets.erase(it);
+      continue;
+    }
+    if (req_bytes == header_buffer.size()) {
+      auto* header = (ReplServerHeader*)(header_buffer.data());
+      // get the body of the message
+      int expected_size = header->length;
+      req_bytes = it->get()->read_n(buffer.data(), expected_size);  // TODO - check error
 
-  // TODO - there are ways to do this with iterators but, couldn't figure it out!
-  std::vector<int> sockets_to_scan(client_sockets.begin(), client_sockets.end());
-  for (const int& sock : sockets_to_scan) {
-    if (FD_ISSET(sock, &read_sockets)) {
-      // Attempt to read a header
-      // TODO - should this be in a loop?
-      auto req_bytes = read_from_socket(sock, header_buffer.data(), header_buffer.size());
-      if (req_bytes == 0) {
-        // Socket disconnected
-        // TODO - add a queue of messages in the REPL::Wrapper so we can print _BEFORE_ the prompt
-        // is output
-        fmt::print("[nREPL:{}] Client Disconnected: {}\n", tcp_port, inet_ntoa(addr.sin_addr),
-                   ntohs(addr.sin_port), sock);
-
-        // Cleanup the socket and remove it from our set
-        close_socket(sock);
-        client_sockets.erase(sock);
-      } else {
-        // Otherwise, process the message
-        auto* header = (ReplServerHeader*)(header_buffer.data());
-        // get the body of the message
-        int expected_size = header->length;
-        int got = 0;
-        while (got < expected_size) {
-          if (got + expected_size > (int)buffer.size()) {
-            fmt::print(stderr,
-                       "[nREPL:{}]: Bad message, aborting the read.  Got :{}, Expected: {}, Buffer "
-                       "Size: {}",
-                       tcp_port, got, expected_size, buffer.size());
-            return std::nullopt;
-          }
-          auto x = read_from_socket(sock, buffer.data() + got, expected_size - got);
-          if (want_exit_callback()) {
-            return std::nullopt;
-          }
-          got += x > 0 ? x : 0;
+      if (header->type == ReplServerMessageType::PING) {
+        const auto success = ping_response(*it);
+        if (!success) {
+          it = client_sockets.erase(it);
         }
-
-        switch (header->type) {
-          case ReplServerMessageType::PING:
-            ping_response(sock);
-            return std::nullopt;
-          case ReplServerMessageType::EVAL:
-            std::string msg(buffer.data(), header->length);
-            return std::make_optional(msg);
-        }
+        server_mutex.unlock();
+        return std::nullopt;
+      } else if (header->type == ReplServerMessageType::EVAL) {
+        std::string msg(buffer.data(), header->length);
+        server_mutex.unlock();
+        return std::make_optional(msg);
       }
     }
+    it++;
   }
+  server_mutex.unlock();
   return std::nullopt;
 }

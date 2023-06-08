@@ -1,7 +1,6 @@
 // clang-format off
 #include "ReplClient.h"
 
-#include "common/cross_sockets/XSocket.h"
 #include "common/versions/versions.h"
 
 #include "third-party/fmt/core.h"
@@ -28,9 +27,9 @@ void ReplClient::eval(std::string form) {
 
   buffer.insert(buffer.end(), form.begin(), form.end());
 
-  int result = write_to_socket(client_socket, buffer.data(), buffer.size());
-  if (result == -1) {
-    // TODO - log
-    disconnect();
-  }
+  // int result = write_to_socket(client_socket, buffer.data(), buffer.size());
+  // if (result == -1) {
+  //   // TODO - log
+  //   disconnect();
+  // }
 }

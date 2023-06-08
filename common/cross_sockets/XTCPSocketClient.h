@@ -17,13 +17,13 @@
 // clang-format on
 
 /// @brief A cross platform generic socket client implementation
-class XSocketClient {
+class XTCPSocketClient {
  public:
-  XSocketClient(int _tcp_port);
-  ~XSocketClient();
+  XTCPSocketClient(int _tcp_port);
+  ~XTCPSocketClient();
 
-  XSocketClient(const XSocketClient&) = delete;
-  XSocketClient& operator=(const XSocketClient&) = delete;
+  XTCPSocketClient(const XTCPSocketClient&) = delete;
+  XTCPSocketClient& operator=(const XTCPSocketClient&) = delete;
 
   bool connect();
   void disconnect();

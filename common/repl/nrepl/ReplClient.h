@@ -2,11 +2,11 @@
 
 #include "ReplServer.h"
 
-#include "common/cross_sockets/XSocketClient.h"
+#include "common/cross_sockets/XTCPSocketClient.h"
 
-class ReplClient : public XSocketClient {
+class ReplClient : public XTCPSocketClient {
  public:
-  using XSocketClient::XSocketClient;
+  using XTCPSocketClient::XTCPSocketClient;
   virtual ~ReplClient() = default;
 
   ReplClient& operator=(const ReplClient&) { return *this; }

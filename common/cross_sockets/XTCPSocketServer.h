@@ -18,16 +18,16 @@
 // clang-format on
 
 /// @brief A cross platform generic socket server implementation
-class XSocketServer {
+class XTCPSocketServer {
  public:
   static constexpr int DEF_BUFFER_SIZE = 32 * 1024 * 1024;
-  XSocketServer(std::function<bool()> shutdown_callback,
-                int _tcp_port,
-                int _buffer_size = DEF_BUFFER_SIZE);
-  virtual ~XSocketServer();
+  XTCPSocketServer(std::function<bool()> shutdown_callback,
+                   int _tcp_port,
+                   int _buffer_size = DEF_BUFFER_SIZE);
+  virtual ~XTCPSocketServer();
 
-  XSocketServer(const XSocketServer&) = delete;
-  XSocketServer& operator=(const XSocketServer&) = delete;
+  XTCPSocketServer(const XTCPSocketServer&) = delete;
+  XTCPSocketServer& operator=(const XTCPSocketServer&) = delete;
 
   bool init_server();
   void shutdown_server();
