@@ -7,24 +7,24 @@ on:
 
 jobs:
   # Windows
-  build_windows_clang:
-    name: "🖥️ Windows"
-    uses: ./.github/workflows/windows-build-clang.yaml
-    with:
-      cmakePreset: "Release-windows-clang-static"
-      cachePrefix: "static"
-      uploadArtifacts: true
-    secrets: inherit
+  # build_windows_clang:
+  #   name: "🖥️ Windows"
+  #   uses: ./.github/workflows/windows-build-clang.yaml
+  #   with:
+  #     cmakePreset: "Release-windows-clang-static"
+  #     cachePrefix: "static"
+  #     uploadArtifacts: true
+  #   secrets: inherit
 
-  # Linux
-  build_linux_clang:
-    name: "🐧 Linux"
-    uses: ./.github/workflows/linux-build-clang.yaml
-    with:
-      cmakePreset: "Release-linux-clang-static"
-      cachePrefix: "static"
-      uploadArtifacts: true
-    secrets: inherit
+  # # Linux
+  # build_linux_clang:
+  #   name: "🐧 Linux"
+  #   uses: ./.github/workflows/linux-build-clang.yaml
+  #   with:
+  #     cmakePreset: "Release-linux-clang-static"
+  #     cachePrefix: "static"
+  #     uploadArtifacts: true
+  #   secrets: inherit
 
   # macOS
   build_macos_clang:
@@ -38,10 +38,10 @@ jobs:
 
   # Upload the Artifacts
   upload_artifacts:
-    if: github.repository == 'open-goal/jak-project'
+    if: github.repository == 'xTVaser/jak-project'
     needs:
-      - build_windows_clang
-      - build_linux_clang
+      # - build_windows_clang
+      # - build_linux_clang
       - build_macos_clang
     name: "Upload Artifacts"
     runs-on: ubuntu-latest
@@ -59,25 +59,25 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -Rl ./ci-artifacts/
 
-      - name: Prepare Linux Release Assets
-        run: |
-          mkdir -p ./ci-artifacts/linux
-          ./.github/scripts/releases/extract_build_unix.sh ./ci-artifacts/linux ./ci-artifacts/opengoal-linux-static ./
-          pushd ci-artifacts/linux
-          TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
-          tar czf ../final/opengoal-linux-${TAG_VAL}.tar.gz .
-          popd
-          strip ./ci-artifacts/opengoal-linux-static/lsp/lsp
-          chmod +x ./ci-artifacts/opengoal-linux-static/lsp/lsp
-          cp ./ci-artifacts/opengoal-linux-static/lsp/lsp ./ci-artifacts/final/opengoal-lsp-linux-${TAG_VAL}.bin
+      # - name: Prepare Linux Release Assets
+      #   run: |
+      #     mkdir -p ./ci-artifacts/linux
+      #     ./.github/scripts/releases/extract_build_unix.sh ./ci-artifacts/linux ./ci-artifacts/opengoal-linux-static ./
+      #     pushd ci-artifacts/linux
+      #     TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
+      #     tar czf ../final/opengoal-linux-${TAG_VAL}.tar.gz .
+      #     popd
+      #     strip ./ci-artifacts/opengoal-linux-static/lsp/lsp
+      #     chmod +x ./ci-artifacts/opengoal-linux-static/lsp/lsp
+      #     cp ./ci-artifacts/opengoal-linux-static/lsp/lsp ./ci-artifacts/final/opengoal-lsp-linux-${TAG_VAL}.bin
 
-      - name: Prepare Windows Build Assets
-        run: |
-          mkdir -p ./ci-artifacts/windows
-          ./.github/scripts/releases/extract_build_windows.sh ./ci-artifacts/windows ./ci-artifacts/opengoal-windows-static ./
-          TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
-          7z a -tzip ./ci-artifacts/final/opengoal-windows-${TAG_VAL}.zip ./ci-artifacts/windows/*
-          cp ./ci-artifacts/opengoal-windows-static/lsp.exe ./ci-artifacts/final/opengoal-lsp-windows-${TAG_VAL}.exe
+      # - name: Prepare Windows Build Assets
+      #   run: |
+      #     mkdir -p ./ci-artifacts/windows
+      #     ./.github/scripts/releases/extract_build_windows.sh ./ci-artifacts/windows ./ci-artifacts/opengoal-windows-static ./
+      #     TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
+      #     7z a -tzip ./ci-artifacts/final/opengoal-windows-${TAG_VAL}.zip ./ci-artifacts/windows/*
+      #     cp ./ci-artifacts/opengoal-windows-static/lsp.exe ./ci-artifacts/final/opengoal-lsp-windows-${TAG_VAL}.exe
 
       - name: Prepare macOS Build Assets
         run: |
@@ -96,11 +96,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
-          gh release upload "${TAG_VAL}" ${{ github.WORKSPACE }}/ci-artifacts/final/* --repo open-goal/jak-project --clobber
+          gh release upload "${TAG_VAL}" ${{ github.WORKSPACE }}/ci-artifacts/final/* --repo xTVaser/jak-project --clobber
 
       - name: Publish Release
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
         run: |
           TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
-          gh release edit ${TAG_VAL} --draft=false --repo open-goal/jak-project
+          gh release edit ${TAG_VAL} --draft=false --repo xTVaser/jak-project
