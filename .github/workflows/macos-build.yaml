@@ -52,14 +52,16 @@ jobs:
       - name: Build Project
         run: cmake --build build --parallel $((`sysctl -n hw.logicalcpu`))
 
-      - name: Testing
-        run: |
-          which strip
-          file ./build/game/gk
-          strip ./build/game/gk
-
       - name: Run Tests
         run: ./test.sh
+
+      - name: Prepare artifacts
+        if: ${{ inputs.uploadArtifacts }}
+        run: |
+          strip ./build/goalc/goalc
+          strip ./build/decompiler/extractor
+          strip ./build/game/gk
+          strip ./build/lsp/lsp
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

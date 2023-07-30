@@ -15,17 +15,6 @@ if [ "$PREP_BIN" = "true" ]; then
   cp $BIN_SOURCE/goalc/goalc $DEST
   cp $BIN_SOURCE/decompiler/extractor $DEST
 
-  which strip
-
-  file $DEST/gk
-  strip $DEST/gk
-
-  file $DEST/goalc
-  strip $DEST/goalc
-
-  file $DEST/extractor
-  strip $DEST/extractor
-
   chmod +x $DEST/gk
   chmod +x $DEST/goalc
   chmod +x $DEST/extractor
