@@ -13,6 +13,7 @@ jobs:
     with:
       cmakePreset: "Release-windows-clang-static"
       cachePrefix: "static"
+      uploadArtifacts: true
     secrets: inherit
 
   # Linux
@@ -22,6 +23,7 @@ jobs:
     with:
       cmakePreset: "Release-linux-clang-static"
       cachePrefix: "static"
+      uploadArtifacts: true
     secrets: inherit
 
   # macOS
@@ -31,6 +33,7 @@ jobs:
     with:
       cmakePreset: "Release-macos-clang-static"
       cachePrefix: "static"
+      uploadArtifacts: true
     secrets: inherit
 
   # Upload the Artifacts
