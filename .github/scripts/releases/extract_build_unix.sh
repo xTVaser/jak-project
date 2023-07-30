@@ -15,6 +15,8 @@ if [ "$PREP_BIN" = "true" ]; then
   cp $BIN_SOURCE/goalc/goalc $DEST
   cp $BIN_SOURCE/decompiler/extractor $DEST
 
+  which strip
+
   file $DEST/gk
   strip $DEST/gk
 
