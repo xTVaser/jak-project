@@ -67,7 +67,6 @@ jobs:
           TAG_VAL=$(echo ${{ github.REF }} | awk -F'refs/tags/' '{print $2}')
           tar czf ../final/opengoal-linux-${TAG_VAL}.tar.gz .
           popd
-          strip ./ci-artifacts/opengoal-linux-static/lsp/lsp
           chmod +x ./ci-artifacts/opengoal-linux-static/lsp/lsp
           cp ./ci-artifacts/opengoal-linux-static/lsp/lsp ./ci-artifacts/final/opengoal-lsp-linux-${TAG_VAL}.bin
 
