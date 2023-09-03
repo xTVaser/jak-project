@@ -428,5 +428,6 @@ int main(int argc, char** argv) {
     launch_game();
   }
 
+  lg::info("wtf10");
   return 0;
 }
