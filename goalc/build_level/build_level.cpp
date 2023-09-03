@@ -7,6 +7,7 @@
 #include "common/util/json_util.h"
 #include "common/util/string_util.h"
 
+#include "decompiler/extractor/extractor_util.h"
 #include "decompiler/level_extractor/extract_merc.h"
 #include "goalc/build_level/Entity.h"
 #include "goalc/build_level/FileInfo.h"
@@ -163,61 +164,58 @@ bool run_build_level(const std::string& input_file,
     }
 
     // Look for iso build info if it's available, otherwise default to ntsc_v1
-    return false;
-    //  const auto version_info = get_version_info_or_default(iso_folder);
+    const auto version_info = get_version_info_or_default(iso_folder);
 
-    //  decompiler::Config config;
-    //  try {
-    //    config = decompiler::read_config_file(
-    //        file_util::get_jak_project_dir() / "decompiler/config/jak1/jak1_config.jsonc",
-    //        version_info.decomp_config_version,
-    //        R"({"decompile_code": false, "find_functions": false, "levels_extract": true,
-    //        "allowed_objects": []})");
-    //  } catch (const std::exception& e) {
-    //    lg::error("Failed to parse config: {}", e.what());
-    //    return false;
-    //  }
+    decompiler::Config config;
+    try {
+      config = decompiler::read_config_file(
+          file_util::get_jak_project_dir() / "decompiler/config/jak1/jak1_config.jsonc",
+          version_info.decomp_config_version,
+          R"({"decompile_code": false, "find_functions": false, "levels_extract": true, "allowed_objects": []})");
+    } catch (const std::exception& e) {
+      lg::error("Failed to parse config: {}", e.what());
+      return false;
+    }
 
-    //  std::vector<fs::path> dgos, objs;
-    //  for (const auto& dgo_name : config.dgo_names) {
-    //    dgos.push_back(iso_folder / dgo_name);
-    //  }
+    std::vector<fs::path> dgos, objs;
+    for (const auto& dgo_name : config.dgo_names) {
+      dgos.push_back(iso_folder / dgo_name);
+    }
 
-    //  for (const auto& obj_name : config.object_file_names) {
-    //    objs.push_back(iso_folder / obj_name);
-    //  }
+    for (const auto& obj_name : config.object_file_names) {
+      objs.push_back(iso_folder / obj_name);
+    }
 
-    //  decompiler::ObjectFileDB db(dgos, fs::path(config.obj_file_name_map_file), objs, {}, {},
-    //                              config);
+    decompiler::ObjectFileDB db(dgos, fs::path(config.obj_file_name_map_file), objs, {}, {},
+                                config);
 
-    //  // need to process link data for tpages
-    //  db.process_link_data(config);
+    // need to process link data for tpages
+    db.process_link_data(config);
 
-    //  decompiler::TextureDB tex_db;
-    //  auto textures_out = file_util::get_jak_project_dir() / "decompiler_out/jak1/textures";
-    //  file_util::create_dir_if_needed(textures_out);
-    //  db.process_tpages(tex_db, textures_out, config);
+    decompiler::TextureDB tex_db;
+    auto textures_out = file_util::get_jak_project_dir() / "decompiler_out/jak1/textures";
+    file_util::create_dir_if_needed(textures_out);
+    db.process_tpages(tex_db, textures_out, config);
 
-    //  std::vector<std::string> processed_art_groups;
+    std::vector<std::string> processed_art_groups;
 
-    //  // find all art groups used by the custom level in other dgos
-    //  for (auto& dgo : config.dgo_names) {
-    //    // remove "DGO/" prefix
-    //    const auto& dgo_name = dgo.substr(4);
-    //    const auto& files = db.obj_files_by_dgo.at(dgo_name);
-    //    auto art_groups = find_art_groups(
-    //        processed_art_groups, level_json.at("art_groups").get<std::vector<std::string>>(),
-    //        files);
-    //    auto tex_remap = decompiler::extract_tex_remap(db, dgo_name);
-    //    for (const auto& ag : art_groups) {
-    //      if (ag.name.length() > 3 && !ag.name.compare(ag.name.length() - 3, 3, "-ag")) {
-    //        const auto& ag_file = db.lookup_record(ag);
-    //        lg::print("custom level: extracting art group {}\n", ag_file.name_in_dgo);
-    //        decompiler::extract_merc(ag_file, tex_db, db.dts, tex_remap, pc_level, false,
-    //                                 db.version());
-    //      }
-    //    }
-    //  }
+    // find all art groups used by the custom level in other dgos
+    for (auto& dgo : config.dgo_names) {
+      // remove "DGO/" prefix
+      const auto& dgo_name = dgo.substr(4);
+      const auto& files = db.obj_files_by_dgo.at(dgo_name);
+      auto art_groups = find_art_groups(
+          processed_art_groups, level_json.at("art_groups").get<std::vector<std::string>>(), files);
+      auto tex_remap = decompiler::extract_tex_remap(db, dgo_name);
+      for (const auto& ag : art_groups) {
+        if (ag.name.length() > 3 && !ag.name.compare(ag.name.length() - 3, 3, "-ag")) {
+          const auto& ag_file = db.lookup_record(ag);
+          lg::print("custom level: extracting art group {}\n", ag_file.name_in_dgo);
+          decompiler::extract_merc(ag_file, tex_db, db.dts, tex_remap, pc_level, false,
+                                   db.version());
+        }
+      }
+    }
   }
 
   // Save the PC level
