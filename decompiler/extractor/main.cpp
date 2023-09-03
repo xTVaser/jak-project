@@ -236,6 +236,7 @@ void launch_game() {
 }
 
 int main(int argc, char** argv) {
+  lg::info("main!");
   ArgumentGuard u8_guard(argc, argv);
 
   fs::path input_file_path;
