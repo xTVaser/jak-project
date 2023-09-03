@@ -80,6 +80,9 @@ std::tuple<std::optional<ISOMetadata>, ExtractorErrorCode> validate(
   lg::info("\tSerial - {}", dbEntry->first);
   lg::info("\tUses Decompiler Config Version - {}", version_info.decomp_config_version);
 
+  lg::info("wtf1 - {}", version_info.num_files);
+  lg::info("wtf2 - {}", version_info.contents_hash);
+
   // - Number of Files
   if (version_info.num_files != expected_num_files) {
     lg::error("Extracted an unexpected number of files. Expected '{}', Actual '{}'",
