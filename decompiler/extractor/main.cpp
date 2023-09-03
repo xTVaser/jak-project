@@ -412,6 +412,7 @@ int main(int argc, char** argv) {
   }
 
   if (flag_decompile) {
+    lg::info("wtf 1 1");
     try {
       decompile(iso_data_path, data_subfolder);
     } catch (std::exception& e) {
@@ -421,6 +422,7 @@ int main(int argc, char** argv) {
   }
 
   if (flag_compile) {
+    lg::info("wtf 2 1");
     compile(iso_data_path, data_subfolder);
   }
 
