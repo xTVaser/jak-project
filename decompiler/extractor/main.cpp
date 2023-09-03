@@ -2,7 +2,7 @@
 #include <regex>
 #include <unordered_map>
 
-#include "extractor_util.h"
+#include "extractor_util.hpp"
 
 #include "common/log/log.h"
 #include "common/util/FileUtil.h"

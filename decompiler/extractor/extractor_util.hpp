@@ -1,4 +1,4 @@
-#include "extractor_util.h"
+#pragma once
 
 #include <optional>
 #include <regex>
@@ -15,10 +15,28 @@
 #include "third-party/json.hpp"
 #include "third-party/zstd/lib/common/xxhash.h"
 
-const std::unordered_map<std::string, GameIsoFlags> game_iso_flag_names = {
+enum class ExtractorErrorCode {
+  SUCCESS = 0,
+  INVALID_CLI_INPUT = 3990,
+  VALIDATION_CANT_LOCATE_ELF = 4000,
+  VALIDATION_SERIAL_MISSING_FROM_DB = 4001,
+  VALIDATION_ELF_MISSING_FROM_DB = 4002,
+  VALIDATION_BAD_ISO_CONTENTS = 4010,
+  VALIDATION_INCORRECT_EXTRACTION_COUNT = 4011,
+  VALIDATION_FILE_CONTENTS_UNEXPECTED = 4012,
+  VALIDATION_BAD_EXTRACTION = 4020,
+  DECOMPILATION_GENERIC_ERROR = 4030,
+  EXTRACTION_INVALID_ISO_PATH = 4040,
+  EXTRACTION_ISO_UNEXPECTED_SIZE = 4041,
+  COMPILATION_BAD_PROJECT_PATH = 4050,
+};
+
+enum GameIsoFlags { FLAG_JAK1_BLACK_LABEL = (1 << 0) };
+
+static const std::unordered_map<std::string, GameIsoFlags> game_iso_flag_names = {
     {"jak1-black-label", FLAG_JAK1_BLACK_LABEL}};
 
-const std::unordered_map<int, std::string> game_iso_territory_map = {
+static const std::unordered_map<int, std::string> game_iso_territory_map = {
     {GAME_TERRITORY_SCEA, "NTSC-U"},
     {GAME_TERRITORY_SCEE, "PAL"},
     {GAME_TERRITORY_SCEI, "NTSC-J"},
@@ -31,18 +49,60 @@ std::string get_territory_name(int territory) {
 }
 
 // used for - decompiler_out/<jak1> and iso_data/<jak1>
-const std::unordered_map<std::string, std::string> data_subfolders = {{"jak1", "jak1"}};
+std::unordered_map<std::string, std::string> data_subfolders = {{"jak1", "jak1"}};
 
-const ISOMetadata jak1_ntsc_black_label_info = {"Jak & Daxter™: The Precursor Legacy (Black Label)",
-                                                GAME_TERRITORY_SCEA,
-                                                337,
-                                                11363853835861842434U,
-                                                "ntsc_v1",
-                                                "jak1",
-                                                {"jak1-black-label"}};
+struct ISOMetadata {
+  std::string canonical_name;
+  int region;  // territory code
+  int num_files;
+  uint64_t contents_hash;
+  std::string decomp_config_version;
+  std::string game_name;
+  std::vector<std::string> flags;
+};
+
+// This is all we need to re-fetch info from the database
+// - if this changes such that we have a collision in the future,
+//   then the database isn't adequate and everything must change
+struct BuildInfo {
+  std::string serial = "";
+  uint64_t elf_hash = 0;
+};
+
+void to_json(nlohmann::json& j, const BuildInfo& info) {
+  j = nlohmann::json{{"serial", info.serial}, {"elf_hash", info.elf_hash}};
+}
+
+void from_json(const nlohmann::json& j, BuildInfo& info) {
+  j[0].at("serial").get_to(info.serial);
+  j[0].at("elf_hash").get_to(info.elf_hash);
+}
+
+std::optional<BuildInfo> get_buildinfo_from_path(fs::path iso_data_path) {
+  if (!fs::exists(iso_data_path / "buildinfo.json")) {
+    return {};
+  }
+  auto buildinfo_path = (iso_data_path / "buildinfo.json").string();
+  try {
+    return parse_commented_json(file_util::read_text_file(buildinfo_path), buildinfo_path)
+        .get<BuildInfo>();
+  } catch (std::exception& e) {
+    lg::error("JSON parsing error on buildinfo.json - {}", e.what());
+    return {};
+  }
+}
+
+static const ISOMetadata jak1_ntsc_black_label_info = {
+    "Jak & Daxter™: The Precursor Legacy (Black Label)",
+    GAME_TERRITORY_SCEA,
+    337,
+    11363853835861842434U,
+    "ntsc_v1",
+    "jak1",
+    {"jak1-black-label"}};
 
 // { SERIAL : { ELF_HASH : ISOMetadataDatabase } }
-const std::unordered_map<std::string, std::unordered_map<uint64_t, ISOMetadata>> iso_database = {
+static const std::unordered_map<std::string, std::unordered_map<uint64_t, ISOMetadata>> iso_database{
     {"SCUS-97124",
      {{7280758013604870207U, jak1_ntsc_black_label_info},
       {744661860962747854,
@@ -71,30 +131,6 @@ const std::unordered_map<std::string, std::unordered_map<uint64_t, ISOMetadata>>
         "jp",
         "jak1",
         {}}}}}};
-
-void to_json(nlohmann::json& j, const BuildInfo& info) {
-  j = nlohmann::json{{"serial", info.serial}, {"elf_hash", info.elf_hash}};
-}
-
-void from_json(const nlohmann::json& j, BuildInfo& info) {
-  j[0].at("serial").get_to(info.serial);
-  j[0].at("elf_hash").get_to(info.elf_hash);
-}
-
-std::optional<BuildInfo> get_buildinfo_from_path(fs::path iso_data_path) {
-  if (!fs::exists(iso_data_path / "buildinfo.json")) {
-    return {};
-  }
-  auto buildinfo_path = (iso_data_path / "buildinfo.json").string();
-  try {
-    const auto buildinfo_data = file_util::read_text_file(buildinfo_path);
-    lg::info("Found version info - {}", buildinfo_data);
-    return parse_commented_json(buildinfo_data, buildinfo_path).get<BuildInfo>();
-  } catch (std::exception& e) {
-    lg::error("JSON parsing error on buildinfo.json - {}", e.what());
-    return {};
-  }
-}
 
 std::optional<ISOMetadata> get_version_info_from_build_info(const BuildInfo& build_info) {
   if (build_info.serial.empty() || build_info.elf_hash == 0) {
