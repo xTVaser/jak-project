@@ -80,8 +80,8 @@ std::tuple<std::optional<ISOMetadata>, ExtractorErrorCode> validate(
   lg::info("\tSerial - {}", dbEntry->first);
   lg::info("\tUses Decompiler Config Version - {}", version_info.decomp_config_version);
 
-  lg::info("wtf1 - {}", version_info.num_files);
-  lg::info("wtf2 - {}", version_info.contents_hash);
+  lg::info("wtf1 - {} = {}", version_info.num_files, expected_num_files);
+  lg::info("wtf2 - {} = {}", version_info.contents_hash, expected_hash);
 
   // - Number of Files
   if (version_info.num_files != expected_num_files) {
@@ -95,6 +95,8 @@ std::tuple<std::optional<ISOMetadata>, ExtractorErrorCode> validate(
               version_info.contents_hash, expected_hash);
     return {std::nullopt, ExtractorErrorCode::VALIDATION_FILE_CONTENTS_UNEXPECTED};
   }
+
+  lg::info("wtf3");
 
   return {
       std::make_optional(version_info),
@@ -357,6 +359,7 @@ int main(int argc, char** argv) {
         lg::error("could not verify release, so not finalizing iso_data, leaving in '_temp'");
         iso_data_path = temp_iso_extract_location;
       } else {
+        lg::info("wtf4");
         // We know the version since we just extracted it, so the user didn't need to provide this
         // explicitly
         data_subfolder = data_subfolders.at(version_info->game_name);
@@ -368,6 +371,7 @@ int main(int argc, char** argv) {
         // std::filesystem doesn't have a rename for dirs...
         fs::copy(temp_iso_extract_location, iso_data_path, fs::copy_options::recursive);
         fs::remove_all(temp_iso_extract_location);
+        lg::info("wtf5");
       }
     } else if (fs::is_directory(input_file_path)) {
       if (!flag_folder) {
@@ -382,10 +386,13 @@ int main(int argc, char** argv) {
       auto [version_info, code] = validate(iso_data_path, hash, file_count);
     }
 
+    lg::info("wtf6");
+
     // write out a json file with some metadata for the game
     if (fs::exists(iso_data_path / "buildinfo.json")) {
       fs::remove(iso_data_path / "buildinfo.json");
     }
+    lg::info("wtf7");
     const auto [serial, elf_hash] = findElfFile(iso_data_path);
     BuildInfo build_info;
     if (serial.has_value()) {
@@ -394,8 +401,10 @@ int main(int argc, char** argv) {
     if (elf_hash.has_value()) {
       build_info.elf_hash = elf_hash.value();
     }
+    lg::info("wtf8");
     const nlohmann::json json_data{build_info};
     file_util::write_text_file((iso_data_path / "buildinfo.json").string(), json_data.dump(2));
+    lg::info("wtf9");
   } else {
     // If we did not extract, we have no clue what game the user is trying to decompile / compile
     // this is why the user has to specify this!
