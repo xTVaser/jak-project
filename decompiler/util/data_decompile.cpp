@@ -13,7 +13,7 @@
 #include "decompiler/ObjectFile/LinkedObjectFile.h"
 #include "decompiler/analysis/final_output.h"
 
-#include "third-party/fmt/core.h"
+#include "fmt/core.h"
 
 namespace decompiler {
 
@@ -984,6 +984,10 @@ const std::unordered_map<
                 ArrayFieldDecompMeta(TypeSpec("sphere"),
                                      16,
                                      ArrayFieldDecompMeta::Kind::REF_TO_INLINE_ARR)}}},
+             {"sparticle-launcher",
+              {{"init-specs", ArrayFieldDecompMeta(TypeSpec("sp-field-init-spec"), 16)}}},
+             {"sparticle-launch-group",
+              {{"launcher", ArrayFieldDecompMeta(TypeSpec("sparticle-group-item"), 32)}}},
          }}};
 
 goos::Object decompile_structure(const TypeSpec& type,

@@ -45,11 +45,7 @@ struct Resolution {
 /// Manages display related operations and querying
 class DisplayManager {
  private:
-  enum class EEDisplayEventType {
-    SET_WINDOW_SIZE,
-    SET_DISPLAY_MODE,
-    SET_DISPLAY_ID
-  };
+  enum class EEDisplayEventType { SET_WINDOW_SIZE, SET_DISPLAY_MODE, SET_DISPLAY_ID };
 
   struct EEDisplayEvent {
     EEDisplayEventType type;
@@ -81,7 +77,9 @@ class DisplayManager {
   int get_active_display_refresh_rate();
   int get_screen_width();
   int get_screen_height();
-  game_settings::DisplaySettings::DisplayMode get_display_mode() { return m_display_settings.display_mode; }
+  game_settings::DisplaySettings::DisplayMode get_display_mode() {
+    return m_display_settings.display_mode;
+  }
   int get_num_resolutions() { return m_available_resolutions.size(); }
   Resolution get_resolution(int id);
 
