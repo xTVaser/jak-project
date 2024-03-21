@@ -251,13 +251,7 @@ std::tuple<bool, ExtractorErrorCode> is_iso_file(fs::path path_to_supposed_iso) 
 }
 
 std::tuple<uint64_t, int> calculate_extraction_hash(const IsoFile& iso_file) {
-  // - XOR all hashes together and hash the result.  This makes the ordering of the hashes (aka
-  // files) irrelevant
-  uint64_t combined_hash = 0;
-  for (const auto& hash : iso_file.hashes) {
-    combined_hash ^= hash;
-  }
-  return {XXH64(&combined_hash, sizeof(uint64_t), 0), iso_file.hashes.size()};
+  return {XXH64(&iso_file.combined_hash, sizeof(uint64_t), 0), iso_file.files_extracted};
 }
 
 std::tuple<uint64_t, int> calculate_extraction_hash(const fs::path& extracted_iso_path) {

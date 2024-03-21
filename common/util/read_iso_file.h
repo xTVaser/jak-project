@@ -13,6 +13,7 @@ struct IsoFile {
     // if file
     size_t offset_in_file = 0;
     size_t size = 0;
+    uint64_t hash = 0;
 
     // if dir
     std::vector<Entry> children;
@@ -25,9 +26,7 @@ struct IsoFile {
 
   int files_extracted = 0;
   bool shouldHash = false;
-  // There is no reason to map to the files, as we don't retain mappings of each file's expected
-  // hash
-  std::vector<uint64_t> hashes = {};
+  uint64_t combined_hash = 0;
 
   IsoFile();
 };

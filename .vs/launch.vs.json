@@ -167,6 +167,19 @@
     {
       "type": "default",
       "project": "CMakeLists.txt",
+      "projectTarget": "extractor.exe (bin\\extractor.exe)",
+      "name": "Decompiler - Extract ISO",
+      "args": [
+        "--proj-path",
+        "C:\\Users\\xtvas\\OpenGOAL\\active\\jak2",
+        "--extract",
+        "--validate",
+        "C:\\Users\\xtvas\\Downloads\\jak2-different.iso"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
       "projectTarget": "decompiler.exe (bin\\decompiler.exe)",
       "name": "Decompiler - Jak 1",
       "args": [

@@ -89,18 +89,21 @@ void add_from_dir(FILE* fp, u32 sector, u32 size, IsoFile::Entry* parent) {
 
 void unpack_entry(FILE* fp,
                   IsoFile& iso,
-                  const IsoFile::Entry& entry,
+                  IsoFile::Entry& entry,
                   const fs::path& dest,
                   bool print_progress) {
   fs::path path_to_entry = dest / entry.name;
   if (entry.is_dir) {
     fs::create_directory(path_to_entry);
-    for (const auto& child : entry.children) {
+    for (auto& child : entry.children) {
       unpack_entry(fp, iso, child, path_to_entry, print_progress);
     }
   } else {
     if (print_progress) {
       lg::info("Extracting {}...", entry.name);
+    }
+    if (entry.name == "Z6TAIL.DUP") {
+      int x = 0;
     }
     std::vector<u8> buffer(entry.size);
     if (fseek_64(fp, entry.offset_in_file, SEEK_SET)) {
@@ -112,8 +115,11 @@ void unpack_entry(FILE* fp,
     file_util::write_binary_file(path_to_entry.string(), buffer.data(), buffer.size());
     iso.files_extracted++;
     if (iso.shouldHash) {
-      auto hash = XXH64(buffer.data(), buffer.size(), 0);
-      iso.hashes.push_back(hash);
+      entry.hash = XXH64(buffer.data(), buffer.size(), 0);
+      // lg::print("{} - {}\n", entry.name, entry.hash);
+      // - XOR all hashes together and hash the result.  This makes the ordering of the hashes (aka
+      // files) irrelevant
+      iso.combined_hash ^= entry.hash;
     }
   }
 }
