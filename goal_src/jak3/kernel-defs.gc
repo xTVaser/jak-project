@@ -132,10 +132,11 @@
 (define-extern scf-get-aspect "Defined in the kernel" (function uint))
 (define-extern scf-get-timeout (function int))
 (define-extern scf-get-inactive-timeout (function int))
-(define-extern kernel-shutdown (function none))
+(define-extern kernel-shutdown (function int none))
 (define-extern *boot-video-mode* "Defined in the kernel" int)
 (define-extern *kernel-boot-message* symbol)
 (define-extern *kernel-symbol-warnings* symbol)
+(define-extern *kernel-boot-art-group* string)
 (define-extern symbol->string (function symbol string))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -328,6 +329,8 @@
 
 (define-extern __pc-texture-upload-now (function object object none))
 (define-extern __pc-texture-relocate (function object object object none))
+(define-extern __pc-set-levels (function (pointer string) none))
+(define-extern __pc-set-active-levels (function (pointer string) none))
 
 (define-extern link-resume (function int))
 (define-extern unload (function string none))

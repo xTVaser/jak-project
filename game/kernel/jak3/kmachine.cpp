@@ -5,6 +5,7 @@
 #include "common/symbols.h"
 
 #include "game/graphics/gfx.h"
+#include "game/graphics/jak3_texture_remap.h"
 #include "game/graphics/sceGraphicsInterface.h"
 #include "game/kernel/common/fileio.h"
 #include "game/kernel/common/kdgo.h"
@@ -303,11 +304,13 @@ int ShutdownMachine() {
 }
 
 u32 KeybdGetData(u32 /*_mouse*/) {
-  ASSERT_NOT_REACHED();
+  return 0;
+  // ASSERT_NOT_REACHED();
 }
 
 u32 MouseGetData(u32 /*_mouse*/) {
-  ASSERT_NOT_REACHED();
+  // ASSERT_NOT_REACHED();
+  return 0;
 }
 
 /*!
@@ -395,7 +398,7 @@ void InitMachine_PCPort() {
 
   make_function_symbol_from_c("__pc-set-levels", (void*)pc_set_levels);
   make_function_symbol_from_c("__pc-set-active-levels", (void*)pc_set_active_levels);
-  // make_function_symbol_from_c("__pc-get-tex-remap", (void*)lookup_jak2_texture_dest_offset);
+  make_function_symbol_from_c("__pc-get-tex-remap", (void*)lookup_jak3_texture_dest_offset);
   // make_function_symbol_from_c("pc-init-autosplitter-struct", (void*)init_autosplit_struct);
   // make_function_symbol_from_c("pc-encode-utf8-string", (void*)encode_utf8_string);
 
