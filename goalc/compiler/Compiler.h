@@ -123,7 +123,6 @@ class Compiler {
   Debugger m_debugger;
   // TODO - this should be able to be removed, these are stored in `m_symbol_info`
   std::unordered_map<std::string, goos::ArgumentSpec> m_macro_specs;
-  // TODO - this should be able to be removed, these are stored in `m_symbol_info`
   std::unordered_map<goos::InternedSymbolPtr, TypeSpec, goos::InternedSymbolPtr::hash>
       m_symbol_types;
   std::unordered_map<goos::InternedSymbolPtr, goos::Object, goos::InternedSymbolPtr::hash>

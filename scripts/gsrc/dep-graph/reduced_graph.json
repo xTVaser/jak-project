@@ -1,0 +1,3299 @@
+{
+  "goal-lib.gc": [],
+  "compiler-setup.gc": [],
+  "kernel-defs.gc": [
+    "engine/ps2/memcard-h.gc",
+    "engine/game/settings-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/entity/entity-h.gc"
+  ],
+  "engine/anim/aligner-h.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/transform-h.gc"
+  ],
+  "engine/anim/aligner.gc": [
+    "engine/anim/joint.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/math/vector.gc",
+    "engine/anim/aligner-h.gc",
+    "engine/anim/mspace-h.gc"
+  ],
+  "engine/anim/joint-exploder.gc": [
+    "engine/data/art-h.gc",
+    "engine/geometry/bounding-box-h.gc",
+    "engine/math/vector.gc",
+    "engine/math/math.gc",
+    "engine/geometry/geometry.gc",
+    "engine/util/types-h.gc"
+  ],
+  "engine/anim/joint-h.gc": [
+    "engine/game/effect-control-h.gc"
+  ],
+  "engine/anim/joint-mod-h.gc": [
+    "engine/gfx/background/prototype-h.gc",
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/anim/joint.gc": [
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/math/transformq.gc",
+    "engine/entity/res-h.gc",
+    "engine/load/file-io.gc"
+  ],
+  "engine/anim/mspace-h.gc": [
+    "engine/math/transform-h.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/camera/cam-combiner.gc": [
+    "engine/camera/camera.gc",
+    "engine/ps2/timer-h.gc"
+  ],
+  "engine/camera/cam-debug-h.gc": [
+    "engine/collide/collide-cache-h.gc",
+    "engine/camera/cam-layout.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/camera/cam-debug.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/math-camera.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/math/euler.gc",
+    "engine/collide/collide-cache-h.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/camera/cam-interface-h.gc": [
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/camera/cam-interface.gc": [
+    "engine/math/quaternion.gc",
+    "engine/math/transform-h.gc",
+    "engine/entity/entity-h.gc"
+  ],
+  "engine/camera/cam-layout.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/entity/entity-h.gc",
+    "engine/geometry/vol-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/camera/cam-interface-h.gc",
+    "engine/engine/connect.gc",
+    "engine/camera/camera.gc"
+  ],
+  "engine/camera/cam-master.gc": [
+    "engine/physics/dynamics-h.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/gfx/mood/weather-part.gc",
+    "engine/engine/connect.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/camera/camera.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/camera/cam-start.gc": [
+    "kernel/gkernel.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/camera/cam-states-dbg.gc": [
+    "engine/camera/camera.gc",
+    "engine/ps2/pad.gc"
+  ],
+  "engine/camera/cam-states.gc": [
+    "engine/ps2/pad.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/camera/camera.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/camera/cam-update-h.gc": [
+    "kernel/gcommon.gc",
+    "engine/math/matrix.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "engine/camera/cam-update.gc": [
+    "engine/physics/dynamics-h.gc",
+    "engine/math/vector.gc",
+    "kernel/gkernel.gc",
+    "engine/math/quaternion.gc",
+    "engine/level/level-h.gc",
+    "engine/camera/cam-update-h.gc",
+    "engine/gfx/math-camera-h.gc",
+    "engine/game/main-h.gc",
+    "engine/gfx/background/wind.gc"
+  ],
+  "engine/camera/camera-h.gc": [
+    "engine/entity/entity-h.gc",
+    "engine/target/target-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/util/types-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/camera/camera.gc": [
+    "engine/math/quaternion-h.gc",
+    "kernel/gstring.gc",
+    "engine/math/vector.gc",
+    "kernel/gkernel.gc",
+    "engine/geometry/geometry.gc",
+    "engine/entity/res-h.gc",
+    "engine/engine/engines.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/camera/pov-camera-h.gc": [
+    "engine/data/art-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/util/types-h.gc"
+  ],
+  "engine/camera/pov-camera.gc": [
+    "engine/load/loader-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "engine/collide/collide-cache-h.gc": [
+    "engine/collide/surface-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/level/bsp-h.gc"
+  ],
+  "engine/collide/collide-cache.gc": [
+    "engine/collide/main-collide.gc",
+    "levels/racer_common/racer.gc",
+    "engine/target/target-h.gc",
+    "engine/gfx/background/subdivide.gc",
+    "engine/engine/connect.gc",
+    "engine/debug/debug.gc",
+    "engine/collide/collide-probe.gc"
+  ],
+  "engine/collide/collide-edge-grab-h.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/collide/collide-edge-grab.gc": [
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/collide/collide-edge-grab-h.gc",
+    "engine/math/math.gc",
+    "engine/geometry/geometry.gc"
+  ],
+  "engine/collide/collide-frag-h.gc": [
+    "engine/draw/drawable-inline-array-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/collide/collide-frag.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/draw/drawable-tree-h.gc",
+    "engine/debug/debug.gc",
+    "kernel/gcommon.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/collide/collide-func-h.gc": [],
+  "engine/collide/collide-func.gc": [
+    "engine/math/vector.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/collide/collide-h.gc": [],
+  "engine/collide/collide-mesh-h.gc": [
+    "engine/math/transform-h.gc",
+    "engine/collide/collide-frag-h.gc",
+    "engine/geometry/bounding-box-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/level/level-h.gc",
+    "engine/collide/pat-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/collide/collide-mesh.gc": [
+    "engine/anim/mspace-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/debug/debug.gc",
+    "kernel/gcommon.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/collide/collide-probe.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/background/prototype-h.gc",
+    "engine/draw/draw-node-h.gc",
+    "engine/level/level-info.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/collide/collide-shape-h.gc": [
+    "engine/physics/dynamics-h.gc",
+    "levels/racer_common/racer.gc",
+    "engine/common-obs/nav-enemy-h.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/target/target-h.gc",
+    "levels/flut_common/flutflut.gc",
+    "levels/rolling/rolling-obs.gc",
+    "engine/math/quaternion.gc",
+    "engine/engine/connect.gc",
+    "kernel/gkernel-h.gc",
+    "engine/math/transform-h.gc"
+  ],
+  "engine/collide/collide-shape-rider.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/math/matrix.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/math/trigonometry.gc",
+    "kernel/gcommon.gc"
+  ],
+  "engine/collide/collide-shape.gc": [
+    "levels/racer_common/racer.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/collide/collide-target-h.gc",
+    "engine/engine/connect.gc",
+    "engine/debug/debug.gc",
+    "engine/collide/collide-probe.gc",
+    "engine/ps2/timer.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/collide/collide-target-h.gc": [
+    "engine/collide/surface-h.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/load/loader-h.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/collide/pat-h.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "engine/collide/collide-touch-h.gc": [
+    "engine/math/transformq-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/math/vector-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "engine/collide/collide-touch.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "kernel/gcommon.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/collide/collide.gc": [],
+  "engine/collide/main-collide.gc": [
+    "engine/geometry/bounding-box-h.gc",
+    "engine/draw/drawable-h.gc",
+    "engine/gfx/tie/tie-h.gc"
+  ],
+  "engine/collide/pat-h.gc": [
+    "engine/math/math.gc"
+  ],
+  "engine/collide/surface-h.gc": [
+    "kernel/gcommon.gc",
+    "engine/target/target-h.gc",
+    "engine/common-obs/collectables.gc"
+  ],
+  "engine/common-obs/babak.gc": [
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/common-obs/basebutton.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/level/load-boundary.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "engine/common-obs/baseplat.gc": [
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/smush-control-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/game/projectiles.gc"
+  ],
+  "engine/common-obs/collectables-part.gc": [
+    "engine/ui/hud-classes.gc"
+  ],
+  "engine/common-obs/collectables.gc": [
+    "engine/anim/joint.gc",
+    "levels/snow/snow-obs.gc",
+    "engine/data/art-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/fact-h.gc",
+    "engine/sound/gsound-h.gc",
+    "kernel/gkernel.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/math/math.gc",
+    "engine/game/game-save.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/common-obs/crates.gc": [
+    "engine/game/task/hint-control.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/entity/res-h.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "engine/common-obs/dark-eco-pool.gc": [
+    "engine/math/math.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/gfx/merc/merc-h.gc"
+  ],
+  "engine/common-obs/generic-obs-h.gc": [
+    "engine/data/art-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "engine/common-obs/generic-obs.gc": [
+    "levels/beach/beach-part.gc",
+    "engine/gfx/hw/display.gc",
+    "engine/level/load-boundary.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/level/level-info.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/camera/camera.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "engine/common-obs/nav-enemy-h.gc": [
+    "engine/gfx/shadow/shadow.gc",
+    "engine/physics/trajectory-h.gc",
+    "engine/math/math.gc",
+    "engine/anim/joint-mod-h.gc"
+  ],
+  "engine/common-obs/nav-enemy.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/data/art-h.gc",
+    "levels/common/battlecontroller.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/physics/trajectory-h.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "engine/common-obs/orb-cache.gc": [
+    "engine/math/vector.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/common-obs/baseplat.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/common-obs/plat-button.gc": [
+    "engine/data/art-h.gc",
+    "engine/sound/gsound.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "engine/common-obs/plat-eco.gc": [
+    "engine/common-obs/plat.gc",
+    "kernel/gcommon.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/game/projectiles.gc"
+  ],
+  "engine/common-obs/plat.gc": [
+    "engine/sound/gsound.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/data/art-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "engine/common-obs/process-drawable-h.gc": [
+    "engine/math/math.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/common-obs/process-drawable.gc": [
+    "engine/anim/joint.gc",
+    "engine/draw/drawable-h.gc",
+    "engine/entity/entity-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "kernel/gkernel.gc",
+    "engine/gfx/merc/merc-h.gc",
+    "levels/village2/swamp-blimp.gc",
+    "engine/math/math.gc",
+    "engine/gfx/merc/merc-blend-shape.gc",
+    "engine/engine/engines.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc"
+  ],
+  "engine/common-obs/process-taskable.gc": [
+    "engine/game/main.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/target/target-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "engine/common-obs/rigid-body-h.gc": [
+    "engine/math/quaternion-h.gc"
+  ],
+  "engine/common-obs/rigid-body.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/rigid-body-h.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/math/matrix.gc",
+    "engine/common-obs/water-anim.gc"
+  ],
+  "engine/common-obs/ropebridge.gc": [
+    "kernel/gstring.gc",
+    "engine/entity/entity-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/math/matrix.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/common-obs/sharkey.gc": [
+    "engine/sound/gsound.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/common-obs/ticky.gc": [
+    "engine/math/math.gc",
+    "engine/util/types-h.gc"
+  ],
+  "engine/common-obs/tippy.gc": [
+    "engine/math/quaternion.gc",
+    "engine/math/vector-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/common-obs/voicebox.gc": [
+    "levels/racer_common/racer.gc",
+    "engine/math/vector.gc",
+    "kernel/gkernel.gc",
+    "engine/math/quaternion.gc",
+    "engine/math/math.gc",
+    "levels/village1/assistant.gc",
+    "kernel/gstate.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/common-obs/water-anim.gc": [
+    "engine/gfx/foreground/ripple.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/common-obs/water-h.gc"
+  ],
+  "engine/common-obs/water-h.gc": [
+    "engine/game/main-h.gc",
+    "engine/game/game-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/util/smush-control-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/common-obs/water.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/collide/collide-target-h.gc",
+    "engine/math/math.gc",
+    "engine/entity/res-h.gc",
+    "engine/gfx/foreground/ripple.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/data/art-elts.gc": [],
+  "engine/data/art-h.gc": [
+    "engine/anim/mspace-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/gfx/merc/merc-h.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/level/level-info.gc",
+    "engine/entity/res-h.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/data/joint-nodes.gc": [],
+  "engine/debug/anim-tester.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/util/glist-h.gc",
+    "kernel/gstring.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/ps2/pad.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/camera/cam-interface-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/gfx/font.gc"
+  ],
+  "engine/debug/assert-h.gc": [],
+  "engine/debug/assert.gc": [],
+  "engine/debug/debug-h.gc": [
+    "engine/math/math.gc",
+    "engine/debug/menu.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/debug/debug-sphere.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/debug/debug.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/gfx/math-camera.gc",
+    "engine/common-obs/crates.gc",
+    "engine/math/vector.gc",
+    "engine/debug/debug-h.gc",
+    "engine/draw/drawable-group-h.gc",
+    "engine/gfx/lights-h.gc",
+    "kernel/gkernel.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/main-h.gc",
+    "engine/debug/debug-sphere.gc"
+  ],
+  "engine/debug/default-menu.gc": [
+    "engine/level/level.gc",
+    "engine/game/task/task-control.gc",
+    "engine/draw/drawable.gc",
+    "engine/entity/entity.gc",
+    "engine/gfx/generic/generic-tie.gc",
+    "engine/entity/ambient.gc",
+    "engine/game/game-info.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/gfx/merc/merc-blend-shape.gc",
+    "engine/game/game-save.gc",
+    "engine/camera/cam-update-h.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/math/euler.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc",
+    "engine/debug/menu.gc",
+    "engine/load/loader.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/debug/memory-usage-h.gc": [
+    "engine/gfx/depth-cue.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/background/prototype-h.gc"
+  ],
+  "engine/debug/memory-usage.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/entity/entity-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "kernel/gkernel.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/debug/menu.gc": [
+    "engine/gfx/hw/display.gc",
+    "kernel/gstring.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/font.gc"
+  ],
+  "engine/debug/part-tester.gc": [
+    "kernel/gkernel.gc",
+    "engine/math/transformq-h.gc",
+    "engine/math/math.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/debug/stats-h.gc": [],
+  "engine/debug/viewer.gc": [
+    "engine/data/art-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "kernel/gstring.gc",
+    "engine/math/quaternion.gc"
+  ],
+  "engine/dma/dma-bucket.gc": [
+    "engine/dma/dma-h.gc"
+  ],
+  "engine/dma/dma-buffer.gc": [
+    "engine/dma/dma-bucket.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/math/vector-h.gc",
+    "engine/dma/dma.gc"
+  ],
+  "engine/dma/dma-disasm.gc": [
+    "engine/dma/dma-h.gc",
+    "kernel/gcommon.gc"
+  ],
+  "engine/dma/dma-h.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/depth-cue.gc",
+    "engine/common-obs/crates.gc"
+  ],
+  "engine/dma/dma.gc": [
+    "engine/ps2/vif-h.gc",
+    "engine/dma/dma-h.gc",
+    "kernel/gcommon.gc",
+    "engine/engine/connect.gc"
+  ],
+  "engine/draw/draw-node-h.gc": [
+    "engine/draw/drawable-h.gc"
+  ],
+  "engine/draw/draw-node.gc": [
+    "engine/draw/draw-node-h.gc",
+    "engine/math/vector.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/draw/drawable-ambient-h.gc",
+    "kernel/gcommon.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/draw/drawable-actor-h.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/entity/entity-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/draw/drawable-ambient-h.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/target/target-h.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/draw/drawable-tree-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/draw/drawable-group-h.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/draw/drawable-group.gc": [
+    "kernel/gcommon.gc",
+    "engine/draw/drawable-group-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/draw/drawable-h.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/data/art-h.gc",
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/engine/connect.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/draw/drawable-inline-array-h.gc": [
+    "engine/draw/drawable-group-h.gc"
+  ],
+  "engine/draw/drawable-inline-array.gc": [
+    "engine/draw/drawable-inline-array-h.gc",
+    "engine/draw/drawable-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/draw/drawable-tree-h.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/draw/drawable-tree.gc": [
+    "engine/draw/drawable-tree-h.gc",
+    "kernel/gcommon.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/draw/drawable.gc": [
+    "engine/ui/progress/progress-h.gc",
+    "engine/dma/dma.gc",
+    "engine/gfx/shadow/shadow-cpu.gc",
+    "engine/gfx/shrub/shrubbery.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/gfx/tie/tie-methods.gc",
+    "engine/gfx/sky/sky-tng.gc",
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/gfx/mood/time-of-day.gc",
+    "engine/ps2/timer.gc",
+    "engine/debug/debug.gc",
+    "engine/engine/engines.gc",
+    "engine/gfx/generic/generic-merc.gc"
+  ],
+  "engine/engine/connect.gc": [
+    "engine/util/types-h.gc"
+  ],
+  "engine/engine/engines.gc": [
+    "engine/anim/mspace-h.gc",
+    "engine/level/level-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/entity/actor-link-h.gc": [
+    "engine/game/game-h.gc",
+    "engine/entity/res-h.gc"
+  ],
+  "engine/entity/ambient.gc": [
+    "engine/sound/gsound.gc",
+    "kernel/gstring.gc",
+    "engine/gfx/ocean/ocean-h.gc",
+    "engine/data/art-h.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/ui/text-h.gc",
+    "engine/game/main-h.gc",
+    "engine/ui/hud-h.gc"
+  ],
+  "engine/entity/entity-h.gc": [
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/game/game-info-h.gc"
+  ],
+  "engine/entity/entity-table.gc": [
+    "levels/racer_common/racer.gc",
+    "levels/village2/assistant-village2.gc",
+    "engine/common-obs/orb-cache.gc",
+    "engine/common-obs/crates.gc",
+    "engine/common-obs/babak.gc",
+    "levels/finalboss/sage-finalboss.gc",
+    "engine/common-obs/water-h.gc",
+    "levels/finalboss/robotboss-h.gc",
+    "engine/level/level-info.gc"
+  ],
+  "engine/entity/entity.gc": [
+    "engine/game/game-info-h.gc",
+    "kernel/gstring.gc",
+    "engine/entity/entity-table.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/level/bsp-h.gc",
+    "engine/math/math.gc",
+    "engine/debug/debug.gc",
+    "engine/engine/engines.gc",
+    "pc/pckernel-impl.gc"
+  ],
+  "engine/entity/relocate.gc": [
+    "engine/geometry/path-h.gc",
+    "engine/anim/aligner-h.gc",
+    "engine/dma/dma.gc",
+    "engine/anim/joint-mod-h.gc",
+    "kernel/gkernel.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/anim/joint-h.gc",
+    "engine/geometry/vol-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/entity/res-h.gc": [
+    "engine/geometry/geometry-h.gc",
+    "engine/entity/entity-h.gc"
+  ],
+  "engine/entity/res.gc": [
+    "engine/data/art-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "engine/game/effect-control-h.gc": [
+    "engine/data/art-h.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/collide/pat-h.gc"
+  ],
+  "engine/game/effect-control.gc": [
+    "engine/gfx/merc/merc-death.gc",
+    "engine/sound/gsound.gc",
+    "kernel/gstring.gc",
+    "engine/collide/collide-shape-h.gc",
+    "kernel/gkernel.gc",
+    "engine/entity/res-h.gc",
+    "engine/collide/pat-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/game/fact-h.gc": [
+    "engine/common-obs/babak.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/level/level-info.gc",
+    "engine/engine/connect.gc",
+    "levels/firecanyon/firecanyon-obs.gc",
+    "engine/entity/res-h.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/game/game-h.gc": [
+    "kernel/gcommon.gc",
+    "engine/draw/drawable-h.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/anim/aligner-h.gc",
+    "levels/swamp/billy.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/geometry/vol-h.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/game/game-info-h.gc": [
+    "engine/game/task/hint-control-h.gc",
+    "engine/math/vector-h.gc",
+    "engine/game/game-save.gc"
+  ],
+  "engine/game/game-info.gc": [
+    "engine/game/game-info-h.gc",
+    "kernel/gstring.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/transformq-h.gc",
+    "engine/debug/debug.gc"
+  ],
+  "engine/game/game-save.gc": [
+    "engine/entity/entity-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/load/loader-h.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/ps2/pad.gc",
+    "engine/ps2/memcard-h.gc",
+    "engine/level/level-info.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/ui/text-h.gc",
+    "engine/gfx/hw/video-h.gc"
+  ],
+  "engine/game/main-h.gc": [
+    "engine/ui/progress/progress-h.gc",
+    "engine/math/math.gc",
+    "engine/engine/connect.gc",
+    "engine/debug/menu.gc"
+  ],
+  "engine/game/main.gc": [
+    "engine/level/level.gc",
+    "engine/draw/drawable.gc",
+    "engine/camera/cam-interface.gc",
+    "engine/ui/text.gc",
+    "engine/entity/ambient.gc",
+    "pc/pckernel-common.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/gfx/depth-cue.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "pc/pckernel-h.gc",
+    "engine/game/game-save.gc",
+    "engine/camera/cam-update-h.gc"
+  ],
+  "engine/game/powerups.gc": [
+    "engine/target/target-util.gc",
+    "engine/gfx/mood/weather-part.gc",
+    "engine/ps2/pad.gc"
+  ],
+  "engine/game/projectiles-h.gc": [
+    "engine/game/game-h.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "engine/game/projectiles.gc": [
+    "engine/sound/gsound.gc",
+    "engine/math/vector.gc",
+    "engine/ps2/pad.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/target/target-util.gc",
+    "engine/collide/pat-h.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/game/settings-h.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/engine/connect.gc",
+    "engine/target/target-h.gc"
+  ],
+  "engine/game/settings.gc": [
+    "engine/sound/gsound.gc",
+    "engine/gfx/ocean/ocean-h.gc",
+    "kernel/gkernel.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/game/settings-h.gc",
+    "engine/game/game-save.gc"
+  ],
+  "engine/game/task/game-task-h.gc": [
+    "kernel/gcommon.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "engine/game/task/hint-control-h.gc": [
+    "engine/util/types-h.gc",
+    "engine/entity/entity-h.gc"
+  ],
+  "engine/game/task/hint-control.gc": [
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/game/task/hint-control-h.gc",
+    "levels/snow/snow-ball.gc"
+  ],
+  "engine/game/task/task-control-h.gc": [
+    "engine/sound/gsound-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/load/loader-h.gc"
+  ],
+  "engine/game/task/task-control.gc": [
+    "levels/snow/snow-obs.gc",
+    "kernel/gkernel-h.gc",
+    "levels/village1/assistant.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "engine/geometry/bounding-box-h.gc": [
+    "kernel/gcommon.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/geometry/bounding-box.gc": [
+    "engine/geometry/bounding-box-h.gc"
+  ],
+  "engine/geometry/cylinder.gc": [
+    "engine/collide/collide-func.gc",
+    "engine/math/matrix.gc"
+  ],
+  "engine/geometry/geometry-h.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/geometry/geometry.gc": [
+    "engine/math/quaternion.gc",
+    "engine/target/target-h.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "engine/geometry/path-h.gc": [
+    "kernel/gstring.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/game/main-h.gc"
+  ],
+  "engine/geometry/path.gc": [
+    "engine/debug/assert.gc",
+    "engine/math/vector-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "kernel/gstring.gc",
+    "engine/debug/assert-h.gc",
+    "engine/debug/debug.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/geometry/vol-h.gc": [
+    "engine/game/main-h.gc",
+    "engine/math/vector-h.gc",
+    "engine/game/game-h.gc",
+    "engine/entity/res-h.gc"
+  ],
+  "engine/geometry/vol.gc": [
+    "engine/geometry/vol-h.gc"
+  ],
+  "engine/gfx/depth-cue-h.gc": [
+    "engine/dma/dma-buffer.gc"
+  ],
+  "engine/gfx/depth-cue.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/hw/display.gc",
+    "engine/gfx/depth-cue-h.gc"
+  ],
+  "engine/gfx/font-h.gc": [
+    "engine/math/matrix-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/debug/anim-tester.gc"
+  ],
+  "engine/gfx/font.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/hw/video-h.gc",
+    "engine/gfx/font-h.gc"
+  ],
+  "engine/gfx/lights-h.gc": [
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/gfx/lights.gc": [
+    "engine/math/vector.gc",
+    "engine/gfx/lights-h.gc"
+  ],
+  "engine/gfx/math-camera-h.gc": [
+    "engine/math/quaternion-h.gc"
+  ],
+  "engine/gfx/math-camera.gc": [
+    "kernel/gcommon.gc",
+    "engine/target/target-h.gc",
+    "engine/level/level-info.gc",
+    "engine/math/matrix.gc",
+    "engine/math/trigonometry.gc",
+    "engine/ps2/vu1-macros.gc",
+    "engine/gfx/math-camera-h.gc",
+    "pc/pckernel-impl.gc"
+  ],
+  "engine/gfx/vu1-user-h.gc": [
+    "engine/gfx/generic/generic.gc",
+    "engine/gfx/depth-cue.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/gfx/background/background-h.gc": [
+    "engine/gfx/shrub/shrubbery-h.gc",
+    "engine/gfx/tie/tie-h.gc"
+  ],
+  "engine/gfx/background/background.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/dma/dma-bucket.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/math/math.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/gfx/background/prototype-h.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/collide/collide-frag-h.gc",
+    "engine/common-obs/crates.gc",
+    "engine/gfx/tie/tie-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "engine/gfx/background/prototype.gc": [
+    "kernel/gcommon.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/background/subdivide-h.gc": [
+    "engine/gfx/generic/generic-work-h.gc",
+    "engine/gfx/foreground/bones-h.gc",
+    "engine/gfx/ocean/ocean-h.gc",
+    "engine/load/decomp-h.gc",
+    "engine/gfx/tie/tie-h.gc",
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/gfx/shrub/shrubbery-h.gc",
+    "engine/gfx/math-camera-h.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/gfx/background/subdivide.gc": [
+    "kernel/gstring.gc",
+    "engine/common-obs/crates.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/gfx/background/wind-h.gc": [
+    "engine/math/vector-h.gc",
+    "engine/gfx/background/prototype-h.gc"
+  ],
+  "engine/gfx/background/wind.gc": [
+    "engine/gfx/background/wind-h.gc",
+    "engine/math/math.gc"
+  ],
+  "engine/gfx/foreground/bones-h.gc": [
+    "engine/data/art-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/merc/generic-merc-h.gc"
+  ],
+  "engine/gfx/foreground/bones.gc": [
+    "engine/dma/dma-h.gc",
+    "pc/pckernel-impl.gc",
+    "engine/gfx/generic/generic-vu1-h.gc",
+    "engine/gfx/background/subdivide.gc",
+    "engine/gfx/merc/generic-merc-h.gc",
+    "engine/math/math.gc",
+    "engine/engine/connect.gc",
+    "engine/gfx/foreground/ripple.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/gfx/foreground/eye-h.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "kernel/gkernel-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/gfx/foreground/eye.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/entity/entity-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/foreground/eye-h.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/foreground/ripple.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/quaternion.gc"
+  ],
+  "engine/gfx/generic/generic-effect.gc": [
+    "engine/gfx/generic/generic-vu0.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/gfx/lights-h.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "kernel/gcommon.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/generic/generic-h.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/math/math.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/gfx/generic/generic-merc.gc": [
+    "engine/gfx/foreground/bones.gc",
+    "engine/gfx/generic/generic-effect.gc",
+    "engine/gfx/generic/generic-h.gc"
+  ],
+  "engine/gfx/generic/generic-tie.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/generic/generic-effect.gc",
+    "engine/gfx/background/subdivide.gc"
+  ],
+  "engine/gfx/generic/generic-vu0.gc": [],
+  "engine/gfx/generic/generic-vu1-h.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/gfx/generic/generic-vu1.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/gfx/generic/generic-vu1-h.gc"
+  ],
+  "engine/gfx/generic/generic-work-h.gc": [
+    "engine/gfx/tie/generic-tie-h.gc",
+    "engine/gfx/merc/generic-merc-h.gc"
+  ],
+  "engine/gfx/generic/generic.gc": [
+    "engine/gfx/lights.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/common-obs/crates.gc"
+  ],
+  "engine/gfx/hw/display-h.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/engine/connect.gc"
+  ],
+  "engine/gfx/hw/display.gc": [
+    "pc/pckernel-impl.gc",
+    "engine/gfx/font-h.gc",
+    "engine/engine/connect.gc",
+    "engine/ps2/timer.gc",
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/gfx/hw/gs.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/math/math.gc",
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/gfx/hw/video-h.gc": [],
+  "engine/gfx/hw/video.gc": [
+    "engine/gfx/shadow/shadow-cpu.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/gfx/merc/generic-merc-h.gc": [
+    "engine/gfx/merc/merc-h.gc",
+    "engine/gfx/lights-h.gc",
+    "engine/gfx/generic/generic-h.gc"
+  ],
+  "engine/gfx/merc/merc-blend-shape.gc": [
+    "engine/data/art-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/merc/generic-merc-h.gc",
+    "engine/target/target-h.gc"
+  ],
+  "engine/gfx/merc/merc-death.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher.gc"
+  ],
+  "engine/gfx/merc/merc-h.gc": [
+    "engine/data/art-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/foreground/eye-h.gc"
+  ],
+  "engine/gfx/merc/merc-vu1.gc": [],
+  "engine/gfx/merc/merc.gc": [
+    "engine/data/art-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/merc/merc-vu1.gc",
+    "engine/gfx/foreground/eye-h.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/mood/mood-h.gc": [
+    "engine/gfx/sky/sky-h.gc"
+  ],
+  "engine/gfx/mood/mood-tables.gc": [
+    "engine/math/vector.gc",
+    "engine/gfx/mood/mood-h.gc",
+    "engine/math/matrix.gc",
+    "engine/gfx/ocean/ocean-tables.gc"
+  ],
+  "engine/gfx/mood/mood.gc": [
+    "engine/sound/gsound.gc",
+    "kernel/gkernel-h.gc",
+    "levels/snow/snow-obs.gc",
+    "pc/pckernel-impl.gc",
+    "engine/gfx/mood/mood-tables.gc",
+    "engine/target/target-h.gc",
+    "engine/game/main-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "engine/gfx/mood/time-of-day-h.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/gfx/mood/mood-h.gc",
+    "engine/math/math.gc"
+  ],
+  "engine/gfx/mood/time-of-day.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/hw/gs.gc",
+    "kernel/gkernel.gc",
+    "engine/level/level-info.gc",
+    "engine/gfx/mood/mood.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "engine/gfx/mood/weather-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/gfx/sky/sky-h.gc",
+    "engine/camera/camera-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-frames.gc": [],
+  "engine/gfx/ocean/ocean-h.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/lights-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-mid.gc": [
+    "engine/gfx/ocean/ocean-trans-tables.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/math/math.gc",
+    "engine/debug/debug.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/ocean/ocean-near.gc": [
+    "engine/gfx/ocean/ocean-transition.gc",
+    "engine/gfx/mood/time-of-day-h.gc",
+    "engine/math/matrix.gc"
+  ],
+  "engine/gfx/ocean/ocean-tables.gc": [
+    "engine/math/vector-h.gc",
+    "engine/gfx/ocean/ocean-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-texture.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/gfx/ocean/ocean-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-trans-tables.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-transition.gc": [
+    "engine/gfx/ocean/ocean-mid.gc",
+    "engine/gfx/ocean/ocean-h.gc"
+  ],
+  "engine/gfx/ocean/ocean-vu0.gc": [
+    "engine/math/vector-h.gc",
+    "engine/gfx/ocean/ocean-h.gc"
+  ],
+  "engine/gfx/ocean/ocean.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/gfx/sky/sky-tng.gc",
+    "engine/gfx/vu1-user-h.gc"
+  ],
+  "engine/gfx/shadow/shadow-cpu-h.gc": [
+    "engine/dma/dma-h.gc"
+  ],
+  "engine/gfx/shadow/shadow-cpu.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/gfx/foreground/bones-h.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "engine/gfx/shadow/shadow-h.gc": [
+    "engine/math/vector-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/gfx/shadow/shadow-vu1-h.gc": [
+    "engine/dma/dma-buffer.gc"
+  ],
+  "engine/gfx/shadow/shadow-vu1.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/math-camera-h.gc",
+    "engine/gfx/generic/generic-h.gc"
+  ],
+  "engine/gfx/shadow/shadow.gc": [
+    "engine/gfx/shadow/shadow-h.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "engine/gfx/shrub/shrub-work.gc": [
+    "engine/gfx/shrub/shrubbery-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/gfx/shrub/shrubbery-h.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/background/prototype-h.gc"
+  ],
+  "engine/gfx/shrub/shrubbery.gc": [
+    "engine/draw/draw-node-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/draw/drawable-group-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/gfx/background/subdivide.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/gfx/texture/texture.gc",
+    "engine/gfx/background/background.gc"
+  ],
+  "engine/gfx/sky/sky-h.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/lights-h.gc",
+    "engine/math/trigonometry.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "engine/gfx/sky/sky-tng.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/hw/display.gc",
+    "engine/gfx/sky/sky.gc",
+    "engine/gfx/sky/sky-h.gc",
+    "engine/math/vector.gc"
+  ],
+  "engine/gfx/sky/sky-utils.gc": [
+    "engine/math/math.gc",
+    "engine/gfx/sky/sky-h.gc"
+  ],
+  "engine/gfx/sky/sky.gc": [
+    "engine/gfx/sky/sky-utils.gc"
+  ],
+  "engine/gfx/sprite/sprite-distort.gc": [
+    "engine/gfx/sprite/sprite.gc"
+  ],
+  "engine/gfx/sprite/sprite-h.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "engine/dma/dma-buffer.gc",
+    "kernel/gcommon.gc"
+  ],
+  "engine/gfx/sprite/sprite.gc": [
+    "pc/pckernel-impl.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/math/matrix-h.gc",
+    "engine/gfx/shadow/shadow-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/sprite/sparticle/sparticle-h.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/math/quaternion-h.gc"
+  ],
+  "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc": [
+    "engine/ui/progress/progress-h.gc",
+    "engine/gfx/background/prototype-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/sprite/sprite-h.gc"
+  ],
+  "engine/gfx/sprite/sparticle/sparticle-launcher.gc": [
+    "kernel/gstring.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/math/transformq-h.gc",
+    "engine/math/matrix.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/main-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/gfx/sprite/sparticle/sparticle.gc": [
+    "engine/dma/dma.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/math/quaternion.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/ui/hud-h.gc"
+  ],
+  "engine/gfx/texture/texture-h.gc": [
+    "levels/village1/farmer.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/level/level-h.gc",
+    "engine/load/file-io.gc"
+  ],
+  "engine/gfx/texture/texture-upload.gc": [
+    "engine/gfx/texture/texture-h.gc"
+  ],
+  "engine/gfx/texture/texture.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/load/file-io.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/gfx/font-h.gc"
+  ],
+  "engine/gfx/tfrag/tfrag-h.gc": [
+    "engine/debug/stats-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/level/level-h.gc",
+    "engine/draw/drawable-inline-array-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "engine/gfx/tfrag/tfrag-methods.gc": [
+    "engine/math/vector-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/draw/draw-node-h.gc",
+    "engine/gfx/tfrag/tfrag-h.gc",
+    "engine/gfx/tfrag/tfrag.gc",
+    "engine/debug/debug.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "kernel/gcommon.gc",
+    "engine/gfx/background/background.gc"
+  ],
+  "engine/gfx/tfrag/tfrag-near.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/tfrag/tfrag-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/gfx/tfrag/tfrag-work.gc": [],
+  "engine/gfx/tfrag/tfrag.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/gfx/tfrag/tfrag-near.gc",
+    "kernel/gkernel.gc",
+    "engine/gfx/background/subdivide.gc",
+    "engine/level/bsp-h.gc",
+    "engine/game/main-h.gc",
+    "engine/engine/engines.gc",
+    "engine/gfx/texture/texture.gc"
+  ],
+  "engine/gfx/tie/generic-tie-h.gc": [
+    "engine/gfx/vu1-user-h.gc",
+    "engine/gfx/generic/generic-h.gc"
+  ],
+  "engine/gfx/tie/tie-h.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/gfx/background/prototype-h.gc",
+    "engine/draw/draw-node-h.gc",
+    "engine/gfx/tfrag/tfrag-h.gc",
+    "engine/math/math.gc"
+  ],
+  "engine/gfx/tie/tie-methods.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/tie/tie.gc",
+    "engine/gfx/tie/tie-work.gc",
+    "engine/draw/draw-node-h.gc",
+    "engine/gfx/background/subdivide.gc",
+    "kernel/gcommon.gc",
+    "engine/collide/collide-cache-h.gc",
+    "engine/gfx/background/background.gc"
+  ],
+  "engine/gfx/tie/tie-near.gc": [
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/generic/generic-h.gc",
+    "engine/math/matrix.gc",
+    "engine/game/main-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/gfx/tie/tie-work.gc": [
+    "engine/gfx/background/prototype-h.gc"
+  ],
+  "engine/gfx/tie/tie.gc": [
+    "engine/draw/drawable-h.gc",
+    "engine/gfx/hw/gs.gc",
+    "engine/gfx/tie/tie-h.gc",
+    "engine/gfx/generic/generic-h.gc",
+    "engine/gfx/texture/texture.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/game/main-h.gc"
+  ],
+  "engine/level/bsp-h.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "engine/draw/drawable-ambient-h.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/draw/drawable-actor-h.gc"
+  ],
+  "engine/level/bsp.gc": [
+    "engine/draw/drawable-group-h.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/gfx/texture/texture-h.gc",
+    "engine/ps2/timer.gc",
+    "kernel/gcommon.gc",
+    "engine/gfx/texture/texture.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/level/level-h.gc": [
+    "engine/load/loader-h.gc",
+    "engine/target/target-death.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/gfx/mood/mood-h.gc",
+    "engine/level/bsp-h.gc",
+    "engine/engine/connect.gc"
+  ],
+  "engine/level/level-info.gc": [],
+  "engine/level/level.gc": [
+    "engine/sound/gsound.gc",
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/game/game-info-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/data/art-h.gc",
+    "engine/level/load-boundary.gc",
+    "engine/load/ramdisk.gc",
+    "engine/ps2/pad.gc",
+    "engine/gfx/tie/tie-h.gc",
+    "engine/gfx/mood/mood-h.gc",
+    "engine/level/bsp-h.gc",
+    "engine/engine/engines.gc",
+    "engine/load/load-dgo.gc"
+  ],
+  "engine/level/load-boundary-data.gc": [
+    "engine/level/load-boundary.gc",
+    "engine/level/load-boundary-h.gc",
+    "engine/level/level-info.gc"
+  ],
+  "engine/level/load-boundary-h.gc": [
+    "engine/game/game-info-h.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/level/load-boundary.gc": [
+    "engine/gfx/hw/gs.gc",
+    "kernel/gkernel.gc",
+    "engine/gfx/sky/sky-tng.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/game-save.gc",
+    "engine/level/load-boundary-data.gc",
+    "engine/gfx/texture/texture.gc",
+    "kernel/gstate.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher.gc"
+  ],
+  "engine/load/decomp-h.gc": [],
+  "engine/load/decomp.gc": [
+    "engine/ps2/pad.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/load/file-io.gc": [
+    "engine/data/art-h.gc",
+    "kernel/gkernel-h.gc",
+    "kernel/gstring.gc",
+    "kernel-defs.gc"
+  ],
+  "engine/load/load-dgo.gc": [
+    "engine/dma/dma-buffer.gc",
+    "kernel/gstring.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/target/target-h.gc",
+    "engine/ps2/rpc-h.gc"
+  ],
+  "engine/load/loader-h.gc": [
+    "engine/data/art-h.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/load/loader.gc": [
+    "kernel/gcommon.gc",
+    "engine/sound/gsound.gc",
+    "engine/draw/drawable-h.gc",
+    "engine/load/loader-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "kernel/gkernel.gc",
+    "engine/load/file-io.gc",
+    "engine/load/load-dgo.gc",
+    "engine/anim/joint-h.gc"
+  ],
+  "engine/load/ramdisk.gc": [],
+  "engine/math/euler-h.gc": [
+    "engine/math/math.gc"
+  ],
+  "engine/math/euler.gc": [
+    "engine/math/euler-h.gc",
+    "engine/math/quaternion.gc"
+  ],
+  "engine/math/math.gc": [
+    "kernel/gcommon.gc",
+    "engine/target/target-h.gc"
+  ],
+  "engine/math/matrix-h.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/math/matrix.gc": [
+    "engine/math/transform-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/math/quaternion-h.gc": [
+    "engine/math/matrix-h.gc"
+  ],
+  "engine/math/quaternion.gc": [
+    "kernel/gcommon.gc",
+    "engine/math/matrix.gc",
+    "engine/math/quaternion-h.gc"
+  ],
+  "engine/math/transform-h.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/math/transform.gc": [
+    "engine/math/transformq-h.gc",
+    "engine/math/matrix.gc"
+  ],
+  "engine/math/transformq-h.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/util/types-h.gc",
+    "engine/math/transform-h.gc"
+  ],
+  "engine/math/transformq.gc": [
+    "engine/physics/dynamics-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/geometry/geometry.gc"
+  ],
+  "engine/math/trigonometry-h.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/math/trigonometry.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/math/vector-h.gc": [
+    "engine/geometry/bounding-box-h.gc",
+    "engine/math/math.gc"
+  ],
+  "engine/math/vector.gc": [
+    "engine/collide/surface-h.gc",
+    "engine/math/trigonometry.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "engine/nav/navigate-h.gc": [
+    "engine/collide/surface-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/level/level-h.gc",
+    "levels/rolling/rolling-lightning-mole.gc",
+    "engine/game/main-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/nav/navigate.gc": [
+    "kernel/gstring.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/collide/collide-func.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/debug/debug.gc",
+    "engine/entity/res-h.gc",
+    "engine/math/trigonometry.gc",
+    "engine/ps2/timer.gc"
+  ],
+  "engine/physics/dynamics-h.gc": [
+    "engine/physics/gravity-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/physics/gravity-h.gc": [],
+  "engine/physics/trajectory-h.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "engine/physics/trajectory.gc": [
+    "engine/math/vector.gc",
+    "engine/physics/trajectory-h.gc"
+  ],
+  "engine/ps2/memcard-h.gc": [
+    "engine/dma/dma-buffer.gc",
+    "kernel/gkernel-h.gc",
+    "kernel/gstring.gc"
+  ],
+  "engine/ps2/pad.gc": [
+    "kernel/gcommon.gc",
+    "pc/pckernel-impl.gc",
+    "engine/util/types-h.gc",
+    "kernel/gkernel.gc"
+  ],
+  "engine/ps2/rpc-h.gc": [
+    "engine/ui/progress/progress-h.gc"
+  ],
+  "engine/ps2/timer-h.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/math/math.gc",
+    "engine/util/types-h.gc"
+  ],
+  "engine/ps2/timer.gc": [
+    "engine/ps2/timer-h.gc",
+    "engine/level/level-h.gc"
+  ],
+  "engine/ps2/vif-h.gc": [],
+  "engine/ps2/vu1-macros.gc": [],
+  "engine/sound/gsound-h.gc": [
+    "engine/level/level.gc",
+    "engine/entity/entity-h.gc",
+    "kernel/gcommon.gc",
+    "engine/util/types-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/sound/gsound.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/math/math.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/target/collide-reaction-target.gc": [
+    "engine/collide/collide-target-h.gc",
+    "engine/collide/collide-mesh-h.gc",
+    "engine/geometry/geometry.gc"
+  ],
+  "engine/target/logic-target.gc": [
+    "levels/racer_common/racer.gc",
+    "engine/game/game-info-h.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/target/target-util.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/math/transformq.gc",
+    "engine/engine/engines.gc",
+    "engine/gfx/foreground/eye-h.gc",
+    "engine/game/main-h.gc"
+  ],
+  "engine/target/sidekick.gc": [
+    "engine/anim/joint.gc",
+    "engine/math/quaternion-h.gc",
+    "pc/pckernel-impl.gc",
+    "engine/ps2/timer-h.gc",
+    "engine/gfx/merc/merc-blend-shape.gc",
+    "engine/gfx/foreground/eye-h.gc"
+  ],
+  "engine/target/target-death.gc": [
+    "engine/anim/joint.gc",
+    "engine/math/vector.gc",
+    "engine/level/load-boundary-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/fact-h.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/target/target.gc",
+    "engine/math/math.gc",
+    "engine/camera/cam-start.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/game-save.gc",
+    "levels/village1/sage.gc",
+    "engine/camera/cam-update-h.gc",
+    "engine/camera/pov-camera-h.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/target/target-h.gc": [
+    "engine/game/game-info-h.gc",
+    "levels/sunken/target-tube.gc",
+    "levels/racer_common/target-racer-h.gc",
+    "levels/snow/target-snowball.gc",
+    "engine/collide/collide-target-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/level/level-h.gc",
+    "levels/flut_common/target-flut.gc",
+    "engine/collide/collide-cache-h.gc"
+  ],
+  "engine/target/target-handler.gc": [
+    "levels/racer_common/racer.gc",
+    "engine/game/game-info-h.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/target/target-util.gc"
+  ],
+  "engine/target/target-part.gc": [
+    "engine/target/target-h.gc",
+    "levels/maincave/mother-spider-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/util/types-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "engine/target/target-util.gc": [
+    "engine/common-obs/collectables.gc",
+    "levels/maincave/mother-spider-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/collide/collide-target-h.gc",
+    "engine/math/matrix.gc",
+    "kernel/gcommon.gc"
+  ],
+  "engine/target/target.gc": [
+    "engine/sound/gsound.gc",
+    "engine/collide/surface-h.gc",
+    "engine/gfx/hw/display.gc",
+    "engine/target/logic-target.gc",
+    "engine/data/art-h.gc",
+    "engine/target/target-handler.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "engine/target/target2.gc": [
+    "engine/anim/joint.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/fact-h.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "kernel/gkernel.gc",
+    "engine/collide/collide-edge-grab-h.gc",
+    "engine/target/target.gc",
+    "engine/math/math.gc",
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gstate.gc"
+  ],
+  "engine/ui/credits.gc": [
+    "engine/gfx/hw/video-h.gc",
+    "engine/ui/text.gc"
+  ],
+  "engine/ui/hud-classes.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/math-camera.gc",
+    "engine/ui/progress/progress-h.gc",
+    "kernel/gstring.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "levels/racer_common/racer-part.gc",
+    "engine/ui/text-h.gc"
+  ],
+  "engine/ui/hud-h.gc": [
+    "engine/ui/hud-classes.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/ui/hud.gc": [
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/gfx/sprite/sprite.gc"
+  ],
+  "engine/ui/text-h.gc": [
+    "engine/gfx/font-h.gc"
+  ],
+  "engine/ui/text.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/debug/memory-usage-h.gc",
+    "engine/debug/debug.gc",
+    "engine/ui/text-h.gc",
+    "engine/load/load-dgo.gc",
+    "pc/pckernel-impl.gc",
+    "engine/gfx/font.gc"
+  ],
+  "engine/ui/progress/progress-draw.gc": [
+    "engine/ui/progress/progress-static.gc",
+    "engine/dma/dma-h.gc",
+    "engine/game/main.gc",
+    "engine/gfx/hw/display.gc",
+    "kernel/gstring.gc",
+    "engine/ps2/pad.gc",
+    "engine/math/transformq-h.gc",
+    "engine/ui/text-h.gc"
+  ],
+  "engine/ui/progress/progress-h.gc": [
+    "engine/gfx/font-h.gc",
+    "engine/util/types-h.gc",
+    "engine/ui/hud-h.gc",
+    "kernel-defs.gc"
+  ],
+  "engine/ui/progress/progress-part.gc": [
+    "engine/ui/progress/progress-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gcommon.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "pc/pckernel-impl.gc"
+  ],
+  "engine/ui/progress/progress-static.gc": [
+    "kernel/gcommon.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/level/level-h.gc",
+    "levels/snow/snow-obs.gc"
+  ],
+  "engine/ui/progress/progress.gc": [
+    "engine/ui/progress/progress-static.gc",
+    "engine/dma/dma-h.gc",
+    "engine/game/main.gc",
+    "engine/sound/gsound.gc",
+    "kernel/gstring.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/ps2/pad.gc",
+    "engine/math/quaternion.gc",
+    "engine/level/level-info.gc",
+    "engine/ui/text-h.gc",
+    "engine/gfx/hw/video-h.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "engine/util/capture.gc": [
+    "engine/dma/dma-h.gc",
+    "engine/gfx/hw/gs.gc"
+  ],
+  "engine/util/glist-h.gc": [],
+  "engine/util/glist.gc": [
+    "engine/util/glist-h.gc"
+  ],
+  "engine/util/smush-control-h.gc": [
+    "engine/util/types-h.gc"
+  ],
+  "engine/util/sync-info-h.gc": [
+    "engine/util/types-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "engine/util/sync-info.gc": [
+    "engine/util/sync-info-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/entity/res-h.gc"
+  ],
+  "engine/util/types-h.gc": [],
+  "examples/debug-collide.gc": [
+    "engine/collide/collide-frag-h.gc",
+    "engine/debug/debug.gc",
+    "engine/collide/pat-h.gc",
+    "engine/collide/collide-probe.gc",
+    "engine/game/game-h.gc"
+  ],
+  "examples/debug-draw-example.gc": [
+    "engine/level/load-boundary.gc",
+    "engine/gfx/background/subdivide-h.gc",
+    "engine/math/math.gc",
+    "engine/debug/debug.gc",
+    "engine/ui/credits.gc",
+    "engine/math/transform.gc"
+  ],
+  "examples/debug-sprite.gc": [
+    "engine/gfx/sprite/sprite.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "kernel/dgo-h.gc": [],
+  "kernel/gcommon.gc": [],
+  "kernel/gkernel-h.gc": [
+    "kernel/gkernel.gc",
+    "kernel/gcommon.gc",
+    "engine/entity/entity-h.gc"
+  ],
+  "kernel/gkernel.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "kernel/gstate.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/game/game-h.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "kernel/gstring-h.gc": [],
+  "kernel/gstring.gc": [
+    "kernel/gcommon.gc",
+    "engine/gfx/background/prototype-h.gc"
+  ],
+  "kernel/pskernel.gc": [],
+  "levels/beach/air-h.gc": [
+    "engine/math/vector-h.gc"
+  ],
+  "levels/beach/air.gc": [
+    "levels/beach/air-h.gc"
+  ],
+  "levels/beach/beach-obs.gc": [
+    "engine/sound/gsound.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/task/hint-control.gc",
+    "kernel/gkernel.gc",
+    "engine/nav/navigate-h.gc",
+    "levels/beach/wobbler.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/beach/beach-part.gc": [],
+  "levels/beach/beach-rocks.gc": [
+    "engine/data/art-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/beach/bird-lady-beach.gc": [
+    "engine/game/task/task-control.gc",
+    "levels/flut_common/flutflut.gc"
+  ],
+  "levels/beach/bird-lady.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/gfx/hw/display-h.gc"
+  ],
+  "levels/beach/lurkercrab.gc": [
+    "kernel/gcommon.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/beach/lurkerpuppy.gc": [
+    "engine/common-obs/process-drawable.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/beach/lurkerworm.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "levels/beach/twister.gc"
+  ],
+  "levels/beach/mayor.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/game/game-info-h.gc"
+  ],
+  "levels/beach/pelican.gc": [
+    "engine/geometry/path-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/common-obs/collectables.gc"
+  ],
+  "levels/beach/sculptor.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/nav-enemy-h.gc",
+    "levels/misty/muse.gc"
+  ],
+  "levels/beach/seagull.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "levels/beach/air.gc",
+    "engine/geometry/path-h.gc"
+  ],
+  "levels/beach/twister.gc": [
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/target/target-h.gc",
+    "engine/math/matrix.gc",
+    "engine/game/game-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/beach/wobbler.gc": [
+    "engine/math/quaternion.gc"
+  ],
+  "levels/citadel/assistant-citadel.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/target/target-h.gc"
+  ],
+  "levels/citadel/citadel-obs.gc": [
+    "levels/common/battlecontroller.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/task/hint-control.gc",
+    "kernel/gkernel.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/common-obs/plat.gc"
+  ],
+  "levels/citadel/citadel-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/math/math.gc"
+  ],
+  "levels/citadel/citadel-sages.gc": [
+    "engine/anim/joint.gc",
+    "engine/sound/gsound.gc",
+    "engine/math/vector.gc",
+    "kernel/gkernel.gc",
+    "levels/finalboss/robotboss-h.gc",
+    "levels/village1/sage.gc",
+    "levels/intro/evilbro.gc"
+  ],
+  "levels/citadel/citb-bunny.gc": [
+    "engine/common-obs/nav-enemy.gc"
+  ],
+  "levels/citadel/citb-drop-plat.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "kernel/gkernel.gc",
+    "engine/math/math.gc"
+  ],
+  "levels/citadel/citb-plat.gc": [
+    "engine/common-obs/plat-button.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/game/projectiles.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/level/level-h.gc"
+  ],
+  "levels/common/battlecontroller.gc": [
+    "engine/common-obs/nav-enemy-h.gc",
+    "engine/gfx/ocean/ocean-h.gc",
+    "engine/common-obs/babak.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/entity/res-h.gc",
+    "engine/geometry/path-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/util/types-h.gc"
+  ],
+  "levels/common/blocking-plane.gc": [
+    "engine/geometry/path-h.gc",
+    "kernel/gcommon.gc",
+    "engine/target/target-h.gc"
+  ],
+  "levels/common/launcherdoor.gc": [
+    "engine/data/art-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/level/load-boundary.gc",
+    "engine/entity/actor-link-h.gc"
+  ],
+  "levels/darkcave/darkcave-obs.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "levels/maincave/cavecrystal-light.gc",
+    "kernel/gkernel.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/math/math.gc"
+  ],
+  "levels/demo/demo-obs.gc": [
+    "engine/level/load-boundary.gc",
+    "levels/demo/static-screen.gc"
+  ],
+  "levels/demo/static-screen.gc": [
+    "engine/gfx/texture/texture-h.gc",
+    "kernel/gcommon.gc",
+    "engine/util/types-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher.gc"
+  ],
+  "levels/finalboss/final-door.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/main.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/math/quaternion-h.gc"
+  ],
+  "levels/finalboss/green-eco-lurker.gc": [
+    "engine/math/vector.gc",
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "kernel/gcommon.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/finalboss/light-eco.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/math/vector.gc",
+    "engine/math/math.gc",
+    "engine/physics/trajectory-h.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/finalboss/robotboss-h.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/entity/entity-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/finalboss/robotboss-misc.gc": [
+    "levels/finalboss/robotboss-h.gc"
+  ],
+  "levels/finalboss/robotboss-part.gc": [],
+  "levels/finalboss/robotboss-weapon.gc": [
+    "engine/math/vector.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "kernel/gcommon.gc"
+  ],
+  "levels/finalboss/robotboss.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "levels/finalboss/robotboss-misc.gc",
+    "levels/finalboss/robotboss-weapon.gc",
+    "engine/common-obs/process-taskable.gc",
+    "engine/camera/camera.gc",
+    "levels/finalboss/light-eco.gc"
+  ],
+  "levels/finalboss/sage-finalboss-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/finalboss/sage-finalboss.gc": [
+    "levels/finalboss/final-door.gc",
+    "levels/citadel/citadel-sages.gc",
+    "engine/common-obs/plat.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/target/target-h.gc",
+    "levels/finalboss/robotboss-misc.gc",
+    "engine/math/quaternion.gc",
+    "engine/game/game-save.gc",
+    "engine/ui/credits.gc",
+    "engine/common-obs/baseplat.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/firecanyon/assistant-firecanyon.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/firecanyon/firecanyon-obs.gc": [
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/firecanyon/firecanyon-part.gc": [],
+  "levels/flut_common/flut-part.gc": [],
+  "levels/flut_common/flutflut.gc": [
+    "engine/entity/entity-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/entity/ambient.gc",
+    "engine/gfx/hw/display-h.gc",
+    "levels/common/blocking-plane.gc",
+    "engine/game/fact-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/gfx/foreground/eye-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/flut_common/target-flut.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/data/art-h.gc",
+    "engine/target/target-handler.gc",
+    "engine/target/target-death.gc",
+    "engine/sound/gsound-h.gc"
+  ],
+  "levels/intro/evilbro.gc": [
+    "engine/entity/actor-link-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/types-h.gc"
+  ],
+  "levels/jungle/bouncer.gc": [
+    "engine/math/vector.gc",
+    "engine/ps2/pad.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/jungle/darkvine.gc": [
+    "engine/data/art-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/jungle/fisher.gc": [
+    "engine/game/task/task-control.gc",
+    "kernel/gstring.gc",
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/target/target-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/level/level-info.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/ui/text-h.gc",
+    "engine/game/main-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/jungle/hopper.gc": [
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/jungle/jungle-elevator.gc": [
+    "engine/level/level-info.gc",
+    "engine/common-obs/plat-button.gc"
+  ],
+  "levels/jungle/jungle-mirrors.gc": [
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/math/transformq.gc",
+    "engine/debug/debug.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "levels/jungle/jungle-obs.gc": [
+    "engine/game/projectiles.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/transformq-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "levels/jungle/jungle-part.gc": [],
+  "levels/jungle/junglefish.gc": [
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/jungle/junglesnake.gc": [
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/jungleb/aphid.gc": [
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/jungleb/jungleb-obs.gc": [
+    "engine/sound/gsound.gc",
+    "engine/entity/entity.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/ui/hud-h.gc"
+  ],
+  "levels/jungleb/plant-boss.gc": [
+    "engine/anim/joint-mod-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "levels/jungleb/aphid.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/jungleb/plat-flip.gc": [
+    "engine/data/art-h.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/util/smush-control-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/lavatube/assistant-lavatube.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/lavatube/lavatube-energy.gc": [
+    "engine/game/task/hint-control.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/math/matrix.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc"
+  ],
+  "levels/lavatube/lavatube-obs.gc": [
+    "engine/math/vector.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/lavatube/lavatube-part.gc": [],
+  "levels/maincave/baby-spider.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/math/vector.gc",
+    "levels/robocave/cave-trap.gc",
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/game/game-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/maincave/cavecrystal-light.gc": [
+    "levels/darkcave/darkcave-obs.gc",
+    "engine/engine/connect.gc",
+    "engine/entity/res-h.gc",
+    "engine/game/game-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/maincave/dark-crystal.gc": [
+    "engine/entity/entity-h.gc",
+    "engine/anim/joint-exploder.gc",
+    "engine/game/fact-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/maincave/driller-lurker.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/sound/gsound-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/entity/res-h.gc"
+  ],
+  "levels/maincave/gnawer.gc": [
+    "levels/maincave/maincave-obs.gc",
+    "engine/geometry/bounding-box-h.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/matrix.gc",
+    "engine/math/trigonometry.gc",
+    "engine/entity/res-h.gc"
+  ],
+  "levels/maincave/maincave-obs.gc": [
+    "engine/collide/collide-shape.gc",
+    "engine/gfx/hw/display-h.gc",
+    "levels/darkcave/darkcave-obs.gc",
+    "engine/math/matrix-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/level/level-h.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/util/smush-control-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/maincave/maincave-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/maincave/mother-spider-egg.gc": [
+    "levels/maincave/mother-spider-h.gc",
+    "levels/robocave/spider-egg.gc",
+    "engine/physics/trajectory-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "levels/maincave/mother-spider-h.gc": [
+    "engine/anim/joint-mod-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "levels/maincave/mother-spider-proj.gc": [
+    "engine/math/vector.gc",
+    "engine/sound/gsound.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/projectiles-h.gc"
+  ],
+  "levels/maincave/mother-spider.gc": [
+    "levels/maincave/mother-spider-egg.gc",
+    "engine/game/fact-h.gc",
+    "levels/maincave/baby-spider.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/collide/collide-mesh-h.gc"
+  ],
+  "levels/maincave/spiderwebs.gc": [
+    "engine/data/art-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/misty/babak-with-cannon.gc": [
+    "levels/misty/mistycannon.gc",
+    "engine/common-obs/nav-enemy-h.gc",
+    "engine/geometry/geometry.gc"
+  ],
+  "levels/misty/balloonlurker.gc": [
+    "engine/sound/gsound.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/math/matrix-h.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/misty/bonelurker.gc": [
+    "kernel/gstate.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/misty/misty-conveyor.gc": [
+    "engine/sound/gsound.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "levels/misty/misty-obs.gc": [
+    "kernel/gstring.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/entity/res-h.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/game/main-h.gc"
+  ],
+  "levels/misty/misty-part.gc": [],
+  "levels/misty/misty-teetertotter.gc": [
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/math/vector-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/misty/misty-warehouse.gc": [
+    "engine/data/art-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/misty/mistycannon.gc": [
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/water.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/camera/camera.gc"
+  ],
+  "levels/misty/mud.gc": [
+    "engine/common-obs/water-anim.gc",
+    "engine/gfx/merc/merc-h.gc"
+  ],
+  "levels/misty/muse.gc": [
+    "engine/math/transformq-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "levels/misty/quicksandlurker.gc": [
+    "engine/game/fact-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/water-anim.gc",
+    "kernel/gstate.gc"
+  ],
+  "levels/misty/sidekick-human.gc": [
+    "levels/intro/evilbro.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/common-obs/babak.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/target/target-h.gc",
+    "engine/level/level-info.gc",
+    "levels/misty/bonelurker.gc",
+    "kernel/gkernel-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/ogre/flying-lurker.gc": [
+    "engine/math/vector.gc",
+    "engine/common-obs/generic-obs.gc",
+    "kernel/gkernel.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/util/types-h.gc"
+  ],
+  "levels/ogre/ogre-obs.gc": [
+    "engine/game/projectiles.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/water-anim.gc"
+  ],
+  "levels/ogre/ogre-part.gc": [],
+  "levels/ogre/ogreboss.gc": [
+    "engine/sound/gsound.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/physics/trajectory-h.gc",
+    "engine/level/level-h.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/camera/pov-camera-h.gc",
+    "compiler-setup.gc"
+  ],
+  "levels/racer_common/collide-reaction-racer.gc": [
+    "engine/target/collide-reaction-target.gc"
+  ],
+  "levels/racer_common/racer-part.gc": [
+    "engine/gfx/hw/display.gc",
+    "levels/racer_common/target-racer-h.gc",
+    "engine/math/matrix-h.gc",
+    "engine/math/trigonometry.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/ui/hud-h.gc"
+  ],
+  "levels/racer_common/racer-states.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/math/vector.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/fact-h.gc",
+    "kernel/gkernel.gc",
+    "engine/target/target.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/game/game-save.gc",
+    "levels/racer_common/racer-part.gc",
+    "engine/target/target-util.gc",
+    "engine/game/main-h.gc"
+  ],
+  "levels/racer_common/racer.gc": [
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "levels/common/blocking-plane.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/gfx/shadow/shadow-cpu-h.gc"
+  ],
+  "levels/racer_common/target-racer-h.gc": [
+    "engine/collide/surface-h.gc",
+    "levels/racer_common/racer.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/sound/gsound-h.gc",
+    "levels/firecanyon/firecanyon-obs.gc",
+    "engine/util/smush-control-h.gc"
+  ],
+  "levels/racer_common/target-racer.gc": [
+    "engine/gfx/hw/display.gc",
+    "engine/math/quaternion-h.gc",
+    "engine/target/logic-target.gc",
+    "engine/game/effect-control.gc",
+    "engine/ps2/pad.gc",
+    "levels/racer_common/target-racer-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry.gc"
+  ],
+  "levels/robocave/cave-trap.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "levels/maincave/baby-spider.gc",
+    "levels/robocave/spider-egg.gc",
+    "engine/common-obs/collectables.gc",
+    "kernel/gcommon.gc"
+  ],
+  "levels/robocave/robocave-part.gc": [],
+  "levels/robocave/spider-egg.gc": [
+    "engine/data/art-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/rolling/rolling-lightning-mole.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/ps2/pad.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/camera/camera.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/rolling/rolling-obs.gc": [
+    "engine/game/fact-h.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/ticky.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/ui/text-h.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/ui/hud-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/rolling/rolling-race-ring.gc": [
+    "engine/game/fact-h.gc",
+    "kernel/gkernel.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/util/types-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/rolling/rolling-robber.gc": [
+    "engine/game/main.gc",
+    "engine/math/vector.gc",
+    "engine/game/fact-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/snow/ice-cube.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/geometry/geometry.gc",
+    "engine/math/trigonometry.gc",
+    "engine/common-obs/nav-enemy.gc"
+  ],
+  "levels/snow/snow-ball.gc": [
+    "engine/sound/gsound.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/geometry/geometry.gc",
+    "engine/math/trigonometry.gc",
+    "engine/game/projectiles-h.gc"
+  ],
+  "levels/snow/snow-bumper.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/game/fact-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "levels/snow/snow-bunny.gc": [
+    "engine/math/vector.gc",
+    "engine/target/target-util.gc",
+    "engine/common-obs/nav-enemy.gc"
+  ],
+  "levels/snow/snow-flutflut-obs.gc": [
+    "engine/math/quaternion-h.gc",
+    "levels/snow/snow-ball.gc",
+    "engine/math/vector.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/ticky.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/common-obs/plat.gc"
+  ],
+  "levels/snow/snow-obs.gc": [
+    "engine/entity/entity.gc",
+    "engine/load/loader-h.gc",
+    "engine/math/vector.gc",
+    "levels/snow/snow-ball.gc",
+    "engine/math/matrix.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/ui/hud-h.gc"
+  ],
+  "levels/snow/snow-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/game/game-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "levels/snow/snow-ram-boss.gc": [
+    "engine/sound/gsound.gc",
+    "levels/snow/snow-ram-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/game/projectiles-h.gc"
+  ],
+  "levels/snow/snow-ram-h.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/load/loader-h.gc"
+  ],
+  "levels/snow/snow-ram.gc": [
+    "levels/snow/snow-ram-boss.gc",
+    "levels/snow/snow-obs.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/nav/navigate-h.gc"
+  ],
+  "levels/snow/target-ice.gc": [
+    "engine/collide/surface-h.gc",
+    "engine/ui/progress/progress-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/target/target-util.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/snow/target-snowball.gc": [
+    "engine/collide/surface-h.gc",
+    "kernel/gkernel-h.gc",
+    "engine/target/logic-target.gc"
+  ],
+  "levels/snow/yeti.gc": [
+    "engine/math/vector.gc",
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/sunken/bully.gc": [
+    "engine/common-obs/process-drawable.gc",
+    "engine/anim/joint-mod-h.gc",
+    "kernel/gstate.gc",
+    "engine/game/task/hint-control.gc"
+  ],
+  "levels/sunken/double-lurker.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "levels/sunken/floating-launcher.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/sunken/helix-water.gc": [
+    "levels/sunken/sunken-obs.gc",
+    "engine/common-obs/dark-eco-pool.gc",
+    "engine/common-obs/collectables.gc",
+    "levels/common/launcherdoor.gc",
+    "kernel/gcommon.gc"
+  ],
+  "levels/sunken/orbit-plat.gc": [
+    "engine/math/vector.gc",
+    "engine/common-obs/baseplat.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/sunken/puffer.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/data/art-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/geometry/geometry-h.gc"
+  ],
+  "levels/sunken/qbert-plat.gc": [
+    "engine/common-obs/rigid-body.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/game/task/hint-control.gc",
+    "kernel/gkernel.gc"
+  ],
+  "levels/sunken/shover.gc": [
+    "engine/data/art-h.gc",
+    "kernel/gkernel.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/sunken/square-platform.gc": [
+    "levels/sunken/sunken-obs.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/water-h.gc",
+    "engine/common-obs/ticky.gc",
+    "engine/entity/res-h.gc",
+    "engine/common-obs/baseplat.gc"
+  ],
+  "levels/sunken/steam-cap.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/math/math.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "levels/sunken/sun-exit-chamber.gc": [
+    "levels/sunken/sunken-obs.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/matrix.gc",
+    "engine/common-obs/basebutton.gc",
+    "engine/camera/pov-camera-h.gc",
+    "levels/sunken/sun-iris-door.gc"
+  ],
+  "levels/sunken/sun-iris-door.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/math/quaternion-h.gc"
+  ],
+  "levels/sunken/sunken-fish.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/geometry/geometry-h.gc",
+    "engine/util/types-h.gc"
+  ],
+  "levels/sunken/sunken-obs.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/main.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "levels/sunken/sunken-part.gc": [],
+  "levels/sunken/sunken-part2.gc": [],
+  "levels/sunken/sunken-part3.gc": [],
+  "levels/sunken/sunken-part4.gc": [],
+  "levels/sunken/sunken-part5.gc": [],
+  "levels/sunken/sunken-pipegame.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/ticky.gc",
+    "engine/common-obs/basebutton.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "levels/sunken/sunken-water.gc": [
+    "engine/math/vector.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/common-obs/water-anim.gc",
+    "engine/gfx/merc/merc-h.gc"
+  ],
+  "levels/sunken/target-tube.gc": [
+    "engine/physics/dynamics-h.gc",
+    "engine/sound/gsound.gc",
+    "engine/collide/collide-touch-h.gc",
+    "engine/target/target-death.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/projectiles-h.gc"
+  ],
+  "levels/sunken/wall-plat.gc": [
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/collide/collide-shape-h.gc"
+  ],
+  "levels/sunken/wedge-plats.gc": [
+    "engine/entity/actor-link-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/math/vector-h.gc"
+  ],
+  "levels/sunken/whirlpool.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/data/art-h.gc",
+    "engine/math/vector.gc",
+    "engine/math/math.gc",
+    "engine/util/sync-info-h.gc"
+  ],
+  "levels/swamp/billy.gc": [
+    "engine/game/task/task-control.gc",
+    "levels/swamp/swamp-rat.gc",
+    "engine/ps2/pad.gc",
+    "engine/geometry/path-h.gc",
+    "engine/ui/text-h.gc"
+  ],
+  "levels/swamp/kermit.gc": [
+    "engine/sound/gsound.gc",
+    "engine/math/vector.gc",
+    "engine/anim/mspace-h.gc",
+    "engine/math/transformq-h.gc",
+    "engine/math/matrix.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/game/projectiles-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc"
+  ],
+  "levels/swamp/swamp-bat.gc": [
+    "engine/debug/assert.gc",
+    "engine/math/vector.gc",
+    "engine/debug/assert-h.gc",
+    "engine/game/fact-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/geometry/geometry.gc",
+    "kernel/gstate.gc"
+  ],
+  "levels/swamp/swamp-obs.gc": [
+    "engine/gfx/hw/display.gc",
+    "levels/common/battlecontroller.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "levels/swamp/swamp-part.gc": [],
+  "levels/swamp/swamp-rat-nest.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/anim/mspace-h.gc",
+    "levels/swamp/swamp-rat.gc",
+    "engine/game/fact-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/game-h.gc"
+  ],
+  "levels/swamp/swamp-rat.gc": [
+    "levels/swamp/swamp-rat-nest.gc",
+    "engine/gfx/hw/display.gc",
+    "engine/math/vector.gc",
+    "engine/geometry/geometry.gc",
+    "engine/common-obs/nav-enemy.gc",
+    "engine/math/vector-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/title/title-obs.gc": [
+    "engine/game/main.gc",
+    "engine/sound/gsound.gc",
+    "kernel/gstring.gc",
+    "engine/entity/entity-h.gc",
+    "engine/load/loader-h.gc",
+    "kernel/gkernel.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "pc/progress-pc.gc",
+    "engine/ui/text-h.gc",
+    "engine/game/main-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc"
+  ],
+  "levels/training/training-obs.gc": [
+    "levels/village2/village2-obs.gc",
+    "levels/jungleb/jungleb-obs.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/camera/pov-camera-h.gc",
+    "engine/common-obs/water-anim.gc"
+  ],
+  "levels/training/training-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/game/game-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "levels/village1/assistant.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/sound/gsound.gc",
+    "engine/data/art-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/village1/explorer.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/target/target-h.gc"
+  ],
+  "levels/village1/farmer.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/target/target-h.gc"
+  ],
+  "levels/village1/fishermans-boat.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/load/loader-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/common-obs/rigid-body.gc",
+    "engine/nav/navigate-h.gc",
+    "levels/intro/evilbro.gc"
+  ],
+  "levels/village1/sage.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/target/target-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/village1/sequence-a-village1.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/gfx/sprite/sprite.gc",
+    "engine/ui/credits.gc",
+    "kernel/gkernel-h.gc",
+    "engine/game/task/task-control-h.gc"
+  ],
+  "levels/village1/village-obs.gc": [
+    "engine/collide/collide-shape-h.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/gfx/merc/merc-h.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/common-obs/water-anim.gc"
+  ],
+  "levels/village1/village1-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc",
+    "engine/game/game-h.gc",
+    "engine/math/matrix-h.gc"
+  ],
+  "levels/village1/village1-part2.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/village1/yakow.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/math/vector.gc",
+    "engine/game/fact-h.gc",
+    "engine/nav/navigate-h.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "levels/village2/assistant-village2.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "levels/village2/flutflut-bluehut.gc",
+    "levels/village2/village2-obs.gc",
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/anim/mspace-h.gc",
+    "levels/village2/sage-bluehut.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/village2/flutflut-bluehut.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/village2/gambler.gc": [
+    "engine/game/task/task-control.gc",
+    "engine/game/game-info-h.gc",
+    "engine/gfx/hw/display-h.gc",
+    "engine/data/art-h.gc",
+    "engine/common-obs/process-drawable.gc"
+  ],
+  "levels/village2/geologist.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/game/game-info-h.gc"
+  ],
+  "levels/village2/sage-bluehut.gc": [
+    "engine/entity/actor-link-h.gc",
+    "levels/village1/sage.gc"
+  ],
+  "levels/village2/sunken-elevator.gc": [
+    "engine/level/load-boundary.gc",
+    "engine/common-obs/plat-button.gc",
+    "engine/game/main-h.gc",
+    "levels/village2/village2-obs.gc"
+  ],
+  "levels/village2/swamp-blimp.gc": [
+    "levels/village3/village3-obs.gc",
+    "engine/anim/joint-mod-h.gc",
+    "engine/game/task/hint-control.gc",
+    "engine/math/matrix-h.gc",
+    "engine/camera/camera.gc"
+  ],
+  "levels/village2/village2-obs.gc": [
+    "engine/data/art-h.gc",
+    "engine/common-obs/generic-obs.gc",
+    "engine/game/fact-h.gc",
+    "kernel/gkernel.gc",
+    "engine/common-obs/rigid-body.gc",
+    "engine/math/math.gc",
+    "engine/nav/navigate-h.gc"
+  ],
+  "levels/village2/village2-part.gc": [
+    "engine/gfx/sprite/sparticle/sparticle.gc",
+    "engine/gfx/sprite/sparticle/sparticle-h.gc"
+  ],
+  "levels/village2/village2-part2.gc": [],
+  "levels/village2/warrior.gc": [
+    "engine/entity/actor-link-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/target/target-h.gc",
+    "levels/village2/village2-obs.gc"
+  ],
+  "levels/village3/assistant-village3.gc": [
+    "engine/data/art-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/util/types-h.gc"
+  ],
+  "levels/village3/minecart.gc": [
+    "engine/util/sync-info-h.gc",
+    "engine/entity/entity-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "engine/load/loader-h.gc"
+  ],
+  "levels/village3/miners.gc": [
+    "engine/entity/actor-link-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/game/game-info-h.gc"
+  ],
+  "levels/village3/sage-village3.gc": [
+    "levels/village1/sage.gc",
+    "levels/intro/evilbro.gc"
+  ],
+  "levels/village3/village3-obs.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/level/load-boundary.gc",
+    "engine/load/loader-h.gc",
+    "engine/ps2/pad.gc",
+    "engine/entity/actor-link-h.gc",
+    "engine/level/level-info.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/target/target-util.gc",
+    "engine/common-obs/water-anim.gc"
+  ],
+  "levels/village3/village3-part.gc": [],
+  "levels/village_common/oracle.gc": [
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "engine/game/task/task-control.gc",
+    "engine/game/game-info-h.gc"
+  ],
+  "levels/village_common/villagep-obs.gc": [
+    "engine/entity/ambient.gc",
+    "engine/common-obs/voicebox.gc",
+    "engine/math/transformq-h.gc",
+    "engine/target/target.gc",
+    "engine/common-obs/basebutton.gc",
+    "engine/camera/pov-camera-h.gc"
+  ],
+  "old/cavegeyserrock.gc": [
+    "engine/math/quaternion-h.gc",
+    "engine/collide/collide-shape-h.gc",
+    "levels/darkcave/darkcave-obs.gc",
+    "engine/util/sync-info-h.gc",
+    "engine/gfx/sprite/sparticle/sparticle-launcher-h.gc",
+    "kernel/gstate.gc"
+  ],
+  "pc/hud-classes-pc.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/entity/entity-h.gc",
+    "levels/common/battlecontroller.gc",
+    "pc/pckernel.gc",
+    "kernel/gkernel.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/generic-obs-h.gc",
+    "engine/gfx/hw/video-h.gc",
+    "engine/gfx/foreground/bones.gc",
+    "engine/game/game-h.gc"
+  ],
+  "pc/pckernel-common.gc": [
+    "engine/dma/dma-buffer.gc",
+    "engine/game/main.gc",
+    "kernel/gstring.gc",
+    "engine/entity/entity-h.gc",
+    "engine/math/math.gc",
+    "engine/engine/connect.gc"
+  ],
+  "pc/pckernel-h.gc": [
+    "engine/dma/dma-buffer.gc",
+    "pc/pckernel-impl.gc",
+    "engine/target/target-h.gc",
+    "engine/engine/connect.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "pc/pckernel-impl.gc": [
+    "engine/level/level-h.gc",
+    "pc/pckernel-h.gc",
+    "goal-lib.gc",
+    "engine/common-obs/collectables.gc"
+  ],
+  "pc/pckernel.gc": [
+    "levels/racer_common/racer.gc",
+    "engine/gfx/hw/display.gc",
+    "pc/pckernel-common.gc",
+    "pc/pckernel-h.gc",
+    "levels/village1/sage.gc",
+    "engine/gfx/mood/time-of-day.gc",
+    "engine/level/level-h.gc",
+    "engine/gfx/mood/time-of-day-h.gc",
+    "levels/village1/assistant.gc"
+  ],
+  "pc/progress-pc.gc": [
+    "engine/ui/progress/progress.gc",
+    "engine/ui/progress/progress-draw.gc",
+    "engine/gfx/hw/display-h.gc",
+    "pc/pckernel.gc",
+    "engine/game/settings.gc",
+    "levels/ogre/ogreboss.gc"
+  ],
+  "pc/subtitle.gc": [
+    "engine/sound/gsound.gc",
+    "engine/ui/text.gc",
+    "pc/pckernel.gc",
+    "engine/level/level-info.gc",
+    "kernel/gkernel-h.gc"
+  ],
+  "pc/debug/anim-tester-x.gc": [
+    "kernel/gstring.gc",
+    "engine/data/art-h.gc",
+    "engine/math/quaternion.gc",
+    "engine/common-obs/process-drawable.gc",
+    "engine/camera/cam-interface-h.gc",
+    "engine/debug/debug.gc"
+  ],
+  "pc/debug/default-menu-pc.gc": [
+    "pc/debug/anim-tester-x.gc",
+    "engine/entity/entity.gc",
+    "engine/level/load-boundary.gc",
+    "engine/camera/cam-update.gc",
+    "pc/pckernel-common.gc",
+    "engine/common-obs/collectables.gc",
+    "pc/pckernel-h.gc",
+    "engine/ui/text-h.gc",
+    "pc/progress-pc.gc",
+    "engine/gfx/vu1-user-h.gc",
+    "engine/debug/part-tester.gc",
+    "engine/debug/menu.gc"
+  ],
+  "pc/debug/entity-debug.gc": [
+    "engine/gfx/hw/display-h.gc",
+    "pc/pckernel-common.gc",
+    "engine/common-obs/collectables.gc",
+    "engine/debug/debug.gc",
+    "engine/entity/res-h.gc",
+    "engine/ui/text-h.gc"
+  ],
+  "pc/debug/pc-debug-common.gc": [
+    "engine/gfx/hw/display.gc"
+  ],
+  "pc/debug/pc-debug-methods.gc": [
+    "engine/sound/gsound-h.gc",
+    "kernel/gkernel.gc",
+    "pc/pckernel-h.gc",
+    "engine/level/level-h.gc",
+    "pc/debug/pc-debug-common.gc"
+  ],
+  "pc/features/autosplit-h.gc": [],
+  "pc/features/autosplit.gc": [
+    "levels/snow/snow-obs.gc",
+    "kernel/gstring.gc"
+  ],
+  "pc/features/speedruns-h.gc": [],
+  "pc/features/speedruns.gc": [
+    "pc/subtitle.gc",
+    "levels/village1/sage.gc",
+    "engine/common-obs/collectables.gc"
+  ],
+  "pc/util/display-font-color.gc": [
+    "kernel/gkernel-h.gc"
+  ],
+  "pc/util/font-encode-test.gc": [
+    "kernel/gstring.gc",
+    "kernel/gkernel.gc",
+    "engine/gfx/font-h.gc"
+  ],
+  "pc/util/hash.gc": [],
+  "pc/util/knuth-rand.gc": [
+    "kernel/gcommon.gc"
+  ],
+  "pc/util/pc-anim-util.gc": [
+    "engine/anim/mspace-h.gc",
+    "engine/target/target-h.gc",
+    "engine/math/matrix.gc",
+    "pc/pckernel-impl.gc",
+    "engine/game/game-h.gc"
+  ],
+  "pc/util/pc-pad-utils.gc": [
+    "kernel/gkernel-h.gc",
+    "engine/util/types-h.gc"
+  ]
+}

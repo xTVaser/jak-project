@@ -8,9 +8,9 @@
       "name": "run python script",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/scripts/gsrc/copy-common-naming.py",
+      "program": "${workspaceFolder}/scripts/gsrc/dep-graph/dep-graph.py",
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/scripts/gsrc/dep-graph",
       "args": ["--update-names-from-refs", "--decompiler", "./out/build/Release/bin/decompiler"]
     },
   ]

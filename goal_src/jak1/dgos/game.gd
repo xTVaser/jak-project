@@ -2,9 +2,10 @@
  ("types-h.o"
   "vu1-macros.o"
   "math.o"
-  "vector-h.o"
+;;   "vector-h.o"
   "gravity-h.o"
   "bounding-box-h.o"
+  "vector-h.o" ;; TEMP dont merge
   "matrix-h.o"
   "quaternion-h.o"
   "euler-h.o"
