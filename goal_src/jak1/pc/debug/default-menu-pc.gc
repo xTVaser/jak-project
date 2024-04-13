@@ -676,11 +676,10 @@
             (int-var "Custom aspect Y" #f ,(dm-lambda-int-var (-> *pc-settings* aspect-custom-y)) 20 1 #t 1 1000)
             (function "Custom" #f ,(lambda () (set-aspect! *pc-settings* (-> *pc-settings* aspect-custom-x) (-> *pc-settings* aspect-custom-y))))
             )
-         ;; TODO - fix
          (menu "Fullscreen"
-            (function "Windowed" #f ,(lambda () (set-display-mode! *pc-settings* 'windowed #t)))
-            (function "Fullscreen" #f ,(lambda () (set-display-mode! *pc-settings* 'fullscreen #t)))
-            (function "Borderless" #f ,(lambda () (set-display-mode! *pc-settings* 'borderless #t)))
+            (function "Windowed" #f ,(lambda () (pc-set-display-mode! 'windowed)))
+            (function "Fullscreen" #f ,(lambda () (pc-set-display-mode! 'fullscreen)))
+            (function "Borderless" #f ,(lambda () (pc-set-display-mode! 'borderless)))
             )
          (menu "Sizes"
             (function "640 x 480" #f ,(lambda () (set-window-size! *pc-settings* 640 480)))
