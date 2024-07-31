@@ -112,6 +112,7 @@
   (:methods
     (call-on-confirm (_type_) none)))
 
+;; TODO NOW - format display of string
 (deftype menu-generic-slider-option (menu-generic-option)
   "A generic slider, can go into the negative as well."
   (;; props
