@@ -1,0 +1,905 @@
+;;-*-Lisp-*-
+(in-package goal)
+
+(define *main-options-pc*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id load-game)
+            :scale #t
+            :param3 (game-option-menu load-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id save-game)
+            :scale #t
+            :param3 (game-option-menu save-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id disable-auto-save)
+            :scale #t
+            :param3 (game-option-menu memcard-disable-auto-save))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id quit-game)
+            :scale #t
+            :param3 (game-option-menu quit))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *main-options-secrets*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id load-game)
+            :scale #t
+            :param3 (game-option-menu load-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id save-game)
+            :scale #t
+            :param3 (game-option-menu save-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id disable-auto-save)
+            :scale #t
+            :param3 (game-option-menu memcard-disable-auto-save))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id secrets)
+            :scale #t
+            :param3 (game-option-menu secrets))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id quit-game)
+            :scale #t
+            :param3 (game-option-menu quit))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+;; (define *game-options-pc*
+;;   (new 'static
+;;        'boxed-array
+;;        :type
+;;        game-option
+;;        (new 'static
+;;             'game-option
+;;             :option-type (game-option-type menu)
+;;             :name (text-id input-options)
+;;             :scale #t
+;;             :param3 (game-option-menu input-options))
+;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t
+;;         :on-confirm
+;;         (lambda ()
+;;           (set! (-> *setting-control* default play-hints) (-> *pc-settings* memcard-play-hints?))))
+;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id subtitles) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id hinttitles) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type language) :name (text-id language) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type language-subtitles) :name (text-id subtitles-language) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type language-text) :name (text-id text-language) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type speaker) :name (text-id subtitles-speaker) :scale #t)
+;;        (new 'static
+;;             'game-option
+;;             :option-type (game-option-type menu)
+;;             :name (text-id misc-options)
+;;             :scale #t
+;;             :param3 (game-option-menu misc-options))
+;;        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *game-options-pc*
+  (progress-new-generic-scrolling-page (text-id game-options)
+    ;; (progress-new-generic-link-to-scrolling-page (text-id input-options)
+    ;;   ;; TODO
+    ;;   )
+    (new 'static 'menu-generic-boolean-option
+      :name (text-id play-hints)
+      :truthy-text (text-id progress-on)
+      :falsey-text (text-id progress-off)
+      :get-value-fn (lambda () (-> *pc-settings* memcard-play-hints?))
+      :on-confirm (lambda ((val symbol))
+        (set! (-> *pc-settings* memcard-play-hints?) val)
+        (set! (-> *setting-control* default play-hints) val)))
+    (new 'static 'menu-generic-boolean-option
+      :name (text-id subtitles)
+      :truthy-text (text-id progress-on)
+      :falsey-text (text-id progress-off)
+      :get-value-fn (lambda () (format 0 "TODO!"))
+      :on-confirm (lambda ((val symbol))
+        (format 0 "TODO!")))
+    (new 'static 'menu-generic-boolean-option
+      :name (text-id hinttitles)
+      :truthy-text (text-id progress-on)
+      :falsey-text (text-id progress-off)
+      :get-value-fn (lambda () (format 0 "TODO!"))
+      :on-confirm (lambda ((val symbol))
+        (format 0 "TODO!")))
+    ;; TODO - 3 language options
+    (new 'static 'menu-generic-boolean-option
+      :name (text-id subtitles-speaker)
+      :truthy-text (text-id progress-on)
+      :falsey-text (text-id progress-off)
+      :get-value-fn (lambda () (format 0 "TODO!"))
+      :on-confirm (lambda ((val symbol))
+        (format 0 "TODO!")))
+    ;; (progress-new-generic-link-to-scrolling-page (text-id misc-options)
+    ;;   ;; TODO
+    ;;   )
+    (new 'static 'menu-generic-button-option
+      :name (text-id back)
+      :on-confirm (lambda ((val symbol))
+        (format 0 "TODO!")))))
+
+(define *graphic-options-pc*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-resolution)
+            :scale #t
+            :param3 (game-option-menu resolution))
+       (new 'static 'game-option :option-type (game-option-type display-mode) :name (text-id display-mode) :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id display)
+            :scale #t
+            :param3 (game-option-menu monitor)
+            :option-disabled-func
+            (lambda ()
+              (= (pc-get-display-mode) 'windowed)))
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vsync) :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id aspect-ratio)
+            :scale #t
+            :param3 (game-option-menu aspect-ratio))
+       (new 'static 'game-option :option-type (game-option-type msaa) :name (text-id msaa) :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type frame-rate)
+            :name (text-id frame-rate)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (or (-> *pc-settings* speedrunner-mode?) (<= (pc-get-active-display-refresh-rate) 60))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id ps2-options)
+            :scale #t
+            :param3 (game-option-menu gfx-ps2-options))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *sound-options-pc*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id sfx-volume)
+            :scale #t
+            :param1 0.0
+            :param2 100.0
+            :slider-step-size 1.0
+            :on-confirm
+            (lambda ((val object))
+              (set! (-> *setting-control* default sfx-volume) (-> *pc-settings* memcard-volume-sfx))
+              (none)))
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id music-volume)
+            :scale #t
+            :param1 0.0
+            :param2 100.0
+            :slider-step-size 1.0
+            :on-confirm
+            (lambda ((val object))
+              (set! (-> *setting-control* default music-volume) (-> *pc-settings* memcard-volume-music))
+              (none)))
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id speech-volume)
+            :scale #t
+            :param1 0.0
+            :param2 100.0
+            :slider-step-size 1.0
+            :on-confirm
+            (lambda ((val object))
+              (set! (-> *setting-control* default dialog-volume) (-> *pc-settings* memcard-volume-dialog))
+              (none)))
+       ;(new 'static 'game-option :option-type (game-option-type on-off) :name (text-id music-fadein) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *camera-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type normal-inverted)
+            :name (text-id camera-controls-first-horz)
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type normal-inverted)
+            :name (text-id camera-controls-first-vert)
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type normal-inverted)
+            :name (text-id camera-controls-third-horz)
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type normal-inverted)
+            :name (text-id camera-controls-third-vert)
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type confirmation)
+            :name (text-id restore-defaults)
+            :scale #t
+            :on-confirm
+            (lambda ()
+              (reset-camera *pc-settings* #t)
+              (none)))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *controller-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-select-controller)
+            :scale #t
+            :param3 (game-option-menu select-controller))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id vibrations)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (not (pc-current-controller-has-rumble?)))
+            :on-confirm
+            (lambda ()
+              (set! (-> *setting-control* default vibration) (-> *pc-settings* memcard-vibration?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id input-opts-analog-deadzone)
+            :scale #t
+            :param1 0.0
+            :param2 1.0
+            :slider-step-size 0.01
+            :slider-show-decimal? #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-ignore-controller-win-focus)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val))) (set-ignore-controller-in-bg! *pc-settings* val-sym) (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-controller-led-reflect-hp)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (not (pc-current-controller-has-led?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-controller-led-reflect-eco)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (not (pc-current-controller-has-led?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-controller-led-reflect-heat)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (not (pc-current-controller-has-led?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type confirmation)
+            :name (text-id restore-defaults)
+            :scale #t
+            :on-confirm
+            (lambda ()
+              (reset-input *pc-settings* 'controller #t)
+              (set-ignore-controller-in-bg! *pc-settings* (-> *pc-settings* ignore-controller-win-unfocused?))
+              (none)))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *mouse-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-mouse-enable-camera)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val)))
+                (set! (-> *pc-settings* mouse-camera?) val-sym)
+                (update-mouse-controls! *pc-settings*)
+                (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id input-opts-mouse-horizontal-sens)
+            :scale #t
+            :param1 -30.0
+            :param2 30.0
+            :slider-step-size 0.25
+            :slider-show-decimal? #t
+            :on-confirm
+            (lambda ()
+              (update-mouse-controls! *pc-settings*)
+              (none))
+            :option-disabled-func
+            (lambda ()
+              (not (-> *pc-settings* mouse-camera?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type slider)
+            :name (text-id input-opts-mouse-vertical-sens)
+            :scale #t
+            :param1 -30.0
+            :param2 30.0
+            :slider-step-size 0.25
+            :slider-show-decimal? #t
+            :on-confirm
+            (lambda ()
+              (update-mouse-controls! *pc-settings*)
+              (none))
+            :option-disabled-func
+            (lambda ()
+              (not (-> *pc-settings* mouse-camera?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-mouse-enable-movement)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val)))
+                (set! (-> *pc-settings* mouse-movement?) val-sym)
+                (update-mouse-controls! *pc-settings*)
+                (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type confirmation)
+            :name (text-id restore-defaults)
+            :scale #t
+            :on-confirm
+            (lambda ()
+              (reset-input *pc-settings* 'mouse #t)
+              (update-mouse-controls! *pc-settings*)
+              (none)))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *reassign-binds-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-binds-controller)
+            :scale #t
+            :param3 (game-option-menu controller-binds)
+            :option-disabled-func
+            (lambda ()
+              (<= (pc-get-controller-count) 0)))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-binds-keyboard)
+            :scale #t
+            :param3 (game-option-menu keyboard-binds)
+            :option-disabled-func
+            (lambda ()
+              (not (pc-get-keyboard-enabled?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-binds-mouse)
+            :scale #t
+            :param3 (game-option-menu mouse-binds)
+            :option-disabled-func
+            (lambda ()
+              (not (-> *pc-settings* mouse-enabled?))))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *input-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id camera-options)
+            :scale #t
+            :param3 (game-option-menu camera-options))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-controller-opts)
+            :scale #t
+            :param3 (game-option-menu controller-options)
+            :option-disabled-func
+            (lambda ()
+              (<= (pc-get-controller-count) 0)))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-enable-kb)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val)))
+                (pc-set-keyboard-enabled! val-sym)
+                (set! (-> *pc-settings* keyboard-enabled?) val-sym)
+                (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-enable-mouse)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val)))
+                (set! (-> *pc-settings* mouse-enabled?) val-sym)
+                (update-mouse-controls! *pc-settings*)
+                (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-mouse-opts)
+            :scale #t
+            :param3 (game-option-menu mouse-options)
+            :option-disabled-func
+            (lambda ()
+              (not (-> *pc-settings* mouse-enabled?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-auto-hide-cursor)
+            :scale #t
+            :on-change
+            (lambda ((val object))
+              (let ((val-sym (the-as symbol val)))
+                (set! (-> *pc-settings* auto-hide-cursor?) val-sym)
+                (update-mouse-controls! *pc-settings*)
+                (none))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id input-opts-reassign-binds)
+            :scale #t
+            :param3 (game-option-menu reassign-binds-options))
+       (new 'static
+            'game-option
+            :option-type (game-option-type confirmation)
+            :name (text-id restore-defaults)
+            :scale #t
+            :on-confirm
+            (lambda ()
+              (reset-input *pc-settings* 'input #t)
+              (pc-set-keyboard-enabled! (-> *pc-settings* keyboard-enabled?))
+              (update-mouse-controls! *pc-settings*)
+              (none)))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *misc-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id money-starburst) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id discord-rpc) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id cutscene-skips) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id speedrunner-mode) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *gfx-ps2-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type lod-bg) :name (text-id lod-bg) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type lod-fg) :name (text-id lod-fg) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id ps2-parts) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id force-envmap) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id force-actors) :scale #t
+          :option-disabled-func
+            (lambda ()
+              (-> *pc-settings* speedrunner-mode?)))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+;; TODO - aspect ratios are hard-coded
+(define *aspect-ratio-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type aspect-new) :name (text-id fit-to-screen) :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect-fmt)
+            :param1 4.0
+            :param2 3.0
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect-fmt)
+            :param1 16.0
+            :param2 9.0
+            :scale #t)
+       (new 'static 'game-option :option-type (game-option-type aspect-new) :name (text-id aspect4x3-ps2) :param1 -1.0 :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect16x9-ps2)
+            :param1 -2.0
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect-fmt)
+            :param1 16.0
+            :param2 10.0
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect-fmt)
+            :param1 21.0
+            :param2 9.0
+            :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type aspect-new)
+            :name (text-id aspect-fmt)
+            :param1 64.0
+            :param2 27.0
+            :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *title-pc*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id new-game)
+            :scale #t
+            :param3 (game-option-menu save-game-title))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id load-game)
+            :scale #t
+            :param3 (game-option-menu load-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id options)
+            :scale #t
+            :param3 (game-option-menu settings-title))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id secrets)
+            :scale #t
+            :param3 (game-option-menu secrets))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id quit-game)
+            :scale #t
+            :param3 (game-option-menu quit-title))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *speedrun-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-reset-current-run) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-new-full-game) :scale #t)
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id speedrun-new-individual-level)
+            :scale #t
+            :param3 (game-option-menu speedrun-il-options))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id speedrun-new-cat-ext)
+            :scale #t
+            :param3 (game-option-menu speedrun-cat-ext-options))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *speedrun-il-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-training) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-village1) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-beach) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-jungle) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-misty) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-firecanyon) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-village2) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-sunken) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-swamp) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-rolling) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-ogre) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-village3) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-snow) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-cave) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-lavatube) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-il-citadel) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *speedrun-cat-ext-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-new-full-game) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-new-game-plus) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-hub1-100) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-hub2-100) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-hub3-100) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id speedrun-all-cutscenes) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *secrets-title*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id music-player)
+            :scale #t
+            :param3 (game-option-menu music-player))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id cheats)
+            :scale #t
+            :param3 (game-option-menu cheats))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *secrets*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id cheats)
+            :scale #t
+            :param3 (game-option-menu cheats))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id checkpoint-select)
+            :scale #t
+            :param3 (game-option-menu checkpoint-select)
+            :option-disabled-func
+            (lambda ()
+              (not (>= (calculate-completion (the progress #f)) 100.0))))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *checkpoint-select-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id training-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id village1-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id beach-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id jungle-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id misty-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id firecanyon-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id village2-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id sunken-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id swamp-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id rolling-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id ogre-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id village3-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id snow-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id cave-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id lavatube-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id citadel-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id finalboss-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *cheats*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-sidekick-alt)
+            :scale #t
+            :param1 5.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-big-head)
+            :scale #t
+            :param1 9.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-small-head)
+            :scale #t
+            :param1 10.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-big-fist)
+            :scale #t
+            :param1 11.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-big-head-npc)
+            :scale #t
+            :param1 16.0)
+       (new 'static 'game-option :option-type (game-option-type cheat-toggle) :name (text-id cheat-tunes) :scale #t :param1 6.0)
+       (new 'static 'game-option :option-type (game-option-type cheat-toggle) :name (text-id cheat-sky) :scale #t :param1 7.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-huge-head)
+            :scale #t
+            :param1 15.0)
+       (new 'static 'game-option :option-type (game-option-type cheat-toggle) :name (text-id cheat-mirror) :scale #t :param1 8.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-eco-yellow)
+            :scale #t
+            :param1 3.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-eco-blue)
+            :scale #t
+            :param1 2.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-eco-red)
+            :scale #t
+            :param1 1.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-eco-green)
+            :scale #t
+            :param1 0.0)
+       (new 'static 'game-option :option-type (game-option-type cheat-toggle) :name (text-id cheat-invinc) :scale #t :param1 4.0)
+       (new 'static
+            'game-option
+            :option-type (game-option-type cheat-toggle)
+            :name (text-id cheat-no-tex)
+            :scale #t
+            :param1 12.0)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
+(define *music-player-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id village1-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id beach-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id jungle-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id fishgame) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id jungleb-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id misty-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id firecanyon-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id village2-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id rolling-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id swamp-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id sunken-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id ogre-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id ogreboss) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id village3-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id snow-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id cave-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id lavatube-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id citadel-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id finalboss-level-name) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id credits) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button-music) :name (text-id danger-mus) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))

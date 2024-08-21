@@ -1,12 +1,17 @@
 ;;-*-Lisp-*-
 (in-package goal)
 
+(deftype game-option-page (basic)
+  ((y-center  int32)
+   (y-space   int32)
+   (scale     float)
+   (options   (array game-option))))
 
 (deftype generic-progress-state-entry (structure)
   "All info that is pushed onto a 'stack' when navigating to a sub-menu with
    the new generic menu options"
   (;; what needs to be drawn now, the normal progress code figures this out with a hard-coded switch statement, this avoids that
-   (ref menu-option-list)
+   (ref game-option-page)
    ;; generic function to potentially run some setup code when the entry is loaded
    (on-load (function none))
    ;; so we can restore back to the same menu position
@@ -36,6 +41,7 @@
     (clear-history! (_type_) none)))
 
 (define *progress-pc-generic-store* (new 'static 'progress-pc-generic-store))
+;; TODO - make sure C++ truncates strings
 (define *progress-generic-temp-string* (new 'global 'string 512 (the string #f)))
 
 (deftype menu-generic-option (menu-option)
@@ -55,28 +61,30 @@
 (deftype menu-generic-scrolling-page (menu-generic-option)
   "A menu option that holds menu options"
   (;; props
-   (menu-options          (array menu-option))
+   (menu-options          (array game-option))
    ;; state
    (selected-option-index int32)
    (last-move             time-frame)))
 
 (deftype menu-generic-link-option (menu-generic-option)
-  "A very simple link option that allows you to link to any other [[menu-option-list]]"
+  "A very simple link option that allows you to link to any other [[game-option]]"
   (;; props
-   (target menu-option-list)
+   (target game-option-page)
    ;; generic function to potentially run some setup code when the entry is loaded
    ;; this is not called from the link option, but rather stored in the history entry
    (on-load (function none))))
 
 (defmacro progress-new-generic-option (option)
-  `(new 'static 'menu-option-list :options (new 'static 'boxed-array :type menu-option ,option)))
+  `(new 'static 'game-option-page :options (new 'static 'boxed-array :type game-option ,option)))
 
+;; TODO - support changing the size from kwargs
+;; TODO - experiment with auto-scaling down to a minimum based on text width
 (defmacro progress-new-generic-scrolling-page (title &rest options)
-  `(new 'static 'menu-option-list
-    :options (new 'static 'boxed-array :type menu-option
+  `(new 'static 'game-option-page
+    :options (new 'static 'boxed-array :type game-option
     (new 'static 'menu-generic-scrolling-page
      :name ,title
-     :menu-options (new 'static 'boxed-array :type menu-option
+     :menu-options (new 'static 'boxed-array :type game-option
      ,@options)))))
 
 (defmacro progress-new-generic-link (text target &key (should-disable? #f))
@@ -89,17 +97,17 @@
   `(new 'static 'menu-generic-link-option
     :name ,title
     :should-disable? ,should-disable?
-    :target (new 'static 'menu-option-list
-      :options (new 'static 'boxed-array :type menu-option
+    :target (new 'static 'game-option-page
+      :options (new 'static 'boxed-array :type game-option
         ,@options))))
 
 (defmacro progress-new-generic-link-to-scrolling-page (title &key (should-disable? #f) &rest options)
   `(new 'static 'menu-generic-link-option
     :name ,title
     :should-disable? ,should-disable?
-    :target (new 'static 'menu-option-list
-      :options (new 'static 'boxed-array :type menu-option
+    :target (new 'static 'game-option-page
+      :options (new 'static 'boxed-array :type game-option
       (new 'static 'menu-generic-scrolling-page
        :name ,title
-       :menu-options (new 'static 'boxed-array :type menu-option
+       :menu-options (new 'static 'boxed-array :type game-option
        ,@options))))))

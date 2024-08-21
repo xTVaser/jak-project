@@ -1,9 +1,6 @@
 ;;-*-Lisp-*-
 (in-package goal)
 
-
-;;
-
 (defglobalconstant DEBUG_PAGE_ROWS #f)
 
 (defconstant FONT_SIZE_HEADER 0.6) ;; font size for the decoration text
@@ -11,10 +8,6 @@
 (defconstant FONT_SIZE_OPTION_EXTRA 0.35) ;; font size for option sub-text
 (defconstant HIGHLIGHT_SIZE 18) ;; default highlight size for options
 (defconstant HIGHLIGHT_SIZE_LARGE 33)
-
-
-;;
-
 
 (defun draw-page-border ((hud-bounds hud-box) (alpha float))
   (let ((x-pos 70)
