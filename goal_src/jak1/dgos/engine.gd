@@ -289,6 +289,11 @@
   "progress-part.o"
   "progress-draw.o"
   "progress.o"
+  "progress-pc-h.o" ;; added
+  "progress-pc-aspect-ratio-adjustments.o" ;; added
+  "progress-generic-pc-h.o" ;; added
+  "progress-generic-draw-pc.o" ;; added
+  "progress-static-pc.o" ;; added
   "progress-pc.o" ;; added
   "credits.o"
   "projectiles.o"

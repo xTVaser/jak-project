@@ -11,7 +11,7 @@
             :option-type (game-option-type menu)
             :name (text-id game-options)
             :scale #t
-            :param3 (game-option-menu game-settings))
+            :param3 (game-option-menu generic-menu))
        (new 'static
             'game-option
             :option-type (game-option-type menu)
@@ -105,77 +105,63 @@
             :param3 (game-option-menu quit))
        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
-;; (define *game-options-pc*
-;;   (new 'static
-;;        'boxed-array
-;;        :type
-;;        game-option
-;;        (new 'static
-;;             'game-option
-;;             :option-type (game-option-type menu)
-;;             :name (text-id input-options)
-;;             :scale #t
-;;             :param3 (game-option-menu input-options))
-;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t
-;;         :on-confirm
-;;         (lambda ()
-;;           (set! (-> *setting-control* default play-hints) (-> *pc-settings* memcard-play-hints?))))
-;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id subtitles) :scale #t)
-;;        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id hinttitles) :scale #t)
-;;        (new 'static 'game-option :option-type (game-option-type language) :name (text-id language) :scale #t)
-;;        (new 'static 'game-option :option-type (game-option-type language-subtitles) :name (text-id subtitles-language) :scale #t)
-;;        (new 'static 'game-option :option-type (game-option-type language-text) :name (text-id text-language) :scale #t)
-;;        (new 'static 'game-option :option-type (game-option-type speaker) :name (text-id subtitles-speaker) :scale #t)
-;;        (new 'static
-;;             'game-option
-;;             :option-type (game-option-type menu)
-;;             :name (text-id misc-options)
-;;             :scale #t
-;;             :param3 (game-option-menu misc-options))
-;;        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+(defmacro progress-pc-back-option ()
+     `(new 'static 'menu-generic-button-option
+          :name (text-id back)
+          :on-confirm (lambda ((val symbol))
+          (back! *progress-pc-generic-store* (-> *progress-process* 0)))))
 
 (define *game-options-pc*
-  (progress-new-generic-scrolling-page (text-id game-options)
-    ;; (progress-new-generic-link-to-scrolling-page (text-id input-options)
-    ;;   ;; TODO
-    ;;   )
+  (progress-new-generic-page (text-id game-options) 115 25 0.70
+    (progress-new-generic-link-to-page (text-id input-options) 115 25 0.70
+      ;; TODO
+      (progress-pc-back-option))
     (new 'static 'menu-generic-boolean-option
       :name (text-id play-hints)
-      :truthy-text (text-id progress-on)
-      :falsey-text (text-id progress-off)
+      :truthy-text (text-id on)
+      :falsey-text (text-id off)
       :get-value-fn (lambda () (-> *pc-settings* memcard-play-hints?))
       :on-confirm (lambda ((val symbol))
         (set! (-> *pc-settings* memcard-play-hints?) val)
         (set! (-> *setting-control* default play-hints) val)))
     (new 'static 'menu-generic-boolean-option
       :name (text-id subtitles)
-      :truthy-text (text-id progress-on)
-      :falsey-text (text-id progress-off)
+      :truthy-text (text-id on)
+      :falsey-text (text-id off)
       :get-value-fn (lambda () (format 0 "TODO!"))
       :on-confirm (lambda ((val symbol))
         (format 0 "TODO!")))
     (new 'static 'menu-generic-boolean-option
       :name (text-id hinttitles)
-      :truthy-text (text-id progress-on)
-      :falsey-text (text-id progress-off)
+      :truthy-text (text-id on)
+      :falsey-text (text-id off)
       :get-value-fn (lambda () (format 0 "TODO!"))
       :on-confirm (lambda ((val symbol))
         (format 0 "TODO!")))
     ;; TODO - 3 language options
+;;     (new 'static 'game-option :option-type (game-option-type language) :name (text-id language) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type language-subtitles) :name (text-id subtitles-language) :scale #t)
+;;        (new 'static 'game-option :option-type (game-option-type language-text) :name (text-id text-language) :scale #t)
     (new 'static 'menu-generic-boolean-option
       :name (text-id subtitles-speaker)
-      :truthy-text (text-id progress-on)
-      :falsey-text (text-id progress-off)
+      :truthy-text (text-id on)
+      :falsey-text (text-id off)
       :get-value-fn (lambda () (format 0 "TODO!"))
       :on-confirm (lambda ((val symbol))
         (format 0 "TODO!")))
-    ;; (progress-new-generic-link-to-scrolling-page (text-id misc-options)
-    ;;   ;; TODO
-    ;;   )
-    (new 'static 'menu-generic-button-option
-      :name (text-id back)
-      :on-confirm (lambda ((val symbol))
-        (format 0 "TODO!")))))
+    (progress-new-generic-link-to-page (text-id misc-options) 115 25 0.70
+      ;; TODO
+      (progress-pc-back-option))
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    (progress-pc-back-option)
+    
+    ))
 
 (define *graphic-options-pc*
   (new 'static
@@ -235,7 +221,7 @@
             :param1 0.0
             :param2 100.0
             :slider-step-size 1.0
-            :on-confirm
+            :on-confirmm
             (lambda ((val object))
               (set! (-> *setting-control* default sfx-volume) (-> *pc-settings* memcard-volume-sfx))
               (none)))
@@ -247,7 +233,7 @@
             :param1 0.0
             :param2 100.0
             :slider-step-size 1.0
-            :on-confirm
+            :on-confirmm
             (lambda ((val object))
               (set! (-> *setting-control* default music-volume) (-> *pc-settings* memcard-volume-music))
               (none)))
@@ -259,7 +245,7 @@
             :param1 0.0
             :param2 100.0
             :slider-step-size 1.0
-            :on-confirm
+            :on-confirmm
             (lambda ((val object))
               (set! (-> *setting-control* default dialog-volume) (-> *pc-settings* memcard-volume-dialog))
               (none)))
@@ -296,7 +282,7 @@
             :option-type (game-option-type confirmation)
             :name (text-id restore-defaults)
             :scale #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (reset-camera *pc-settings* #t)
               (none)))
@@ -321,7 +307,7 @@
             :option-disabled-func
             (lambda ()
               (not (pc-current-controller-has-rumble?)))
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (set! (-> *setting-control* default vibration) (-> *pc-settings* memcard-vibration?))))
        (new 'static
@@ -370,7 +356,7 @@
             :option-type (game-option-type confirmation)
             :name (text-id restore-defaults)
             :scale #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (reset-input *pc-settings* 'controller #t)
               (set-ignore-controller-in-bg! *pc-settings* (-> *pc-settings* ignore-controller-win-unfocused?))
@@ -402,7 +388,7 @@
             :param2 30.0
             :slider-step-size 0.25
             :slider-show-decimal? #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (update-mouse-controls! *pc-settings*)
               (none))
@@ -418,7 +404,7 @@
             :param2 30.0
             :slider-step-size 0.25
             :slider-show-decimal? #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (update-mouse-controls! *pc-settings*)
               (none))
@@ -441,7 +427,7 @@
             :option-type (game-option-type confirmation)
             :name (text-id restore-defaults)
             :scale #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (reset-input *pc-settings* 'mouse #t)
               (update-mouse-controls! *pc-settings*)
@@ -555,7 +541,7 @@
             :option-type (game-option-type confirmation)
             :name (text-id restore-defaults)
             :scale #t
-            :on-confirm
+            :on-confirmm
             (lambda ()
               (reset-input *pc-settings* 'input #t)
               (pc-set-keyboard-enabled! (-> *pc-settings* keyboard-enabled?))

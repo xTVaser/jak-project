@@ -1,24 +1,39 @@
 ;;-*-Lisp-*-
 (in-package goal)
 
-(deftype game-option-page (basic)
-  ((y-center  int32)
-   (y-space   int32)
-   (scale     float)
-   (options   (array game-option))))
+;; 
+   ;; fields below added in pc port
+  ;;  (option-disabled-func (function symbol))
+  ;;  (name-override        string)
+  ;;  (on-change            (function object none))
+  ;;  (on-confirm           (function none))
+  ;;  (slider-step-size     float)
+  ;;  (slider-show-decimal? symbol)
+  ;;  (bind-info            bind-assignment-info :inline)
+
+(deftype menu-generic-option (game-option)
+  ((mounted? symbol)
+   (should-disable? (function symbol)))
+  (:methods
+    (draw-option (_type_ progress font-context int symbol) none)
+    (on-mount! "Called when the menu item is first drawn as a means to initialize defaults, etc" (_type_) none)
+    (should-disable? (_type_) symbol)))
+
+(deftype generic-game-option-page (basic)
+  ((options   (array menu-generic-option))))
 
 (deftype generic-progress-state-entry (structure)
   "All info that is pushed onto a 'stack' when navigating to a sub-menu with
    the new generic menu options"
   (;; what needs to be drawn now, the normal progress code figures this out with a hard-coded switch statement, this avoids that
-   (ref game-option-page)
+   (ref generic-game-option-page)
    ;; generic function to potentially run some setup code when the entry is loaded
    (on-load (function none))
    ;; so we can restore back to the same menu position
    (hover-index   int32)
    (scroll-index  int32)
    ;; symbol used normally for progress stuff
-   (progress-id symbol))
+   (progress-id progress-screen))
   (:methods
     (call-on-load (_type_) none)))
 
@@ -34,7 +49,7 @@
    )
   (:methods
     (init! (_type_) none)
-    (navigate! (_type_ progress menu-option-list (function none)) none)
+    (navigate! (_type_ progress generic-game-option-page (function none)) none)
     (back! (_type_ progress) none)
     (has-history? (_type_) symbol)
     (clear-history-if-empty! (_type_) none)
@@ -44,13 +59,6 @@
 ;; TODO - make sure C++ truncates strings
 (define *progress-generic-temp-string* (new 'global 'string 512 (the string #f)))
 
-(deftype menu-generic-option (menu-option)
-  ((mounted? symbol)
-   (should-disable? (function symbol)))
-  (:methods
-    (on-mount! "Called when the menu item is first drawn as a means to initialize defaults, etc" (_type_) none)
-    (should-disable? (_type_) symbol)))
-
 (deftype menu-generic-button-option (menu-generic-option)
   "A button option that run its action when selected"
   (;; props
@@ -58,56 +66,59 @@
   (:methods
     (call-on-confirm (_type_ progress) none)))
 
-(deftype menu-generic-scrolling-page (menu-generic-option)
+(deftype menu-generic-page (menu-generic-option)
   "A menu option that holds menu options"
   (;; props
-   (menu-options          (array game-option))
+   (menu-options          (array menu-generic-option))
+   (page-y-center         int32)
+   (page-y-space          int32)
+   (page-scale            float)
    ;; state
    (selected-option-index int32)
    (last-move             time-frame)))
 
 (deftype menu-generic-link-option (menu-generic-option)
-  "A very simple link option that allows you to link to any other [[game-option]]"
+  "A very simple link option that allows you to link to any other [[generic-game-option-page]]"
   (;; props
-   (target game-option-page)
+   (target generic-game-option-page)
    ;; generic function to potentially run some setup code when the entry is loaded
    ;; this is not called from the link option, but rather stored in the history entry
    (on-load (function none))))
 
-(defmacro progress-new-generic-option (option)
-  `(new 'static 'game-option-page :options (new 'static 'boxed-array :type game-option ,option)))
+(deftype menu-generic-boolean-option (menu-generic-option)
+  "Generic two option menu entry (ie. yes/no)"
+  (;; props
+   (truthy-text text-id)
+   (falsey-text text-id)
+   ;; state
+   (value symbol)
+   ;; lambdas
+   (get-value-fn (function symbol))
+   (on-confirm (function symbol none)))
+  (:methods
+    (call-get-value-fn (_type_) symbol)
+    (call-on-confirm (_type_ symbol) none)))
 
-;; TODO - support changing the size from kwargs
 ;; TODO - experiment with auto-scaling down to a minimum based on text width
-(defmacro progress-new-generic-scrolling-page (title &rest options)
-  `(new 'static 'game-option-page
-    :options (new 'static 'boxed-array :type game-option
-    (new 'static 'menu-generic-scrolling-page
+(defmacro progress-new-generic-page (title y-center y-space scale &rest options)
+  `(new 'static 'generic-game-option-page
+    :options (new 'static 'boxed-array :type menu-generic-option
+    (new 'static 'menu-generic-page
      :name ,title
-     :menu-options (new 'static 'boxed-array :type game-option
-     ,@options)))))
+     :page-y-center ,y-center
+     :page-y-space ,y-space
+     :page-scale ,scale
+     :menu-options (new 'static 'boxed-array :type menu-generic-option ,@options)))))
 
-(defmacro progress-new-generic-link (text target &key (should-disable? #f))
-  `(new 'static 'menu-generic-link-option
-    :name ,text
-    :should-disable? ,should-disable?
-    :target ,target))
-
-(defmacro progress-new-generic-link-to-page (title &key (should-disable? #f) &rest options)
+(defmacro progress-new-generic-link-to-page (title y-center y-space scale &key (should-disable? #f) &rest options)
   `(new 'static 'menu-generic-link-option
     :name ,title
     :should-disable? ,should-disable?
-    :target (new 'static 'game-option-page
-      :options (new 'static 'boxed-array :type game-option
-        ,@options))))
-
-(defmacro progress-new-generic-link-to-scrolling-page (title &key (should-disable? #f) &rest options)
-  `(new 'static 'menu-generic-link-option
-    :name ,title
-    :should-disable? ,should-disable?
-    :target (new 'static 'game-option-page
-      :options (new 'static 'boxed-array :type game-option
-      (new 'static 'menu-generic-scrolling-page
+    :target (new 'static 'generic-game-option-page
+      :options (new 'static 'boxed-array :type menu-generic-option
+      (new 'static 'menu-generic-page
        :name ,title
-       :menu-options (new 'static 'boxed-array :type game-option
-       ,@options))))))
+       :page-y-center ,y-center
+       :page-y-space ,y-space
+       :page-scale ,scale
+       :menu-options (new 'static 'boxed-array :type menu-generic-option ,@options))))))

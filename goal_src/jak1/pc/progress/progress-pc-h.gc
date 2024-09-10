@@ -1,0 +1,51 @@
+;;-*-Lisp-*-
+(in-package goal)
+
+(defconstant PROGRESS_PC_PAGE_HEIGHT 7)
+
+(defconstant PROGRESS_SCROLL_DIR_UP -1)
+
+(defconstant PROGRESS_SCROLL_DIR_DOWN 1)
+
+(defconstant GAME_MIN_RES_MULT 0.5)
+
+(deftype progress-scroll (structure)
+  ((transition  float)
+   (start-index int16)
+   (real-index  int16)
+   (direction   int8)
+   (last-screen progress-screen)))
+
+(define *progress-scroll* (new 'static 'progress-scroll))
+
+(defmacro progress-scrolling? ()
+  `(< (-> *progress-scroll* transition) 1.0))
+
+(defmacro progress-scrolling-up? ()
+  `(and (progress-scrolling?) (= (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_UP)))
+
+(defmacro progress-scrolling-down? ()
+  `(and (progress-scrolling?) (= (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_DOWN)))
+
+(defconstant *progress-scroll-start* (-> *progress-scroll* start-index))
+
+(defconstant *progress-scroll-end* (+ -1 PROGRESS_PC_PAGE_HEIGHT (-> *progress-scroll* start-index)))
+
+(defmacro progress-scroll-reset ()
+  "resets scroll. nothing will be scrolling, as if it had finished."
+  `(begin
+    (set! (-> *progress-scroll* transition) 1.0)
+    (set! (-> *progress-scroll* direction) 0)
+    (set! (-> *progress-scroll* start-index) 0)))
+
+(defmacro progress-scroll-up! ()
+  `(begin
+    (set! (-> *progress-scroll* transition) 0.0)
+    (set! (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_UP)
+    (1-! (-> *progress-scroll* start-index))))
+
+(defmacro progress-scroll-down! ()
+  `(begin
+    (set! (-> *progress-scroll* transition) 0.0)
+    (set! (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_DOWN)
+    (1+! (-> *progress-scroll* start-index))))

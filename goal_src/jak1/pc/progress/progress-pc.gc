@@ -8,55 +8,6 @@
 ;;---------------------------
 ;; pc menu extra stuff
 
-(defconstant PROGRESS_PC_PAGE_HEIGHT 7)
-
-(defconstant PROGRESS_SCROLL_DIR_UP -1)
-
-(defconstant PROGRESS_SCROLL_DIR_DOWN 1)
-
-(defconstant GAME_MIN_RES_MULT 0.5)
-
-(deftype progress-scroll (structure)
-  ((transition  float)
-   (start-index int16)
-   (real-index  int16)
-   (direction   int8)
-   (last-screen progress-screen)))
-
-(define *progress-scroll* (new 'static 'progress-scroll))
-
-(defmacro progress-scrolling? ()
-  `(< (-> *progress-scroll* transition) 1.0))
-
-(defmacro progress-scrolling-up? ()
-  `(and (progress-scrolling?) (= (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_UP)))
-
-(defmacro progress-scrolling-down? ()
-  `(and (progress-scrolling?) (= (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_DOWN)))
-
-(defconstant *progress-scroll-start* (-> *progress-scroll* start-index))
-
-(defconstant *progress-scroll-end* (+ -1 PROGRESS_PC_PAGE_HEIGHT (-> *progress-scroll* start-index)))
-
-(defmacro progress-scroll-reset ()
-  "resets scroll. nothing will be scrolling, as if it had finished."
-  `(begin
-    (set! (-> *progress-scroll* transition) 1.0)
-    (set! (-> *progress-scroll* direction) 0)
-    (set! (-> *progress-scroll* start-index) 0)))
-
-(defmacro progress-scroll-up! ()
-  `(begin
-    (set! (-> *progress-scroll* transition) 0.0)
-    (set! (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_UP)
-    (1-! (-> *progress-scroll* start-index))))
-
-(defmacro progress-scroll-down! ()
-  `(begin
-    (set! (-> *progress-scroll* transition) 0.0)
-    (set! (-> *progress-scroll* direction) PROGRESS_SCROLL_DIR_DOWN)
-    (1+! (-> *progress-scroll* start-index))))
-
 (defun progress-fast-save-and-start-speedrun ((category speedrun-category))
   "saves to first slot, updates last-slot-saved for cursor, then starts speedrun"
   (set! (-> *progress-state* last-slot-saved) 0)
@@ -471,10 +422,10 @@
     (case screen
       ;; NOTE - assumes only port 0
       (((progress-screen controller-binds))
-       (set! (-> option on-confirm) (lambda () (pc-reset-bindings-to-defaults! 0 0) (none))))
+       (set! (-> option on-confirmm) (lambda () (pc-reset-bindings-to-defaults! 0 0) (none))))
       (((progress-screen keyboard-binds))
-       (set! (-> option on-confirm) (lambda () (pc-reset-bindings-to-defaults! 0 1) (none))))
-      (((progress-screen mouse-binds)) (set! (-> option on-confirm) (lambda () (pc-reset-bindings-to-defaults! 0 2) (none)))))
+       (set! (-> option on-confirmm) (lambda () (pc-reset-bindings-to-defaults! 0 1) (none))))
+      (((progress-screen mouse-binds)) (set! (-> option on-confirmm) (lambda () (pc-reset-bindings-to-defaults! 0 2) (none)))))
     (1+! (-> *temp-options* length)))
   (add-back-option)
   *temp-options*)
@@ -695,7 +646,7 @@
   ;; set up options for each screen
   (set! (-> *options-remap* (progress-screen settings))
         (if (or *cheat-mode* (nonzero? (-> *pc-settings* cheats-known))) *main-options-secrets* *main-options-pc*))
-  (set! (-> *options-remap* (progress-screen game-settings)) *game-options-pc*)
+  (set! (-> *options-remap* (progress-screen game-settings)) (-> *game-options-pc* options))
   (set! (-> *options-remap* (progress-screen graphic-settings)) *graphic-options-pc*)
   (let ((max-refresh-rate (pc-get-active-display-refresh-rate)))
     (cond
@@ -770,13 +721,13 @@
   (set! (-> *sound-options* 2 value-to-modify) (&-> *setting-control* default dialog-volume))
   (set! (-> *yes-no-options* 0 value-to-modify) (&-> *progress-state* yes-no-choice))
   ;; our options!
-  (set! (-> *game-options-pc* 1 value-to-modify) (&-> *pc-settings* memcard-play-hints?))
-  (set! (-> *game-options-pc* 2 value-to-modify) (&-> *pc-settings* subtitles?))
-  (set! (-> *game-options-pc* 3 value-to-modify) (&-> *pc-settings* hinttitles?))
-  (set! (-> *game-options-pc* 4 value-to-modify) (&-> *setting-control* default language))
-  (set! (-> *game-options-pc* 5 value-to-modify) (&-> *progress-carousell* int-backup))
-  (set! (-> *game-options-pc* 6 value-to-modify) (&-> *progress-carousell* int-backup))
-  (set! (-> *game-options-pc* 7 value-to-modify) (&-> *progress-carousell* int-backup))
+  ;; (set! (-> *game-options-pc* 1 value-to-modify) (&-> *pc-settings* memcard-play-hints?))
+  ;; (set! (-> *game-options-pc* 2 value-to-modify) (&-> *pc-settings* subtitles?))
+  ;; (set! (-> *game-options-pc* 3 value-to-modify) (&-> *pc-settings* hinttitles?))
+  ;; (set! (-> *game-options-pc* 4 value-to-modify) (&-> *setting-control* default language))
+  ;; (set! (-> *game-options-pc* 5 value-to-modify) (&-> *progress-carousell* int-backup))
+  ;; (set! (-> *game-options-pc* 6 value-to-modify) (&-> *progress-carousell* int-backup))
+  ;; (set! (-> *game-options-pc* 7 value-to-modify) (&-> *progress-carousell* int-backup))
   (set! (-> *graphic-options-pc* 1 value-to-modify) (&-> *progress-carousell* int-backup))
   (set! (-> *graphic-options-pc* 3 value-to-modify) (&-> *pc-settings* vsync?))
   (set! (-> *graphic-options-pc* 5 value-to-modify) (&-> *progress-carousell* int-backup))
@@ -1098,7 +1049,13 @@
                   (set! (-> obj next-display-state) (the-as progress-screen (-> options (-> obj option-index) param3)))
                   (case (-> obj next-display-state)
                     (((progress-screen load-game) (progress-screen save-game) (progress-screen save-game-title))
-                     (set! (-> obj next-display-state) (set-memcard-screen obj (-> obj next-display-state))))))))
+                     (set! (-> obj next-display-state) (set-memcard-screen obj (-> obj next-display-state))))
+                    (((progress-screen generic-menu))
+                     ;; if we are entering a generic menu, navigate to it!
+                    ;;  (navigate! *progress-pc-generic-store* obj (-> obj target) (-> obj on-load))
+                     )
+                     
+                     ))))
               ((= (-> options (-> obj option-index) option-type) (game-option-type button))
                ;; a button. what?
                (case (-> options (-> obj option-index) name)
@@ -1430,8 +1387,8 @@
                  ((2) (set-frame-rate! *pc-settings* 150 #t)))
                (set-video-mode (-> *setting-control* default video-mode))))
             ;; if the option has a `on-confirm` function, run it
-            (when (nonzero? (-> options (-> obj option-index) on-confirm))
-              ((-> options (-> obj option-index) on-confirm)))
+            (when (nonzero? (-> options (-> obj option-index) on-confirmm))
+              ((-> options (-> obj option-index) on-confirmm)))
             (commit-to-file *pc-settings*)))))))
   (none))
 
@@ -2089,6 +2046,33 @@
                (unk #t)
                (stats? #f))
           (case (-> self display-state)
+            ;; generic menu case
+            (((progress-screen generic-menu))
+             ;; a single condition to handle all generic menu links
+             (let ((curr-history-entry (-> *progress-pc-generic-store* history-stack
+                                           (-> *progress-pc-generic-store* history-stack-index))))
+               ;; call the on-load function is appropriate, this can be used to perform some kind of generic setup
+               ;; for the particular route
+               (when (and (nonzero? (-> curr-history-entry on-load)) (!= (-> curr-history-entry on-load) #f))
+                 ((-> curr-history-entry on-load)))
+               ;; restore state from the history entry
+               (set! (-> *progress-pc-generic-store* clear-screen?) #f)
+               (set! (-> *progress-pc-generic-store* current-menu-hover-index) (-> curr-history-entry hover-index))
+              ;;  (if (!= (-> curr-history-entry progress-id) 'generic-menu)
+              ;;    ;; do a recursive call to hit the relevant case in this switch
+              ;;    (set-menu-options obj (-> curr-history-entry progress-id))
+                  ;; TODO - not sure if i need these
+                 ;; otherwise, set the options
+                 (draw-generic-page self (-> curr-history-entry ref)) ;; TODO  temp
+                ;;  )
+                 ))
+            ;; top level ones that will remain
+            ;; TODO - dont hard-code display options here
+            (((progress-screen game-settings))
+             (hide-progress-icons)
+             (draw-generic-page self *game-options-pc*)
+             )
+            ;; all others (builtins that aren't overridden by us)
             (((progress-screen fuel-cell)) (set! stats? #t) (draw-fuel-cell-screen self a1-0))
             (((progress-screen money)) (set! stats? #t) (draw-money-screen self a1-0))
             (((progress-screen buzzer)) (set! stats? #t) (draw-buzzer-screen self a1-0))
@@ -2127,7 +2111,6 @@
              (hide-progress-icons)
              (draw-options self 115 25 0.65))
             (((progress-screen gfx-ps2-options)) (hide-progress-icons) (draw-options self 115 25 0.67))
-            (((progress-screen game-settings)) (hide-progress-icons) (draw-options self 115 25 0.70))
             (((progress-screen memcard-removed) (progress-screen memcard-auto-save-error))
              (draw-notice-screen self)
              (draw-options self 192 0 0.82))
@@ -2162,7 +2145,7 @@
               (progress-screen memcard-creating))
              (draw-notice-screen self))
             (((progress-screen save-game-title)) (draw-notice-screen self) (draw-options self 169 15 0.6))
-            (else (format 0 "PROGRESS - You forgot to add a `progress-screen` case to draw options!")))
+            (else (format 0 "PROGRESS - You forgot to add a `progress-screen` case to draw options!~%")))
           (when stats?
             (let* ((v1-98 (cond
                             ((-> self stat-transition) 0)

@@ -96,10 +96,11 @@
      (bad-disc 33)
      (quit 34)
      ;; extra screens for pc port
+     (generic-menu)
      ;; input options
      (input-options)
      (select-controller)
-     (controller-binds) ;; 0x25
+     (controller-binds)
      (keyboard-binds)
      (mouse-binds)
      (controller-options)
@@ -210,10 +211,11 @@
    (param3               game-option-menu)
    (value-to-modify      pointer)
    ;; fields below added in pc port
+   ;; TODO remove
    (option-disabled-func (function symbol))
    (name-override        string)
    (on-change            (function object none))
-   (on-confirm           (function none))
+   (on-confirmm           (function none))
    (slider-step-size     float)
    (slider-show-decimal? symbol)
    (bind-info            bind-assignment-info :inline)))
