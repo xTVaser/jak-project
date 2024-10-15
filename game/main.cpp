@@ -98,6 +98,9 @@ int main(int argc, char** argv) {
   bool enable_profiling = false;
   bool enable_portable = false;
   bool disable_save_location_override = false;
+#ifdef _WIN32
+  bool disable_console = false;
+#endif
   std::string profile_until_event = "";
   std::string gpu_test = "";
   std::string gpu_test_out_path = "";
@@ -114,6 +117,9 @@ int main(int argc, char** argv) {
       "Specify port number for listener connection (default is 8112 for Jak 1 and 8113 for Jak 2)");
   app.add_flag("--no-avx2", disable_avx2, "Disable AVX2 for testing");
   app.add_flag("--no-display", disable_display, "Disable video display");
+#ifdef _WIN32
+  app.add_flag("--no-console", disable_console, "Disable the application's console");
+#endif
   app.add_flag("--profile", enable_profiling, "Enables profiling immediately from startup");
   app.add_flag("--portable", enable_portable,
                "Save settings and saves relative to the game's executable, takes precedence over "
@@ -137,6 +143,14 @@ int main(int argc, char** argv) {
   define_common_cli_arguments(app);
   app.allow_extras();
   CLI11_PARSE(app, argc, argv);
+
+#ifdef _WIN32
+  if (disable_console) {
+    AllocConsole();
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+  }
+#endif
 
   // Override the user's config dir, potentially (either because it was explicitly provided
   // or because it's portable mode)
@@ -265,3 +279,11 @@ int main(int argc, char** argv) {
   }
   return 0;
 }
+
+#ifdef _WIN32
+int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int nShowCmd) {
+  auto status = main(__argc, __argv);
+  FreeConsole();
+  return status;
+}
+#endif
