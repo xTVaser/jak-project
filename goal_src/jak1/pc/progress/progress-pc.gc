@@ -165,7 +165,10 @@
                                   catalan
                                   icelandic
                                   polish
-                                  lithuanian))
+                                  lithuanian
+                                  czech
+                                  croatian
+                                  galician))
 
 (define *text-languages*
   (static-text-list-array english
@@ -184,7 +187,10 @@
                           dutch
                           hungarian
                           polish
-                          lithuanian))
+                          lithuanian
+                          czech
+                          croatian
+                          galician))
 
 (define *subtitle-languages*
   (static-text-list-array english
@@ -199,7 +205,10 @@
                           danish
                           dutch
                           polish
-                          lithuanian))
+                          lithuanian
+                          czech
+                          croatian
+                          galician))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  DYNAMIC MENU THINGS
@@ -754,6 +763,7 @@
   (set! (-> *controller-options* 4 value-to-modify) (&-> *pc-settings* controller-led-hp?))
   (set! (-> *controller-options* 5 value-to-modify) (&-> *pc-settings* controller-led-eco?))
   (set! (-> *controller-options* 6 value-to-modify) (&-> *pc-settings* controller-led-heat?))
+  (set! (-> *controller-options* 7 value-to-modify) (&-> *pc-settings* pressure-sensitivity-enabled?))
   (set! (-> *mouse-options* 0 value-to-modify) (&-> *pc-settings* mouse-camera?))
   (set! (-> *mouse-options* 1 value-to-modify) (&-> *pc-settings* mouse-xsens))
   (set! (-> *mouse-options* 2 value-to-modify) (&-> *pc-settings* mouse-ysens))

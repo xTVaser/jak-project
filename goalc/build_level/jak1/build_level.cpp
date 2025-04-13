@@ -4,6 +4,7 @@
 
 #include "decompiler/extractor/extractor_util.h"
 #include "decompiler/level_extractor/BspHeader.h"
+#include "decompiler/level_extractor/extract_collide_frags.h"
 #include "decompiler/level_extractor/extract_level.h"
 #include "decompiler/level_extractor/extract_merc.h"
 #include "goalc/build_level/collide/jak1/collide_bvh.h"
@@ -13,10 +14,13 @@
 #include "goalc/build_level/jak1/FileInfo.h"
 #include "goalc/build_level/jak1/LevelFile.h"
 
+#include "fmt/ranges.h"
+
 namespace jak1 {
 bool run_build_level(const std::string& input_file,
                      const std::string& bsp_output_file,
-                     const std::string& output_prefix) {
+                     const std::string& output_prefix,
+                     bool gen_fr3) {
   auto level_json = parse_commented_json(
       file_util::read_text_file(file_util::get_file_path({input_file})), input_file);
   LevelFile file{};                 // GOAL level file
@@ -104,6 +108,22 @@ bool run_build_level(const std::string& input_file,
     auto& collide_drawable_tree = file.drawable_trees.collides.emplace_back();
     collide_drawable_tree.bvh = collide::construct_collide_bvh(mesh_extract_out.collide.faces);
     collide_drawable_tree.packed_frags = pack_collide_frags(collide_drawable_tree.bvh.frags.frags);
+    // for collision renderer
+    for (auto& face : mesh_extract_out.collide.faces) {
+      math::Vector4f verts[3];
+      for (int i = 0; i < 3; i++) {
+        verts[i].x() = face.v[i].x();
+        verts[i].y() = face.v[i].y();
+        verts[i].z() = face.v[i].z();
+        verts[i].w() = 1.f;
+      }
+      tfrag3::CollisionMesh::Vertex out_verts[3];
+      decompiler::set_vertices_for_tri(out_verts, verts);
+      for (auto& out : out_verts) {
+        out.pat = face.pat.val;
+        pc_level.collision.vertices.push_back(out);
+      }
+    }
   }
 
   auto sky_name = level_json.value("sky", "none");
@@ -112,8 +132,8 @@ bool run_build_level(const std::string& input_file,
 
   // Add textures and models
   // TODO remove hardcoded config settings
-  if ((level_json.contains("art_groups") && !level_json.at("art_groups").empty()) ||
-      (level_json.contains("textures") && !level_json.at("textures").empty())) {
+  if (gen_fr3 && ((level_json.contains("art_groups") && !level_json.at("art_groups").empty()) ||
+                  (level_json.contains("textures") && !level_json.at("textures").empty()))) {
     lg::info("Looking for ISO path...");
     const auto iso_folder = file_util::get_iso_dir_for_game(GameVersion::Jak1);
     lg::info("Found ISO path: {}", iso_folder.string());
@@ -156,6 +176,11 @@ bool run_build_level(const std::string& input_file,
     auto textures_out = file_util::get_jak_project_dir() / "decompiler_out/jak1/textures";
     file_util::create_dir_if_needed(textures_out);
     db.process_tpages(tex_db, textures_out, config, "");
+    auto replacements_path = file_util::get_jak_project_dir() / "custom_assets" /
+                             game_version_names[config.game_version] / "texture_replacements";
+    if (fs::exists(replacements_path)) {
+      tex_db.replace_textures(replacements_path);
+    }
 
     std::vector<std::string> processed_art_groups;
 
@@ -168,6 +193,9 @@ bool run_build_level(const std::string& input_file,
       for (auto& dgo : config.dgo_names) {
         // remove "DGO/" prefix
         const auto& dgo_name = dgo.substr(4);
+        ASSERT_MSG(
+            db.obj_files_by_dgo.contains(dgo_name),
+            fmt::format("{} DGO expected to be part of the ObjectDB but it is not!", dgo_name));
         const auto& files = db.obj_files_by_dgo.at(dgo_name);
         auto art_groups =
             find_art_groups(processed_art_groups,
@@ -217,8 +245,9 @@ bool run_build_level(const std::string& input_file,
           if (ag.name.length() > 3 && !ag.name.compare(ag.name.length() - 3, 3, "-ag")) {
             const auto& ag_file = db.lookup_record(ag);
             lg::info("custom level: extracting art group {}", ag_file.name_in_dgo);
+            decompiler::MercSwapInfo info;
             decompiler::extract_merc(ag_file, tex_db, db.dts, tex_remap, pc_level, false,
-                                     db.version());
+                                     db.version(), info);
           }
         }
       }
@@ -295,7 +324,7 @@ bool run_build_level(const std::string& input_file,
   }
 
   // add custom models to fr3
-  if (level_json.contains("custom_models") && !level_json.at("custom_models").empty()) {
+  if (gen_fr3 && level_json.contains("custom_models") && !level_json.at("custom_models").empty()) {
     auto models = level_json.at("custom_models").get<std::vector<std::string>>();
     for (auto& name : models) {
       add_model_to_level(GameVersion::Jak1, name, pc_level);
@@ -311,8 +340,10 @@ bool run_build_level(const std::string& input_file,
   file_util::write_binary_file(save_path, result.data(), result.size());
 
   // Save the PC level
-  save_pc_data(file.name, pc_level,
-               file_util::get_jak_project_dir() / "out" / output_prefix / "fr3");
+  if (gen_fr3) {
+    save_pc_data(file.name, pc_level,
+                 file_util::get_jak_project_dir() / "out" / output_prefix / "fr3");
+  }
 
   return true;
 }

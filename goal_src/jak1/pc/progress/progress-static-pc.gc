@@ -351,6 +351,29 @@
             :option-disabled-func
             (lambda ()
               (not (pc-current-controller-has-led?))))
+       ;; TODO NOW:
+     ;;   (new 'static
+     ;;        'game-option
+     ;;        :option-type (game-option-type on-off)
+     ;;        :name (text-id input-opts-controller-pressure-sensitivity)
+     ;;        :scale #t
+     ;;        :on-change
+     ;;        (lambda ((val object))
+     ;;          (let ((val-sym (the-as symbol val)))
+     ;;            (pc-set-pressure-sensitivity-enabled! val-sym)
+     ;;            (set! (-> *pc-settings* pressure-sensitivity-enabled?) val-sym)
+     ;;            (none)))
+     ;;        :option-disabled-func
+     ;;        (lambda ()
+     ;;          (not (pc-current-controller-has-pressure-sensitivity?))))
+       (new 'static
+            'game-option
+            :option-type (game-option-type on-off)
+            :name (text-id input-opts-controller-pressure-sensitivity)
+            :scale #t
+            :option-disabled-func
+            (lambda ()
+              (not (pc-current-controller-has-led?))))
        (new 'static
             'game-option
             :option-type (game-option-type confirmation)
