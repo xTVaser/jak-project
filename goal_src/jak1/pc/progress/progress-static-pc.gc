@@ -1,6 +1,8 @@
 ;;-*-Lisp-*-
 (in-package goal)
 
+;; TODO - there's a change from `progress-pc` that i havn't copied over, get it (probably a translation update)
+
 (define *main-options-pc*
   (new 'static
        'boxed-array
