@@ -17,6 +17,8 @@ tasks:
     - '{{.PYTHON}} ./scripts/tasks/update-env.py --game jak2'
   set-game-jak3:
     - '{{.PYTHON}} ./scripts/tasks/update-env.py --game jak3'
+  set-game-jakx:
+    - '{{.PYTHON}} ./scripts/tasks/update-env.py --game jakx'
   set-decomp-ntscv1:
     desc: "aka black label"
     cmds:
@@ -171,8 +173,8 @@ tasks:
   fix-translations:
     desc: Finds and tries to fix invalid translation Characters
     cmds:
-      - '{{.PYTHON}} ./scripts/ci/lint-characters.py --fix'
       - '{{.PYTHON}} ./scripts/ci/lint-autoglottonyms.py --fix'
+      - '{{.PYTHON}} ./scripts/ci/lint-characters.py --fix'
   lint:
     cmds:
       - '{{.PYTHON}} ./scripts/ci/lint-trailing-whitespace.py'
