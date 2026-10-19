@@ -1,5 +1,26 @@
 {
-    "done-in-this-round": [],
+    "done-in-this-round": [
+        "3d-menu-elements",
+        "math-fx",
+        "wcar-base",
+        "wcar-bear",
+        "wcar-bobcat",
+        "wcar-cheetah",
+        "wcar-falcon",
+        "wcar-gila",
+        "wcar-leopard",
+        "wcar-mongoose",
+        "wcar-panther",
+        "wcar-skel",
+        "wcar-snake",
+        "wcar-tiger",
+        "wcar-wolf",
+        "wcar-wombat",
+        "wcar-possum",
+        "wcar-cougar",
+        "wcar-daxtermobile",
+        "cam-interface"
+    ],
     "requires-decomp-fixes": [
         "gsound-h", // new instruction needs support
         "wvehicle-weapons-h", // array of symbols support
@@ -7,9 +28,11 @@
     ],
     "soon": [
         "TODO - make a script that compares files between jak3 and jakx and checks for preserve comments",
-        "TODO - script to ensure that these lists aren't forgetting a file",
+        "TODO - script to ensure that these lists aren't forgetting a file (i've noticed a few missing)",
         "time-of-day", // time-of-day-interp-colors[-scratch] not done in jak3 and update-time-of-day causes compilation error
         "entity-more-perm",
+        "camera-facing-quad", // one func left, dont know the stack cast
+        "math-camera", // one function left, clipping has to be patched
         "net-mgr-h", // one function left
         "dma",
         "process-drawable", // manually fix update-anim-data
@@ -66,7 +89,6 @@
         "menumap-part"
     ],
     "defer": [
-        "3d-menu-elements",
         "actor-hash",
         "ambient",
         "attackable-hash",
@@ -75,9 +97,7 @@
         "bones",
         "brdroom-obs",
         "cam-debug",
-        "cam-interface",
         "cam-states",
-        "camera-facing-quad",
         "canyon-obs",
         "capture",
         "car-textures",
@@ -185,8 +205,6 @@
         "lobby-stats",
         "logic-target",
         "main",
-        "math-camera",
-        "math-fx",
         "mem-buffer",
         "memory-usage",
         "menu2-b",
@@ -336,25 +354,8 @@
         "water-anim",
         "water-flow",
         "water",
-        "wcar-base",
-        "wcar-bear",
-        "wcar-bobcat",
-        "wcar-cheetah",
-        "wcar-cougar",
-        "wcar-daxtermobile",
         "wcar-drone",
-        "wcar-falcon",
-        "wcar-gila",
-        "wcar-leopard",
-        "wcar-mongoose",
-        "wcar-panther",
-        "wcar-possum",
         "wcar-projectiles",
-        "wcar-skel",
-        "wcar-snake",
-        "wcar-tiger",
-        "wcar-wolf",
-        "wcar-wombat",
         "wvehicle-ai",
         "wvehicle-effects",
         "wvehicle-events",
