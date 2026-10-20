@@ -857,7 +857,7 @@
   )
 
 (deftype event-message-block-array (inline-array-class)
-  ((data             event-message-block :dynamic :offset-assert 16) ;; guessed by decompiler
+  ((data             event-message-block :dynamic :inline :offset-assert 16) ;; guessed by decompiler
    )
   :method-count-assert 15
   :size-assert         #x10
@@ -4405,7 +4405,7 @@
   (debug 583)
   (debug-no-zbuf2 584)
   (debug-menu 585)
-  (bucket586 586)
+    (bucket586 586)
   (bucket587 587)
   (bucket588 588)
   (bucket589 589)
@@ -4432,72 +4432,186 @@
   (bucket610 610)
   (bucket611 611)
   (bucket612 612)
-
+  (bucket613 613)
+  (bucket614 614)
+  (bucket615 615)
+  (bucket616 616)
+  (bucket617 617)
+  (bucket618 618)
+  (bucket619 619)
+  (bucket620 620)
   (bucket621 621)
-
+  (bucket622 622)
+  (bucket623 623)
+  (bucket624 624)
+  (bucket625 625)
+  (bucket626 626)
+  (bucket627 627)
+  (bucket628 628)
+  (bucket629 629)
   (bucket630 630)
-
+  (bucket631 631)
+  (bucket632 632)
   (bucket633 633)
   (bucket634 634)
   (bucket635 635)
-
+  (bucket636 636)
+  (bucket637 637)
+  (bucket638 638)
+  (bucket639 639)
+  (bucket640 640)
+  (bucket641 641)
   (bucket642 642)
   (bucket643 643)
   (bucket644 644)
-
+  (bucket645 645)
+  (bucket646 646)
+  (bucket647 647)
+  (bucket648 648)
+  (bucket649 649)
+  (bucket650 650)
   (bucket651 651)
   (bucket652 652)
   (bucket653 653)
   (bucket654 654)
-
+  (bucket655 655)
+  (bucket656 656)
+  (bucket657 657)
+  (bucket658 658)
+  (bucket659 659)
+  (bucket660 660)
   (bucket661 661)
   (bucket662 662)
   (bucket663 663)
-
+  (bucket664 664)
+  (bucket665 665)
+  (bucket666 666)
+  (bucket667 667)
+  (bucket668 668)
+  (bucket669 669)
   (bucket670 670)
   (bucket671 671)
   (bucket672 672)
   (bucket673 673)
-
+  (bucket674 674)
+  (bucket675 675)
+  (bucket676 676)
+  (bucket677 677)
+  (bucket678 678)
+  (bucket679 679)
   (bucket680 680)
   (bucket681 681)
   (bucket682 682)
-
+  (bucket683 683)
+  (bucket684 684)
+  (bucket685 685)
+  (bucket686 686)
+  (bucket687 687)
+  (bucket688 688)
   (bucket689 689)
   (bucket690 690)
   (bucket691 691)
   (bucket692 692)
-
+  (bucket693 693)
+  (bucket694 694)
+  (bucket695 695)
+  (bucket696 696)
+  (bucket697 697)
+  (bucket698 698)
   (bucket699 699)
   (bucket700 700)
   (bucket701 701)
-
+  (bucket702 702)
+  (bucket703 703)
+  (bucket704 704)
+  (bucket705 705)
+  (bucket706 706)
+  (bucket707 707)
   (bucket708 708)
   (bucket709 709)
-
+  (bucket710 710)
+  (bucket711 711)
+  (bucket712 712)
+  (bucket713 713)
+  (bucket714 714)
+  (bucket715 715)
+  (bucket716 716)
+  (bucket717 717)
+  (bucket718 718)
+  (bucket719 719)
+  (bucket720 720)
+  (bucket721 721)
+  (bucket722 722)
+  (bucket723 723)
+  (bucket724 724)
+  (bucket725 725)
+  (bucket726 726)
+  (bucket727 727)
   (bucket728 728)
-
+  (bucket729 729)
+  (bucket730 730)
+  (bucket731 731)
+  (bucket732 732)
+  (bucket733 733)
+  (bucket734 734)
+  (bucket735 735)
+  (bucket736 736)
+  (bucket737 737)
+  (bucket738 738)
+  (bucket739 739)
+  (bucket740 740)
+  (bucket741 741)
+  (bucket742 742)
+  (bucket743 743)
+  (bucket744 744)
+  (bucket745 745)
+  (bucket746 746)
   (bucket747 747)
-
+  (bucket748 748)
+  (bucket749 749)
+  (bucket750 750)
+  (bucket751 751)
+  (bucket752 752)
+  (bucket753 753)
+  (bucket754 754)
+  (bucket755 755)
+  (bucket756 756)
+  (bucket757 757)
+  (bucket758 758)
+  (bucket759 759)
+  (bucket760 760)
+  (bucket761 761)
+  (bucket762 762)
+  (bucket763 763)
+  (bucket764 764)
+  (bucket765 765)
+  (bucket766 766)
   (bucket767 767)
   (bucket768 768)
-
+  (bucket769 769)
   (bucket770 770)
   (bucket771 771)
-
+  (bucket772 772)
   (bucket773 773)
   (bucket774 774)
   (bucket775 775)
   (bucket776 776)
   (bucket777 777)
-
+  (bucket778 778)
+  (bucket779 779)
   (bucket780 780)
-
+  (bucket781 781)
+  (bucket782 782)
+  (bucket783 783)
+  (bucket784 784)
   (bucket785 785)
   (bucket786 786)
-
+  (bucket787 787)
   (bucket788 788)
-
+  (bucket789 789)
+  (bucket790 790)
+  (bucket791 791)
+  (bucket792 792)
   (bucket793 793)
   (bucket794 794)
   (bucket795 795)
@@ -5085,7 +5199,7 @@
 
 (define-extern *cheat-mode* symbol) ;; 
 ;; (define-extern cpad-invalid! function) ;; (function cpad-info cpad-info)
-;; (define-extern analog-input function) ;; (function int float float float float float)
+(define-extern analog-input (function int float float float float float)) ;; 
 ;; (define-extern cpad-set-buzz! function) ;; (function cpad-info int int time-frame none)
 (define-extern *cpad-list* cpad-list) ;; 
 (define-extern *cpad-debug* symbol) ;; 
@@ -17132,7 +17246,7 @@
     (new (symbol type int) _type_) ;; 0
     (setting-control-method-9 () none) ;; 9 ;; (add-setting (_type_ process symbol object object object) connection)
     (setting-control-method-10 () none) ;; 10 ;; (persist-with-delay (_type_ symbol time-frame symbol symbol float int) none)
-    (setting-control-method-11 () none) ;; 11 ;; (set-setting (_type_ process symbol object object object) connection)
+    (setting-control-method-11 (_type_ int process symbol symbol vector int) none) ;; 11 ;; (set-setting (_type_ process symbol object object object) connection)
     (setting-control-method-12 () none) ;; 12 ;; (remove-setting (_type_ process symbol) none)
     (setting-control-method-13 (_type_ process symbol object object object) none) ;; 13 ;; (kill-persister (_type_ engine-pers object) none)
     (setting-control-method-14 (_type_ symbol int symbol symbol float int) none) ;; 14 ;; (setting-control-method-14 (_type_ object) connectable)
@@ -33859,6 +33973,7 @@
     cam-decel
     cam-endlessfall
     cam-free-floating
+    cam-point-watch
     )
   )
 
@@ -37153,7 +37268,7 @@
 ;; (define-extern set-background-regs! function) ;; (function level none)
 ;; (define-extern set-tie-guard-planes! function)
 ;; (define-extern set-shrub-guard-planes! function)
-;; (define-extern set-subdivide-settings! function) ;; (function level none)
+(define-extern set-subdivide-settings! (function level none)) ;; 
 ;; (define-extern finish-shrub function)
 ;; (define-extern finish-tfrag function)
 ;; (define-extern finish-tfrag-trans function)
@@ -37179,7 +37294,7 @@
   )
 |#
 
-;; (define-extern draw-node-cull function) ;; (function pointer pointer (inline-array draw-node) int none)
+(define-extern draw-node-cull (function pointer pointer (inline-array draw-node) int none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; shrubbery                      ;;
@@ -37281,7 +37396,6 @@
 ;; tfrag-methods                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype tfrag-init-data (structure)
   ((tfrag-bucket               int32  :offset-assert 0) ;; bucket-id
    (tfrag-scissor-bucket       int32  :offset-assert 4) ;; bucket-id
@@ -37294,16 +37408,15 @@
   :size-assert         #x18
   :flag-assert         #x900000018
   )
-|#
 
-;; (define-extern edge-debug-lines function) ;; (function (array vector-array) none)
-;; (define-extern draw-drawable-tree-tfrag function) ;; (function drawable-tree-tfrag none)
-;; (define-extern draw-drawable-tree-tfrag-trans function) ;; (function drawable-tree-tfrag none)
-;; (define-extern draw-drawable-tree-tfrag-water function) ;; (function drawable-tree-tfrag none)
-;; (define-extern tfrag-vu1-init-buf function) ;; (function bucket-id gs-test int uint symbol none)
-;; (define-extern tfrag-scissor-vu1-init-buf function) ;; (function bucket-id gs-test int uint symbol none)
-;; (define-extern *tfrag-init-table* object) ;; (inline-array tfrag-init-data)
-;; (define-extern tfrag-vu1-init-buffers function) ;; (function none)
+(define-extern edge-debug-lines (function (array vector-array) none))
+(define-extern draw-drawable-tree-tfrag (function drawable-tree-tfrag none))
+(define-extern draw-drawable-tree-tfrag-trans (function drawable-tree-tfrag none))
+(define-extern draw-drawable-tree-tfrag-water (function drawable-tree-tfrag none))
+(define-extern tfrag-vu1-init-buf (function bucket-id gs-test int uint symbol none))
+(define-extern tfrag-scissor-vu1-init-buf (function bucket-id gs-test int uint symbol none))
+(define-extern *tfrag-init-table* (inline-array tfrag-init-data))
+(define-extern tfrag-vu1-init-buffers (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; tfrag-work                     ;;
@@ -37508,7 +37621,7 @@
 
 (define-extern tie-near-vu1-block vu-function)
 ;; (define-extern tie-near-init-consts function)
-;; (define-extern tie-near-init-engine function)
+;; (define-extern tie-near-init-engine function) ;; not done in jak3
 ;; (define-extern tie-near-end-buffer function)
 (define-extern tie-scissor-make-perspective-matrix (function matrix matrix none))
 ;; (define-extern tie-near-int-reg function)
@@ -37545,7 +37658,7 @@
 (define-extern *pke-hack* vector)
 (define-extern draw-inline-array-instance-tie (function pointer (inline-array instance-tie) int dma-buffer none))
 (define-extern draw-inline-array-prototype-tie-asm (function dma-buffer int prototype-array-tie none))
-(define-extern draw-inline-array-prototype-tie-shared-asm function)
+(define-extern draw-inline-array-prototype-tie-shared-asm (function dma-buffer int prototype-array-tie none))
 (define-extern instance-tie-patch-buckets (function dma-buffer level object))
 (define-extern draw-drawable-tree-instance-tie (function drawable-tree-instance-tie level none))
 
@@ -38741,7 +38854,6 @@
 ;;    (ret              float                :offset-assert 240)
 ;;    (dma-buf          basic                :offset-assert 244)
 ;;    )
-;;   :allow-misaligned
 ;;   :method-count-assert 9
 ;;   :size-assert         #xf4
 ;;   :flag-assert         #x9000000f4
@@ -39167,7 +39279,7 @@
 (define-extern set-point (function vector float float float float))
 (define-extern update-view-planes (function math-camera (inline-array plane) float matrix float))
 (define-extern *update-leaf-when-outside-bsp* symbol)
-(define-extern update-visible (function math-camera symbol))
+(define-extern update-visible (function math-camera int symbol))
 (define-extern *save-camera-inv-rot* matrix)
 (define-extern move-camera-from-pad (function math-camera math-camera))
 (define-extern external-cam-reset! (function none))
@@ -39237,7 +39349,6 @@
 ;; cam-layout                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype cam-layout-bank (basic)
   ((spline-t    float  :offset-assert 4)
    (spline-step float  :offset-assert 8)
@@ -39250,33 +39361,52 @@
   :size-assert         #x1c
   :flag-assert         #x90000001c
   )
-|#
 
-#|
 (deftype clm-basic (basic)
   ()
   :method-count-assert 9
   :size-assert         #x4
   :flag-assert         #x900000004
   )
-|#
 
-#|
+;; +++cam-layout:clm-item-action-options
+(defenum clm-item-action-options
+  :type uint64
+  :bitfield #t
+  (clm0 0)
+  (clm1 1)
+  (clm2 2)
+  (clm3 3)
+  (clm4 4)
+  (clm5 5)
+  (clm6 6)
+  (clm7 7)
+  )
+;; ---cam-layout:clm-item-action-options
+
+;; +++cam-layout:pad-buttons-u64
+(defenum pad-buttons-u64
+  :type uint64
+  :bitfield #t
+  :copy-entries pad-buttons
+  )
+;; ---cam-layout:pad-buttons-u64
+
 (deftype clm-item-action (structure)
-  ((button  uint64  :offset-assert 0) ;; pad-buttons-u64
-   (options uint64  :offset-assert 8) ;; clm-item-action-options
+  ((button  pad-buttons-u64 :offset-assert 0)
+   (options clm-item-action-options :offset-assert 8)
    (func    symbol  :offset-assert 16) ;; guessed by decompiler
    (parm0   int32   :offset-assert 20) ;; guessed by decompiler
+   (parm0-sym symbol :offset 20)
    (parm1   symbol  :offset-assert 24) ;; guessed by decompiler
+   (parm1-basic basic :offset 24)
    )
   :method-count-assert 9
   :size-assert         #x1c
   :flag-assert         #x90000001c
   ;; field parm0 uses ~A with a signed load. field parm1 uses ~A with a signed load.
   )
-|#
 
-#|
 (deftype clm-item (clm-basic)
   ((description   string                  :offset-assert 4) ;; guessed by decompiler
    (button-symbol symbol                  :offset-assert 8) ;; guessed by decompiler
@@ -39286,14 +39416,13 @@
   :size-assert         #x2c
   :flag-assert         #x90000002c
   )
-|#
 
-#|
 (deftype clm-list-item (basic)
   ((description string                   :offset-assert 4) ;; guessed by decompiler
    (track-val   symbol                   :offset-assert 8) ;; guessed by decompiler
    (val-func    symbol                   :offset-assert 12) ;; guessed by decompiler
    (val-parm0   int32                    :offset-assert 16) ;; guessed by decompiler
+   (val-parm0-sym symbol                 :offset 16)
    (val-parm1   symbol                   :offset-assert 20) ;; guessed by decompiler
    (actions     (array clm-item-action)  :offset-assert 24) ;; guessed by decompiler
    )
@@ -39302,9 +39431,7 @@
   :flag-assert         #x90000001c
   ;; field track-val uses ~A with a signed load. field val-parm0 uses ~A with a signed load. field val-parm1 uses ~A with a signed load.
   )
-|#
 
-#|
 (deftype clm-list (clm-basic)
   ((tracker       symbol                 :offset-assert 4) ;; guessed by decompiler
    (cur-list-item int32                  :offset-assert 8)
@@ -39314,9 +39441,7 @@
   :size-assert         #x10
   :flag-assert         #x900000010
   )
-|#
 
-#|
 (deftype clm (basic)
   ((title string             :offset-assert 4) ;; guessed by decompiler
    (items (array clm-basic)  :offset-assert 8) ;; guessed by decompiler
@@ -39325,21 +39450,15 @@
   :size-assert         #xc
   :flag-assert         #x90000000c
   )
-|#
 
-#|
 (deftype volume-descriptor-array (inline-array-class)
-  ((length           int32                 :offset-assert 4)
-   (allocated-length int32                 :offset-assert 8)
-   (data             plane-volume :dynamic :offset-assert 16) ;; guessed by decompiler
+  ((data             plane-volume :dynamic :offset-assert 16) ;; guessed by decompiler
    )
   :method-count-assert 14
   :size-assert         #x10
   :flag-assert         #xe00000010
   )
-|#
 
-#|
 (deftype cam-layout (process)
   ((cam-entity      entity-camera  :offset-assert 144) ;; guessed by decompiler
    (num-entities    int32          :offset-assert 148)
@@ -39353,21 +39472,11 @@
   :method-count-assert 15
   :size-assert         #xb0
   :flag-assert         #xf002000b0
-  (:methods
-    (cam-layout-method-9 () none) ;; 9
-    (cam-layout-method-10 () none) ;; 10
-    (cam-layout-method-11 () none) ;; 11
-    (cam-layout-method-12 () none) ;; 12
-    (cam-layout-method-13 () none) ;; 13
-    (cam-layout-method-14 () none) ;; 14
-    )
   (:states
     cam-layout-active ;; associated process guessed by decompiler, old: (state cam-layout)
     )
   )
-|#
 
-#|
 (deftype interp-test-info (structure)
   ((from   vector   :inline :offset-assert 0)
    (to     vector   :inline :offset-assert 16)
@@ -39380,9 +39489,7 @@
   :size-assert         #x3c
   :flag-assert         #x90000003c
   )
-|#
 
-#|
 (deftype clmf-cam-flag-toggle-info (structure)
   ((key       float  :offset-assert 0)
    (force-on  int32  :offset-assert 4)
@@ -39392,97 +39499,96 @@
   :size-assert         #xc
   :flag-assert         #x90000000c
   )
-|#
 
-;; (define-extern *camera-layout-blink* object) ;; symbol
-;; (define-extern *CAM_LAYOUT-bank* cam-layout-bank) ;; cam-layout-bank
-;; (define-extern *camera-layout-message-ypos* object) ;; int
-;; (define-extern *volume-point-current* object) ;; int
-;; (define-extern *volume-point* object) ;; vector-array
-;; (define-extern *volume-normal-current* object) ;; int
-;; (define-extern *volume-normal* object) ;; vector-array
-;; (define-extern *volume-descriptor-current* object) ;; int
-;; (define-extern *volume-descriptor* object) ;; vol-control
-;; (define-extern cam-layout-print function) ;; (function int int string pointer)
-;; (define-extern cam-layout-intersect-dist function) ;; (function vector vector vector float)
-;; (define-extern cam-layout-entity-volume-info-create function) ;; (function entity-camera symbol symbol :behavior cam-layout)
-;; (define-extern cam-layout-entity-volume-info function) ;; (function symbol :behavior cam-layout)
-;; (define-extern v-slrp! function) ;; (function vector vector vector float vector)
-;; (define-extern interp-test function) ;; (function (function vector vector vector float vector float none) interp-test-info none)
-;; (define-extern interp-test-deg function) ;; (function (function vector vector vector vector float none) interp-test-info none)
-;; (define-extern cam-layout-entity-info function) ;; (function entity-actor none)
-;; (define-extern clmf-button-test function) ;; (function symbol)
-;; (define-extern clmf-bna function) ;; (function symbol)
-;; (define-extern clmf-implement function) ;; (function symbol)
-;; (define-extern clmf-input function) ;; (function vector vector int vector)
-;; (define-extern clmf-pos-rot function) ;; (function symbol symbol symbol :behavior cam-layout)
-;; (define-extern clmf-next-volume function) ;; (function int symbol :behavior cam-layout)
-;; (define-extern clmf-next-vol-dpad function) ;; (function symbol)
-;; (define-extern clmf-to-edit-cam function) ;; (function symbol)
-;; (define-extern *last-cur-entity* object) ;; int
-;; (define-extern clmf-next-entity function) ;; (function int symbol :behavior cam-layout)
-;; (define-extern clmf-to-spline-attr function) ;; (function symbol)
-;; (define-extern clmf-to-intro-attr function) ;; (function symbol)
-;; (define-extern clmf-to-index-attr function) ;; (function symbol)
-;; (define-extern clmf-to-focalpull-attr function) ;; (function symbol)
-;; (define-extern clmf-to-edit function) ;; (function symbol :behavior cam-layout)
-;; (define-extern clmf-to-select function) ;; (function symbol)
-;; (define-extern clmf-look-through function) ;; (function symbol :behavior cam-layout)
-;; (define-extern fov->maya function) ;; (function float float)
-;; (define-extern cam-layout-save-cam-rot function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-cam-trans function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-pivot function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-align function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-interesting function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-fov function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-focalpull function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-flags function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-focalpull-flags function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-campoints-flags function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-introsplinetime function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-introsplineexitval function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-interptime function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-splineoffset function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-spline-follow-dist-offset function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-campointsoffset function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-tiltAdjust function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-stringMinLength function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-stringMaxLength function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-stringMinHeight function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-stringMaxHeight function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-stringCliffHeight function) ;; (function symbol string entity-actor none)
-;; (define-extern cam-layout-save-maxAngle function) ;; (function symbol string entity-actor none)
-;; (define-extern clmf-save-single function) ;; (function entity-camera symbol symbol file-stream :behavior cam-layout)
-;; (define-extern clmf-save-one function) ;; (function symbol symbol :behavior cam-layout)
-;; (define-extern clmf-save-all function) ;; (function symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-flag-toggle function) ;; (function int int symbol :behavior cam-layout)
-;; (define-extern clmf-cam-flag function) ;; (function string uint uint symbol :behavior cam-layout)
-;; (define-extern clmf-cam-float-adjust function) ;; (function symbol (pointer float) symbol :behavior cam-layout)
-;; (define-extern clmf-cam-meters function) ;; (function meters symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-fov function) ;; (function degrees symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-deg function) ;; (function degrees symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-intro-time function) ;; (function float symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-interp-time function) ;; (function float symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-float function) ;; (function float symbol symbol :behavior cam-layout)
-;; (define-extern clmf-cam-string function) ;; (function string symbol symbol :behavior cam-layout)
-;; (define-extern *clm-focalpull-attr* clm) ;; clm
-;; (define-extern *clm-index-attr* clm) ;; clm
-;; (define-extern *clm-intro-attr* clm) ;; clm
-;; (define-extern *clm-spline-attr* clm) ;; clm
-;; (define-extern *clm-cam-attr* clm) ;; clm
-;; (define-extern *clm-cam-lookthrough* clm) ;; clm
-;; (define-extern *clm-edit* clm) ;; clm
-;; (define-extern *clm-save-all* clm) ;; clm
-;; (define-extern *clm-save-one* clm) ;; clm
-;; (define-extern *clm-select* clm) ;; clm
-;; (define-extern *clm* object) ;; clm
-;; (define-extern cam-layout-do-action function) ;; (function clm-item-action object :behavior cam-layout)
-;; (define-extern cam-layout-function-call function) ;; (function symbol string int basic symbol :behavior cam-layout)
-;; (define-extern cam-layout-do-menu function) ;; (function clm symbol :behavior cam-layout)
-;; (define-extern cam-layout-init function) ;; (function object :behavior cam-layout)
-;; (define-extern cam-layout-stop function) ;; (function symbol)
-;; (define-extern cam-layout-start function) ;; (function symbol)
-;; (define-extern cam-layout-restart function) ;; (function symbol)
+(define-extern *camera-layout-blink* symbol)
+(define-extern *CAM_LAYOUT-bank* cam-layout-bank)
+(define-extern *camera-layout-message-ypos* int)
+(define-extern *volume-point-current* int)
+(define-extern *volume-point* vector-array)
+(define-extern *volume-normal-current* int)
+(define-extern *volume-normal* vector-array)
+(define-extern *volume-descriptor-current* int)
+(define-extern *volume-descriptor* vol-control)
+(define-extern cam-layout-print (function int int string pointer))
+(define-extern cam-layout-intersect-dist (function vector vector vector float))
+(define-extern cam-layout-entity-volume-info-create (function entity-camera symbol symbol :behavior cam-layout))
+(define-extern cam-layout-entity-volume-info (function symbol :behavior cam-layout))
+(define-extern v-slrp! (function vector vector vector float vector))
+(define-extern interp-test (function (function vector vector vector float vector float none) interp-test-info none))
+(define-extern interp-test-deg (function (function vector vector vector vector float none) interp-test-info none))
+(define-extern cam-layout-entity-info (function entity-actor none))
+(define-extern clmf-button-test (function symbol))
+(define-extern clmf-bna (function symbol))
+(define-extern clmf-implement (function symbol))
+(define-extern clmf-input (function vector vector int vector))
+(define-extern clmf-pos-rot (function symbol symbol symbol :behavior cam-layout))
+(define-extern clmf-next-volume (function int symbol :behavior cam-layout))
+(define-extern clmf-next-vol-dpad (function symbol))
+(define-extern clmf-to-edit-cam (function symbol))
+(define-extern *last-cur-entity* int)
+(define-extern clmf-next-entity (function int symbol :behavior cam-layout))
+(define-extern clmf-to-spline-attr (function symbol))
+(define-extern clmf-to-intro-attr (function symbol))
+(define-extern clmf-to-index-attr (function symbol))
+(define-extern clmf-to-focalpull-attr (function symbol))
+(define-extern clmf-to-edit (function symbol :behavior cam-layout))
+(define-extern clmf-to-select (function symbol))
+(define-extern clmf-look-through (function symbol :behavior cam-layout))
+(define-extern fov->maya (function float float))
+(define-extern cam-layout-save-cam-rot (function symbol string entity-actor none))
+(define-extern cam-layout-save-cam-trans (function symbol string entity-actor none))
+(define-extern cam-layout-save-pivot (function symbol string entity-actor none))
+(define-extern cam-layout-save-align (function symbol string entity-actor none))
+(define-extern cam-layout-save-interesting (function symbol string entity-actor none))
+(define-extern cam-layout-save-fov (function symbol string entity-actor none))
+(define-extern cam-layout-save-focalpull (function symbol string entity-actor none))
+(define-extern cam-layout-save-flags (function symbol string entity-actor none))
+(define-extern cam-layout-save-focalpull-flags (function symbol string entity-actor none))
+(define-extern cam-layout-save-campoints-flags (function symbol string entity-actor none))
+(define-extern cam-layout-save-introsplinetime (function symbol string entity-actor none))
+(define-extern cam-layout-save-introsplineexitval (function symbol string entity-actor none))
+(define-extern cam-layout-save-interptime (function symbol string entity-actor none))
+(define-extern cam-layout-save-splineoffset (function symbol string entity-actor none))
+(define-extern cam-layout-save-spline-follow-dist-offset (function symbol string entity-actor none))
+(define-extern cam-layout-save-campointsoffset (function symbol string entity-actor none))
+(define-extern cam-layout-save-tiltAdjust (function symbol string entity-actor none))
+(define-extern cam-layout-save-stringMinLength (function symbol string entity-actor none))
+(define-extern cam-layout-save-stringMaxLength (function symbol string entity-actor none))
+(define-extern cam-layout-save-stringMinHeight (function symbol string entity-actor none))
+(define-extern cam-layout-save-stringMaxHeight (function symbol string entity-actor none))
+(define-extern cam-layout-save-stringCliffHeight (function symbol string entity-actor none))
+(define-extern cam-layout-save-maxAngle (function symbol string entity-actor none))
+(define-extern clmf-save-single (function entity-camera symbol symbol file-stream :behavior cam-layout))
+(define-extern clmf-save-one (function symbol symbol :behavior cam-layout))
+(define-extern clmf-save-all (function symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-flag-toggle (function int int symbol :behavior cam-layout))
+(define-extern clmf-cam-flag (function string uint uint symbol :behavior cam-layout))
+(define-extern clmf-cam-float-adjust (function symbol (pointer float) symbol :behavior cam-layout))
+(define-extern clmf-cam-meters (function meters symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-fov (function degrees symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-deg (function degrees symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-intro-time (function float symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-interp-time (function float symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-float (function float symbol symbol :behavior cam-layout))
+(define-extern clmf-cam-string (function string symbol symbol :behavior cam-layout))
+(define-extern *clm-focalpull-attr* clm)
+(define-extern *clm-index-attr* clm)
+(define-extern *clm-intro-attr* clm)
+(define-extern *clm-spline-attr* clm)
+(define-extern *clm-cam-attr* clm)
+(define-extern *clm-cam-lookthrough* clm)
+(define-extern *clm-edit* clm)
+(define-extern *clm-save-all* clm)
+(define-extern *clm-save-one* clm)
+(define-extern *clm-select* clm)
+(define-extern *clm* clm)
+(define-extern cam-layout-do-action (function clm-item-action object :behavior cam-layout))
+(define-extern cam-layout-function-call (function symbol string int basic symbol :behavior cam-layout))
+(define-extern cam-layout-do-menu (function clm symbol :behavior cam-layout))
+(define-extern cam-layout-init (function object :behavior cam-layout))
+(define-extern cam-layout-stop (function symbol))
+(define-extern cam-layout-start (function symbol))
+(define-extern cam-layout-restart (function symbol))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; cam-debug                      ;;
@@ -39572,8 +39678,8 @@
 ;; (define-extern cam-line-dma function) ;; (function pointer)
 ;; (define-extern camera-line2d function) ;; (function vector4w vector4w pointer)
 ;; (define-extern camera-plot-float-func function) ;; (function float float float float (function float float) vector4w none)
-;; (define-extern camera-line-setup function) ;; (function vector4w none)
-;; (define-extern camera-line-draw function) ;; (function vector vector none)
+(define-extern camera-line-setup (function vector4w none)) ;; 
+(define-extern camera-line-draw (function vector vector none)) ;; 
 (define-extern camera-line (function vector vector vector4w none)) ;; 
 ;; (define-extern camera-line-rel function) ;; (function vector vector vector4w none)
 (define-extern camera-line-rel-len (function vector vector float vector4w none)) ;; 
@@ -39589,7 +39695,7 @@
 ;; (define-extern cam-debug-add-coll-tri function) ;; (function cam-debug-tri vector cam-debug-tri none)
 ;; (define-extern cam-debug-draw-tris function) ;; (function symbol)
 ;; (define-extern camera-fov-draw function) ;; (function int int vector float float vector4w none)
-;; (define-extern camera-fov-frame function) ;; (function matrix vector float float float vector4w symbol)
+(define-extern camera-fov-frame (function matrix vector float float float vector4w symbol)) ;; 
 ;; (define-extern debug-euler function) ;; (function cam-dbg-scratch object)
 ;; (define-extern bike-cam-limit function) ;; (function float float)
 (define-extern camera-slave-debug (function camera-slave none)) ;; 
@@ -41785,7 +41891,7 @@
 (define-extern debug-actor (function string none)) ;; 
 ;; (define-extern debug-actor-process function) ;; (function process none)
 ;; (define-extern draw-actor-marks function) ;; (function process none)
-;; (define-extern init-entity function) ;; (function process entity-actor type none)
+(define-extern init-entity (function process entity-actor type none)) ;; 
 ;; (define-extern entity-deactivate-handler function) ;; (function process entity-actor none)
 ;; (define-extern check-for-rougue-process function) ;; (function process int int level none)
 ;; (define-extern process-drawable-scale-from-entity! function) ;; (function process-drawable entity none)
@@ -47643,8 +47749,8 @@
 ;; (define-extern restore-selection-index function)
 ;; (define-extern *lobby-timetrial-lock-mode* object)
 (define-extern *vehicle-class-data* (array menu-option-info))
-;; (define-extern *vehicle-class* object)
-;; (define-extern *time-of-day-data* array)
+(define-extern *vehicle-class* net-process-class-info)
+(define-extern *time-of-day-data* (array menu-option-info))
 ;; (define-extern *time-of-day-array* object)
 ;; (define-extern *ready-room-host-id* object)
 ;; (define-extern *keyboard-buf* object)
@@ -49237,7 +49343,6 @@
 ;; idle-control                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype idle-control-frame (structure)
   ((command uint8   :offset-assert 0) ;; idle-control-cmd
    (anim    uint32  :offset-assert 4)
@@ -49250,9 +49355,7 @@
   :flag-assert         #x900000014
   ;; field param2 uses ~A with a signed load.
   )
-|#
 
-#|
 (deftype idle-control (structure)
   ((anim          (inline-array idle-control-frame)  :offset-assert 0) ;; guessed by decompiler
    (anim-speed    float                              :offset-assert 4)
@@ -49264,11 +49367,10 @@
   :size-assert         #x14
   :flag-assert         #xb00000014
   (:methods
-    (idle-control-method-9 () none) ;; 9 ;; (init! (_type_ (inline-array idle-control-frame)) none)
-    (idle-control-method-10 () none) ;; 10 ;; (play-idle-frames! (_type_ process-drawable) none)
+    (init! (_type_ (inline-array idle-control-frame)) none)
+    (play-idle-frames! (_type_ process-drawable) none)
     )
   )
-|#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; water-anim                     ;;
@@ -50176,7 +50278,6 @@
 ;; cam-states-dbg                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype cam-point-watch-bank (basic)
   ((speed     float  :offset-assert 4)
    (rot-speed degrees    :offset-assert 8) ;; degrees
@@ -50185,9 +50286,7 @@
   :size-assert         #xc
   :flag-assert         #x90000000c
   )
-|#
 
-#|
 (deftype cam-free-bank (basic)
   ((speed     float  :offset-assert 4)
    (rot-speed degrees    :offset-assert 8) ;; degrees
@@ -50196,7 +50295,6 @@
   :size-assert         #xc
   :flag-assert         #x90000000c
   )
-|#
 
 (deftype camera-free-floating-move-info (structure)
   ((rv vector :inline :offset-assert 0)
@@ -50209,12 +50307,11 @@
   :flag-assert         #x900000070
   )
 
-;; (define-extern *CAM_POINT_WATCH-bank* cam-point-watch-bank) ;; cam-point-watch-bank
-;; (define-extern cam-point-watch state) ;; (state camera-slave)
-;; (define-extern *CAM_FREE-bank* cam-free-bank) ;; cam-free-bank
-;; (define-extern cam-mouse-input function) ;; (function matrix vector vector object)
-;; (define-extern cam-free-floating-input function) ;; (function matrix vector vector int int vector)
-;; (define-extern cam-free-floating-move function) ;; (function matrix vector vector int vector)
+(define-extern *CAM_POINT_WATCH-bank* cam-point-watch-bank) ;; cam-point-watch-bank
+(define-extern *CAM_FREE-bank* cam-free-bank) ;; cam-free-bank
+(define-extern cam-mouse-input (function camera-master matrix vector vector object))
+(define-extern cam-free-floating-input (function camera-master cam-rotation-tracker vector vector symbol int vector))
+(define-extern cam-free-floating-move (function camera-master cam-rotation-tracker vector vector int vector))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; speech-jak                     ;;
@@ -50528,7 +50625,6 @@
 ;; anim-tester                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype list-control (structure)
   ((listfunc            (function int list-control symbol)  :offset-assert 0) ;; guessed by decompiler
    (list-owner          uint32                              :offset-assert 4)
@@ -50555,9 +50651,7 @@
   :size-assert         #x50
   :flag-assert         #x900000050
   )
-|#
 
-#|
 (deftype list-field (structure)
   ((left  int32  :offset-assert 0)
    (width int32  :offset-assert 4)
@@ -50566,9 +50660,7 @@
   :size-assert         #x8
   :flag-assert         #x900000008
   )
-|#
 
-#|
 (deftype DISP_LIST-bank (basic)
   ((V_SPACING     int32  :offset-assert 4)
    (BORDER_WIDTH  int32  :offset-assert 8)
@@ -50586,9 +50678,7 @@
   :size-assert         #x30
   :flag-assert         #x900000030
   )
-|#
 
-#|
 (deftype anim-tester-bank (basic)
   ((ANIM_SPEED            float  :offset-assert 4)
    (BLEND                 float  :offset-assert 8)
@@ -50611,7 +50701,6 @@
   :size-assert         #x44
   :flag-assert         #x900000044
   )
-|#
 
 
 #|
@@ -50710,7 +50799,6 @@
 ;; viewer                         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype viewer (process-drawable)
   ((janim art-joint-anim  :offset-assert 248) ;; guessed by decompiler
    )
@@ -50721,18 +50809,18 @@
     viewer-process ;; associated process guessed by decompiler, old: (state viewer)
     )
   )
-|#
 
-;; (define-extern *viewer-sg* skeleton-group) ;; skeleton-group
-;; (define-extern viewer-string object) ;; string
-;; (define-extern viewer-ja-name object) ;; string
-;; (define-extern viewer-geo-name object) ;; string
-;; (define-extern actor-get-arg! function) ;; (function string string string symbol)
-;; (define-extern art-part-name function) ;; (function string string)
-;; (define-extern init-viewer function) ;; (function string string object :behavior viewer)
-;; (define-extern init-viewer-for-other function) ;; (function string vector entity-actor object :behavior viewer)
-;; (define-extern add-a-bunch function) ;; (function string int int float process-tree entity-actor symbol)
-;; (define-extern birth-viewer function) ;; (function process entity-actor object)
+(define-extern *viewer* viewer) ;; added
+(define-extern *viewer-sg* skeleton-group)
+(define-extern viewer-string string)
+(define-extern viewer-ja-name string)
+(define-extern viewer-geo-name string)
+(define-extern actor-get-arg! (function string string string symbol))
+(define-extern art-part-name (function string string))
+(define-extern init-viewer (function string string object :behavior viewer))
+(define-extern init-viewer-for-other (function string vector entity-actor object :behavior viewer))
+(define-extern add-a-bunch (function string int int float process-tree entity-actor symbol))
+(define-extern birth-viewer (function process entity-actor object))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; part-tester                    ;;

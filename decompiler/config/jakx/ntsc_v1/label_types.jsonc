@@ -20,6 +20,43 @@
       462
     ]
   ],
+  "tfrag-methods": [
+    [
+      "L92",
+      "(inline-array tfrag-init-data)",
+      10
+    ],
+    [
+      "L93",
+      "(pointer bucket-id)",
+      12
+    ],
+    [
+      "L94",
+      "(pointer bucket-id)",
+      12
+    ],
+    [
+      "L95",
+      "(pointer bucket-id)",
+      12
+    ],
+    [
+      "L96",
+      "(pointer bucket-id)",
+      12
+    ],
+    [
+      "L98",
+      "(pointer bucket-id)",
+      12
+    ],
+    [
+      "L99",
+      "(pointer bucket-id)",
+      12
+    ]
+  ],
   "joint-mod": [
     [
       "L212",
@@ -3883,6 +3920,97 @@
     ],
     [
       "L95",
+      "vector"
+    ]
+  ],
+  "cam-layout": [
+    [
+      "L893",
+      "uint64",
+      true
+    ],
+    [
+      "L899",
+      "uint64",
+      true
+    ],
+    [
+      "L898",
+      "uint64",
+      true
+    ],
+    [
+      "L892",
+      "uint64",
+      true
+    ],
+    [
+      "L895",
+      "uint64",
+      true
+    ],
+    [
+      "L894",
+      "uint64",
+      true
+    ],
+    [
+      "L897",
+      "uint64",
+      true
+    ],
+    [
+      "L896",
+      "uint64",
+      true
+    ],
+    [
+      "L802",
+      "rgba",
+      true
+    ],
+    [
+      "L800",
+      "rgba",
+      true
+    ],
+    [
+      "L798",
+      "rgba",
+      true
+    ],
+    [
+      "L796",
+      "rgba",
+      true
+    ],
+    [
+      "L794",
+      "rgba",
+      true
+    ],
+    [
+      "L792",
+      "rgba",
+      true
+    ],
+    [
+      "L889",
+      "uint64",
+      true
+    ],
+    [
+      "L785",
+      "vector"
+    ]
+  ],
+  "cam-states-dbg": [
+    [
+      "L60",
+      "vector"
+    ],
+    [
+      "L59",
       "vector"
     ]
   ]

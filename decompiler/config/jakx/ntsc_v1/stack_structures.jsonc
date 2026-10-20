@@ -1261,6 +1261,12 @@
       ]
     ]
   ],
+  "clmf-pos-rot": [
+    [
+      112,
+      "matrix"
+    ]
+  ],
   "(method 115 v-wombat)": [
     [
       16,
@@ -1413,6 +1419,30 @@
         "quaternion",
         2
       ]
+    ]
+  ],
+  "cam-layout-entity-info": [
+    [
+      208,
+      "vector"
+    ]
+  ],
+  "(code cam-point-watch)": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "cam-mouse-input": [
+    [
+      64,
+      "vector"
+    ]
+  ],
+  "add-a-bunch": [
+    [
+      16,
+      "vector"
     ]
   ]
 }

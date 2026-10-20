@@ -5,5 +5,28 @@
 ;; name in dgo: cam-layout
 ;; dgos: ENGINE, GAME
 
+;; +++clm-item-action-options
+(defenum clm-item-action-options
+  :type uint64
+  :bitfield #t
+  (clm0 0)
+  (clm1 1)
+  (clm2 2)
+  (clm3 3)
+  (clm4 4)
+  (clm5 5)
+  (clm6 6)
+  (clm7 7)
+  )
+;; ---clm-item-action-options
+
+;; +++pad-buttons-u64
+(defenum pad-buttons-u64
+  :type uint64
+  :bitfield #t
+  :copy-entries pad-buttons
+  )
+;; ---pad-buttons-u64
+
 ;; DECOMP BEGINS
 
