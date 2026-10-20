@@ -5823,5 +5823,256 @@
       "a0",
       "process"
     ]
+  ],
+  "(method 65 projectile)": [
+    [
+      5,
+      "a1",
+      "process"
+    ]
+  ],
+  "projectile-update-velocity-space-wars": [
+    [
+      59,
+      "a0",
+      "projectile"
+    ]
+  ],
+  "(method 9 actor-hash-buckets)": [
+    [
+      19,
+      "v1",
+      "connection"
+    ],
+    [
+      21,
+      "s4",
+      "collide-shape"
+    ],
+    [
+      119,
+      "s4",
+      "collide-shape"
+    ]
+  ],
+  "(event idle can-leaves-floor)": [
+    [
+      11,
+      "gp",
+      "vehicle"
+    ],
+    [
+      43,
+      "gp",
+      "vehicle"
+    ]
+  ],
+  "(code running end-credits-character-viewer)": [
+    [
+      188,
+      "s3",
+      "net-driver"
+    ]
+  ],
+  "(event dropped ctf-flag)": [
+    [
+      13,
+      "gp",
+      "vehicle"
+    ],
+    [
+      23,
+      "gp",
+      "vehicle"
+    ]
+  ],
+  "(event falling ctf-flag)": [
+    [
+      13,
+      "gp",
+      "vehicle"
+    ],
+    [
+      23,
+      "gp",
+      "vehicle"
+    ]
+  ],
+  "(enter carried ctf-flag)": [
+    [
+      213,
+      "gp",
+      "vehicle"
+    ]
+  ],
+  "place-on-car": [
+    [
+      15,
+      "s5",
+      "vehicle"
+    ],
+    [
+      21,
+      "s5",
+      "vehicle"
+    ],
+    [
+      28,
+      "s5",
+      "vehicle"
+    ],
+    [
+      31,
+      "s5",
+      "vehicle"
+    ],
+    [
+      24,
+      "s5",
+      "vehicle"
+    ]
+  ],
+  "(event idle ctf-flag)": [
+    [
+      17,
+      "a1",
+      "vehicle"
+    ]
+  ],
+  "(code idle wind-rotor)": [
+    [
+      11,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle drome-tunnel-drum)": [
+    [
+      11,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle ice-flag)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(method 62 jungle-stone-snake-head-proxy)": [
+    [
+      20,
+      "a0",
+      "process-nettable"
+    ],
+    [
+      38,
+      "a0",
+      "process-focusable"
+    ]
+  ],
+  "(method 62 jungle-stone-snake-head-draw)": [
+    [
+      9,
+      "a0",
+      "process-nettable"
+    ],
+    [
+      27,
+      "a0",
+      "process-focusable"
+    ]
+  ],
+  "(method 44 jungle-stone-snake-head)": [
+    [
+      50,
+      "v1",
+      "jungle-stone-snake-head-proxy"
+    ]
+  ],
+  "(method 61 jungle-stone-snake-head-proxy)": [
+    [
+      20,
+      "a0",
+      "process-nettable"
+    ]
+  ],
+  "(code idle kcro-flag-down)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle kras-windsock)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle kras-flag)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(event explode kras-pump-break-draw)": [
+    [
+      82,
+      "v1",
+      "handle"
+    ]
+  ],
+  "(code idle menu-spargus-trophy)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle menu-marauder-trophy)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle menu-kras-trophy)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle menu-haven-trophy)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle wm-kras-circular-tower)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle wm-drome-wind-machine)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
+  ],
+  "(code idle wm-docks-crane)": [
+    [
+      9,
+      "v1",
+      "float"
+    ]
   ]
 }

@@ -1267,6 +1267,24 @@
       "matrix"
     ]
   ],
+  "(method 9 actor-hash-buckets)": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
+    ],
+    [
+      48,
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
+    ]
+  ],
   "(method 115 v-wombat)": [
     [
       16,
@@ -1443,6 +1461,132 @@
     [
       16,
       "vector"
+    ]
+  ],
+  "projectile-bounce-falling-post": [
+    [
+      16,
+      "collide-query"
+    ]
+  ],
+  "(method 69 projectile)": [
+    [
+      16,
+      "collide-query"
+    ]
+  ],
+  "projectile-update-velocity-add-gravity": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "projectile-update-velocity-space-wars": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      64,
+      "vector"
+    ]
+  ],
+  "(method 71 construction-object)": [
+    [
+      80,
+      "collide-query"
+    ]
+  ],
+  "(method 18 ragdoll)": [
+    [
+      16,
+      "collide-query"
+    ]
+  ],
+  "(event idle can-leaves-floor)": [
+    [
+      16,
+      "matrix"
+    ]
+  ],
+  "(enter dropped ctf-flag)": [
+    [
+      16,
+      "task-arrow-params"
+    ],
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "flag-fall": [
+    [
+      560,
+      "vector"
+    ]
+  ],
+  "(exit carried ctf-flag)": [
+    [
+      16,
+      "event-message-block"
+    ]
+  ],
+  "(enter idle ctf-flag)": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "(method 45 jungle-stone-snake-head)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spawn-flame": [
+    [
+      16,
+      "jungle-obs-stack-var0"
+    ]
+  ],
+  "(post idle kras-fireworks-ship-a)": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        1
+      ]
+    ]
+  ],
+  "(post idle wm-fireworks-ship)": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        1
+      ]
+    ]
+  ],
+  "(code explode peak-snowball)": [
+    [
+      32,
+      "quaternion"
+    ]
+  ],
+  "(method 71 peak-snowball)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "collide-query"
     ]
   ]
 }

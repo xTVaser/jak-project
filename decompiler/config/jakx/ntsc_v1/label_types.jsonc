@@ -4013,5 +4013,54 @@
       "L59",
       "vector"
     ]
+  ],
+  "coliseum-obs": [
+    [
+      "L18",
+      "vector"
+    ],
+    [
+      "L17",
+      "vector"
+    ]
+  ],
+  "garage-obs": [
+    [
+      "L110",
+      "vector"
+    ],
+    [
+      "L111",
+      "vector"
+    ]
+  ],
+  "kras-obs": [
+    [
+      "L148",
+      "attack-info"
+    ]
+  ],
+  "peak-obs": [
+    [
+      "L90",
+      "attack-info"
+    ]
+  ],
+  "snow-obs": [
+    [
+      "L16",
+      "vector"
+    ],
+    [
+      "L15",
+      "vector"
+    ]
+  ],
+  "title-obs": [
+    [
+      "L226",
+      "uint64",
+      true
+    ]
   ]
 }
