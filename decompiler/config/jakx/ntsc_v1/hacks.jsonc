@@ -90,6 +90,10 @@
     "~0knodes    = ~d~256hnodes/call   = ~f~%": 2
   },
   "blocks_ending_in_asm_branch": {
+    "(method 16 collide-shape-prim-sphere)": [
+      1,
+      2
+    ],
     "load-game-text-info": [
       20,
       21,
