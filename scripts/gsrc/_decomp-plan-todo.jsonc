@@ -10,13 +10,19 @@
         "wcar-falcon",
         "wcar-gila",
         "wcar-leopard",
+        "camera-facing-quad",
         "actor-hash",
         "cam-states-dbg",
+        "collide-debug",
         "docks-obs",
         "jungle-obs",
         "lobby-adventure-obs",
+        "mysql-nav-graph",
         "drome-obs",
+        "anim-tester", // largely skipped in jak3
+        "collide-mesh",
         "coliseum-obs-2",
+        "default-menu",
         "haven-obs",
         "spargus-obs",
         "net-training-obs",
@@ -43,10 +49,12 @@
         "wcar-cougar",
         "wcar-daxtermobile",
         "cam-interface"
+        // target 55
     ],
     "requires-decomp-fixes": [
         "gsound-h", // new instruction needs support
         "wvehicle-weapons-h", // array of symbols support
+        "loader", // different way of dealing with far label for `format` call
         "mem-buffer-h" // new symbol subtraction
     ],
     "soon": [
@@ -54,7 +62,6 @@
         "TODO - script to ensure that these lists aren't forgetting a file (i've noticed a few missing)",
         "time-of-day", // time-of-day-interp-colors[-scratch] not done in jak3 and update-time-of-day causes compilation error
         "entity-more-perm",
-        "camera-facing-quad", // one func left, dont know the stack cast
         "math-camera", // one function left, clipping has to be patched
         "net-mgr-h", // one function left
         "dma",
@@ -72,7 +79,7 @@
         "tie",
         "tie-methods", // lots of functions that i dont think are required / are hand fixed going all the way back to jak1
         "sparticle",
-        "text", // annoying deftype
+        "text", // `game-text-info` is annoying one to crack and it has this really weird behaviour in method 12
         "spatial-hash",
         "cam-update",
         "cam-layout",
@@ -82,11 +89,8 @@
         "hud",
         "net-world-h", // annoying type, a usage would help
         "lobby-menu-manager-h",
-        "anim-tester", // largely skipped in jak3
-        "mysql-nav-graph",
         "nav-graph-editor",
         "nav-mesh-editor",
-        "default-menu",
         "visvol-edit",
         "collision-editor",
         "construction-obs-h", // is it possible that the collide-query can contain another collide-query at `0`?
@@ -99,6 +103,7 @@
         "kras-part",
         "havjung-part",
         "jungle-part",
+        "jungle-part2",
         "sewer-part",
         "havtour-part",
         "menumap-part"
@@ -116,10 +121,8 @@
         "car-textures",
         "cloth",
         "coliseum-obs-atlas",
-        "coliseum-obs-female-statue",
+        "coliseum-obs-female-statue", // coliseum-obs-atlas
         "collide-cache",
-        "collide-debug",
-        "collide-mesh",
         "collide-shape",
         "credits-cloth",
         "daxter",
@@ -157,12 +160,10 @@
         "intro-scenes2",
         "joint-exploder",
         "joint",
-        "jungle-part2",
         "jungle-shared",
         "keyboard",
         "level",
         "load-state",
-        "loader",
         "logic-target",
         "main",
         "mem-buffer",
@@ -252,7 +253,7 @@
         "race-obs",
         "time-box-obs",
         "title-obs",
-        "train-obs", // gui-control
+        "train-obs",
         // hud files
         "hud-cash",
         "hud-classes",

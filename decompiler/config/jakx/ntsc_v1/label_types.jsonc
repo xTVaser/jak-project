@@ -4062,5 +4062,141 @@
       "uint64",
       true
     ]
+  ],
+  "loader": [
+    [
+      "L1450",
+      "uint64",
+      true
+    ],
+    [
+      "L1450",
+      "uint64",
+      true
+    ],
+    [
+      "L1229",
+      "string"
+    ]
+  ],
+  "hud": [
+    [
+      "L145",
+      "vector"
+    ]
+  ],
+  "lobby-net-h": [
+    [
+      "L110",
+      "(pointer uint32)",
+      84
+    ],
+    [
+      "L114",
+      "(pointer uint32)",
+      3840
+    ],
+    [
+      "L115",
+      "(pointer uint32)",
+      3840
+    ],
+    [
+      "L116",
+      "(pointer uint32)",
+      3840
+    ],
+    [
+      "L117",
+      "(pointer uint32)",
+      64
+    ],
+    [
+      "L146",
+      "uint64",
+      true
+    ],
+    [
+      "L148",
+      "uint64",
+      true
+    ],
+    [
+      "L147",
+      "uint64",
+      true
+    ],
+    [
+      "L145",
+      "uint64",
+      true
+    ],
+    [
+      "L144",
+      "uint64",
+      true
+    ],
+    [
+      "L119",
+      "uint64",
+      true
+    ]
+  ],
+  "default-menu": [
+    [
+      "L6893",
+      "uint64",
+      true
+    ],
+    [
+      "L6899",
+      "uint64",
+      true
+    ],
+    [
+      "L6236",
+      "attack-info"
+    ],
+    [
+      "L6242",
+      "attack-info"
+    ],
+    [
+      "L6896",
+      "uint64",
+      true
+    ],
+    [
+      "L6894",
+      "uint64",
+      true
+    ],
+    [
+      "L6895",
+      "uint64",
+      true
+    ],
+    [
+      "L6898",
+      "uint64",
+      true
+    ],
+    [
+      "L6897",
+      "uint64",
+      true
+    ]
+  ],
+  "collide-cache": [
+    [
+      "L220",
+      "vector"
+    ]
+  ],
+  "collide-shape": [
+    [
+      "L323",
+      "vector"
+    ]
   ]
 }

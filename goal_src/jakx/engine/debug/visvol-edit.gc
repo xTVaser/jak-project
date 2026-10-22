@@ -5,5 +5,15 @@
 ;; name in dgo: visvol-edit
 ;; dgos: ENGINE, GAME
 
+;; +++visvol-edit-func
+(defenum visvol-edit-func
+  :type uint64
+  (visvol-positive 0)
+  (visvol-negative 1)
+  (adjust-sphere 2)
+  (adjust-vis-distance 3)
+  )
+;; ---visvol-edit-func
+
 ;; DECOMP BEGINS
 

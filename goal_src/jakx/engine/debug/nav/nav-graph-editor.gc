@@ -5,5 +5,18 @@
 ;; name in dgo: nav-graph-editor
 ;; dgos: ENGINE, GAME
 
+;; +++nav-com-type
+(defenum nav-com-type
+  :type uint32
+  (undo-move-node 0)
+  (undo-delete-edge 1)
+  (undo-delete-node 2)
+  (undo-new-node 3)
+  (undo-new-edge 4)
+  (undo-delete-visnode 5)
+  (undo-new-visnode 6)
+  )
+;; ---nav-com-type
+
 ;; DECOMP BEGINS
 

@@ -1563,6 +1563,16 @@
       ]
     ]
   ],
+  "(method 23 mysql-nav-graph)": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        5
+      ]
+    ]
+  ],
   "(post idle wm-fireworks-ship)": [
     [
       16,
@@ -1587,6 +1597,82 @@
     [
       32,
       "collide-query"
+    ]
+  ],
+  "(method 10 visvol-edit-info)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "(method 9 camera-facing-quad)": [
+    [
+      16,
+      "camera-facing-quad-stackvar0"
+    ]
+  ],
+  "(method 16 collide-cache)": [
+    [
+      16,
+      "collide-puls-work"
+    ]
+  ],
+  "test-closest-pt-in-triangle": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ],
+    [
+      48,
+      "vector"
+    ]
+  ],
+  "(method 14 collide-cache)": [
+    [
+      16,
+      "bounding-box"
+    ]
+  ],
+  "(method 20 collide-cache)": [
+    [
+      16,
+      "matrix"
+    ]
+  ],
+  "col-rend-draw": [
+    [
+      16,
+      "matrix"
+    ]
+  ],
+  "(method 63 collide-shape-moving)": [
+    [
+      48,
+      "vector"
+    ]
+  ],
+  "cshape-reaction-default": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "cshape-reaction-update-state": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
     ]
   ]
 }
