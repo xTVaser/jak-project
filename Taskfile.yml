@@ -158,14 +158,6 @@ tasks:
       - task: decomp-file
       - '{{.PYTHON}} ./scripts/gsrc/update-from-decomp.py --game "{{.GAME}}" --file "{{.FILE}}"'
       - task: lint-gsrc-file
-  copy-common-naming:
-    cmds:
-      - '{{.PYTHON}} ./scripts/gsrc/copy-common-naming.py --file "{{.FILE}}" --decompiler "{{.DECOMP_BIN_RELEASE_DIR}}/decompiler"'
-      - task: format-json
-  copy-common-naming-from-refs:
-    cmds:
-      - '{{.PYTHON}} ./scripts/gsrc/copy-common-naming.py --update-names-from-refs --decompiler "{{.DECOMP_BIN_RELEASE_DIR}}/decompiler"'
-      - task: format-json
   # ASSET RIPPING
   rip-textures:
     cmds:
@@ -190,10 +182,6 @@ tasks:
       - watchmedo shell-command --drop --patterns="*.p2s" --recursive --command='task analyze-ee-memory FILE="${watch_src_path}"' "{{.SAVESTATE_DIR}}"
     vars:
       SAVESTATE_DIR: '{{default "." .SAVESTATE_DIR}}'
-  type-search:
-    desc: Just an example to show it running
-    cmds:
-      - '{{.TYPESEARCH_BIN_RELEASE_DIR}}/type_searcher --output-path ./search-results.json --game {{.GAME}} --fields ''[{"type":"int16","offset":2},{"type":"int16","offset":4}]'''
   update-treesitter:
     desc: Updates locally built tree-sitter rules
     cmds:

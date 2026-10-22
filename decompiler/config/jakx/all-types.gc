@@ -17134,6 +17134,7 @@
    (special-volume          float               :offset-assert 700)
    (unknown-usd-35             int32             17 :offset-assert 704) ;; added
    (unknown-uint32-1 uint32 :offset 748)
+   (unknown-uint32-2 uint32 :offset 752)
    (unknown-float float :offset 756)
    )
   :method-count-assert 11
@@ -18154,7 +18155,7 @@
 (define-extern lookup-texture-id-by-name (function string string texture-id)) ;; 
 (define-extern lookup-level-texture-by-name (function string level (pointer texture-page) texture)) ;; 
 ;; (define-extern lookup-tex-id-from-texture function) ;; (function texture texture-id)
-;; (define-extern lookup-level-texture-id-by-name function) ;; (function string level int texture-id)
+(define-extern lookup-level-texture-id-by-name (function string level int texture-id)) ;; 
 ;; (define-extern *shader-list* object) ;; pair
 (define-extern *edit-shader* texture-id) ;; 
 ;; (define-extern link-texture-by-id function) ;; (function texture-id adgif-shader texture-page-dir-entry)
@@ -20552,7 +20553,7 @@
   :size-assert         #x4
   :flag-assert         #xa00000004
   (:methods
-    (generate-dma! "Generate DMA for prim rendering." (_type_ matrix) none) ;; 9
+    (generate-dma! "Generate DMA for prim rendering." (_type_ matrix int) none) ;; 9
     )
   )
 
@@ -20584,7 +20585,7 @@
    These are owned by the thing submitting to prim, not the prim renderer itself."
   ((flags               prim-flags           :offset-assert 4) ;; guessed by decompiler
    (tex-name            basic                :offset-assert 8)
-   (tex                 basic                :offset-assert 12)
+   (tex                 texture                :offset-assert 12)
    (tex-id              texture-id           :offset-assert 16) ;; guessed by decompiler
    (adnops              gs-adcmd    2   :inline     :offset-assert 32) ;; guessed by decompiler
    (data0               gs-test               :offset 32) ;; gs-test
@@ -20637,7 +20638,7 @@
   :size-assert         #x80c
   :flag-assert         #xa0000080c
   (:methods
-    (prim-work-method-9 () none) ;; 9 ;; (reset! (_type_) none)
+    (reset! (_type_) none)
     )
   )
 
@@ -28584,8 +28585,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype list-link (structure)
-  ((prev list-link  :offset-assert 0) ;; TODO - may be wrong, fixup-relocated-link still is not correct
-   (next list-link  :offset-assert 4) ;; TODO - may be wrong, fixup-relocated-link still is not correct
+  ((prev list-link  :offset-assert 0) ;; TODO - may be wrong, fixup-relocated-link required a TON of casts, but it is a relocate function so that is typically normal
+   (next list-link  :offset-assert 4) ;; TODO - may be wrong, fixup-relocated-link required a TON of casts, but it is a relocate function so that is typically normal
    )
   :pack-me
   :method-count-assert 9
@@ -36006,7 +36007,7 @@
 ;; (define-extern sound-group-pause function) ;; (function sound-group int)
 ;; (define-extern sound-group-stop function) ;; (function sound-group int)
 ;; (define-extern sound-group-continue function) ;; (function sound-group int)
-;; (define-extern sound-set-fps function) ;; (function int int)
+(define-extern sound-set-fps (function int int)) ;; 
 ;; (define-extern sound-volume-off function) ;; (function int)
 ;; (define-extern show-iop-info function) ;; (function dma-buffer int)
 ;; (define-extern show-iop-memory function) ;; (function dma-buffer int)
@@ -36924,14 +36925,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-extern generic-vu1-block vu-function) ;; vu-function
-;; (define-extern generic-setup-constants function) ;; (function generic-constants none)
-;; (define-extern generic-add-constants function) ;; (function dma-buffer none)
-;; (define-extern generic-setup-shrub-constants function) ;; (function generic-shrub-constants int int int none)
-;; (define-extern generic-add-shrub-constants function) ;; (function dma-buffer int int int none)
-;; (define-extern generic-init-buf function) ;; (function dma-buffer gs-zbuf none)
-;; (define-extern generic-vu1-init-buf function) ;; (function bucket-id gs-zbuf none)
-;; (define-extern generic-vu1-init-buf-special function) ;; (function bucket-id gs-zbuf none)
-;; (define-extern generic-vu1-init-buffers function) ;; (function none)
+(define-extern generic-setup-constants (function generic-constants viewport none))
+(define-extern generic-add-constants (function dma-buffer viewport none))
+(define-extern generic-setup-shrub-constants (function generic-shrub-constants int int int none))
+(define-extern generic-add-shrub-constants (function dma-buffer int int int none))
+(define-extern generic-init-buf (function dma-buffer gs-zbuf viewport object none))
+(define-extern generic-vu1-init-buf (function bucket-id gs-zbuf viewport object none))
+(define-extern generic-vu1-init-buf-special (function bucket-id gs-zbuf object object none))
+(define-extern generic-vu1-init-buffers (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic-effect                 ;;
@@ -37145,7 +37146,7 @@
 
 ;; (define-extern fx-copy-init function)
 ;; (define-extern warp-shader-init function)
-;; (define-extern fx-copy-buf function) ;; (function dma-buffer none)
+(define-extern fx-copy-buf (function dma-buffer none)) ;; 
 (define-extern init-warp (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37731,10 +37732,10 @@
 ;; prim                           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *prim-work* object) ;; prim-work
-;; (define-extern *level-texture-page-translate* array)
-;; (define-extern *foreground-to-level-translate* array)
-;; (define-extern prim-engine-execute function) ;; (function none)
+(define-extern *prim-work* prim-work) ;; 
+(define-extern *level-texture-page-translate* (array uint32))
+(define-extern *foreground-to-level-translate* (array uint32))
+(define-extern prim-engine-execute (function object object int none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; trajectory                     ;;
@@ -41298,7 +41299,7 @@
     (rigid-body-object-method-67 () none) ;; 67
     (rigid-body-object-method-68 () none) ;; 68
     (rigid-body-object-method-69 (_type_) none) ;; 69
-    (rigid-body-object-method-70 () none) ;; 70
+    (rigid-body-object-method-70 (_type_) none) ;; 70
     (rigid-body-object-method-71 (_type_) none) ;; 71
     (rigid-body-object-method-72 () none) ;; 72
     (rigid-body-object-method-73 () none) ;; 73
@@ -41739,12 +41740,13 @@
 ;; video                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern set-video-mode function) ;; (function symbol none)
+(define-extern *video-mode* int)
+(define-extern set-video-mode (function symbol none)) ;; 
 (define-extern get-video-mode (function symbol)) ;; 
 (define-extern set-aspect-ratio (function symbol none)) ;; 
 (define-extern get-aspect-ratio (function symbol)) ;; 
-;; (define-extern set-progressive-scan function) ;; (function symbol none)
-;; (define-extern get-progressive-scan function) ;; (function symbol)
+(define-extern set-progressive-scan (function symbol none))
+(define-extern get-progressive-scan (function symbol))
 (define-extern set-graphics-mode (function none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44356,6 +44358,10 @@
   ;;  (vehicle-section-12 vehicle-section :offset 1664 :score 999)
   ;;  (vehicle-section-2 vehicle-section :offset 1728 :score 999)
    (pad11 uint32 4)
+   (vehicle-sound-1 sound-id :offset 888)
+   (vehicle-uint32-1 uint32 :offset 892)
+   (vehicle-sound-2 sound-id :offset 896)
+   (vehicle-float-1 float :offset 904)
    (pred                            net-predictor-sphcol                :inline :offset-assert 1808)
    (next-reliable-send-time         int32                                       :offset-assert 2116)
    (player-id                       int8                                        :offset-assert 2120)
@@ -44425,7 +44431,7 @@
     (vehicle-method-141 () none) ;; 141 ;; (vehicle-method-141 (_type_) symbol)
     (vehicle-method-142 () none) ;; 142 ;; (vehicle-method-142 (_type_) none)
     (vehicle-method-143 () none) ;; 143 ;; (vehicle-method-143 (_type_ process) object)
-    (vehicle-method-144 () none) ;; 144 ;; (vehicle-method-144 (_type_) none)
+    (vehicle-method-144 (_type_) none) ;; 144 ;; (vehicle-method-144 (_type_) none)
     (vehicle-method-145 () none) ;; 145 ;; (vehicle-method-145 (_type_) none)
     (vehicle-method-146 () none) ;; 146 ;; (vehicle-method-146 (_type_ vector) none)
     (vehicle-method-147 () none) ;; 147 ;; (vehicle-method-147 (_type_) none)
@@ -44450,8 +44456,8 @@
     (vehicle-method-166 () none) ;; 166
     (vehicle-method-167 () none) ;; 167
     (vehicle-method-168 () none) ;; 168
-    (vehicle-method-169 () none) ;; 169
-    (vehicle-method-170 () none) ;; 170
+    (vehicle-method-169 (_type_) none) ;; 169
+    (vehicle-method-170 (_type_) none) ;; 170
     (vehicle-method-171 () none) ;; 171
     (vehicle-method-172 () none) ;; 172
     (vehicle-method-173 () none) ;; 173
@@ -45293,7 +45299,7 @@
     (wvehicle-method-220 () none) ;; 220
     (wvehicle-method-221 () none) ;; 221
     (wvehicle-method-222 () none) ;; 222
-    (wvehicle-method-223 () none) ;; 223
+    (wvehicle-method-223 (_type_) none) ;; 223
     (wvehicle-method-224 () none) ;; 224
     (wvehicle-method-225 () none) ;; 225
     (wvehicle-method-226 () none) ;; 226
@@ -50516,7 +50522,6 @@
 ;; find-nearest                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype search-info (structure)
   ((point        vector            :inline :offset-assert 0)
    (best-point   vector            :inline :offset-assert 16)
@@ -50535,12 +50540,11 @@
   :size-assert         #x64
   :flag-assert         #x900000064
   )
-|#
 
-;; (define-extern *search-info* object) ;; search-info
+(define-extern *search-info* search-info) ;; 
 (define-extern find-nearest-focusable (function (array collide-shape) vector float search-info-flag search-info-flag vector vector float process-focusable)) ;; 
-;; (define-extern in-process-array? function)
-;; (define-extern fst-insertion-helper function)
+(define-extern in-process-array? (function object symbol))
+(define-extern fst-insertion-helper (function object int int float none))
 ;; (define-extern find-sorted-targets! function)
 ;; (define-extern find-sorted-targets-faster! function)
 ;; (define-extern sorted-targ-validator-test-collision function)
@@ -56237,7 +56241,6 @@
 ;; wvehicle-sounds                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype wvehicle-sound-loop-params (structure)
   ((speed  float  :offset-assert 0)
    (weight float  :offset-assert 4)
@@ -56246,20 +56249,16 @@
   :size-assert         #x8
   :flag-assert         #x900000008
   )
-|#
 
-#|
 (deftype wvehicle-sound-work (structure)
-  ((roll-basis-params  wvehicle-sound-loop-params 6 :offset-assert 0) ;; guessed by decompiler
-   (slide-basis-params wvehicle-sound-loop-params 2 :offset-assert 96) ;; guessed by decompiler
+  ((roll-basis-params  wvehicle-sound-loop-params 6 :inline :offset-assert 0) ;; guessed by decompiler
+   (slide-basis-params wvehicle-sound-loop-params 2 :inline :offset-assert 96) ;; guessed by decompiler
    )
   :method-count-assert 9
   :size-assert         #x80
   :flag-assert         #x900000080
   )
-|#
 
-#|
 (deftype update-engine-mix-state-params (structure)
   ((info-array   uint32  :offset-assert 0)
    (info-count   int8    :offset-assert 4)
@@ -56271,9 +56270,7 @@
   :size-assert         #x10
   :flag-assert         #x900000010
   )
-|#
 
-#|
 (deftype update-engine-loop-state-work (structure)
   ((i-loop int8                            :offset-assert 0)
    (info   vehicle-sound-engine-loop-info  :offset-assert 4)
@@ -56284,11 +56281,9 @@
   :size-assert         #x10
   :flag-assert         #x900000010
   )
-|#
 
-#|
 (deftype update-engine-mix-state-work (structure)
-  ((loops             UNKNOWN 2 :offset-assert 0)
+  ((loops             wvehicle-sound-loop-params 2 :inline :offset-assert 0)
    (xover1            float     :offset-assert 32)
    (xover2            float     :offset-assert 36)
    (crossover         float     :offset-assert 40)
@@ -56301,10 +56296,9 @@
   :size-assert         #x33
   :flag-assert         #x900000033
   )
-|#
 
-;; (define-extern update-engine-mix-state function)
-;; (define-extern *debug-engine-sound-work* object)
+(define-extern update-engine-mix-state (function wvehicle (inline-array wvehicle-engine-mix-state) object none))
+(define-extern *debug-engine-sound-work* vector)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; vehicle-reticle                ;;
@@ -56481,7 +56475,7 @@
   )
 |#
 
-;; (define-extern whoosh-shake-camera function)
+(define-extern whoosh-shake-camera (function vector int int none))
 ;; (define-extern vehicle-respawn-invul-init-by-other function)
 ;; (define-extern vehicle-respawn-invul-spawn function)
 ;; (define-extern vehicle-suppress-look-init-by-other function)
