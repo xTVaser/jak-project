@@ -4198,5 +4198,31 @@
       "L323",
       "vector"
     ]
+  ],
+  "mood-funcs": [
+    [
+      "L52",
+      "uint64",
+      true
+    ],
+    [
+      "L53",
+      "uint64",
+      true
+    ]
+  ],
+  "mood-funcs2": [
+    [
+      "L47",
+      "uint64",
+      true
+    ]
+  ],
+  "ocean": [
+    [
+      "L137",
+      "uint64",
+      true
+    ]
   ]
 }

@@ -1059,6 +1059,16 @@
       "(function debug-menu debug-menu symbol)"
     ]
   ],
+  "memory-usage": [
+    [
+      2,
+      "(function process-drawable symbol)"
+    ],
+    [
+      3,
+      "(function basic symbol)"
+    ]
+  ],
   "intro-scenes2": [
     [
       0,

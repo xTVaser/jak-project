@@ -8573,7 +8573,7 @@
     (is-object-visible? (_type_ int int) symbol)
     (level-method-12 () none) ;; 12 ;; (level-method-12 () none)
     (level-method-13 () none) ;; 13 ;; (bsp-name (_type_) symbol)
-    (level-method-14 (_type_) none) ;; 14 ;; (compute-memory-usage! (_type_ symbol) memory-usage-block)
+    (compute-memory-usage! (_type_ symbol) memory-usage-block)
     (level-method-15 () none) ;; 15 ;; (inside-bsp? (_type_) symbol)
     (update-vis! (_type_ level-vis-info uint (pointer uint8) int) symbol)
     (level-method-17 () none) ;; 17 ;; (load-continue (_type_) _type_)
@@ -8658,7 +8658,7 @@
   (:methods
     (level-get (_type_ symbol) level)
     (level-group-method-10 () none) ;; 10 ;; (level-get-with-status (_type_ symbol) level)
-    (level-group-method-11 () none) ;; 11 ;; (get-level-by-heap-ptr-and-status (_type_ pointer symbol) level)
+    (get-level-by-heap-ptr-and-status (_type_ pointer symbol) level)
     (level-group-method-12 () none) ;; 12 ;; (level-get-for-use (_type_ symbol symbol) level)
     (level-group-method-13 () none) ;; 13 ;; (activate-levels! (_type_) int)
     (level-group-method-14 () none) ;; 14 ;; (debug-print-entities (_type_ symbol type string) none)
@@ -17256,9 +17256,9 @@
    (flip-horizontal               symbol                     :offset-assert 376) ;; guessed by decompiler
    (dummy                         object             1       :offset-assert 380) ;; guessed by decompiler
    (fov-priority                  float                      :offset-assert 384)
-   (ocean-off                     basic                      :offset-assert 388)
-   (ocean-override                basic                      :offset-assert 392)
-   (crash-cam-force-freeze        basic                      :offset-assert 396)
+   (ocean-off                     symbol                      :offset-assert 388)
+   (ocean-override                symbol                      :offset-assert 392)
+   (crash-cam-force-freeze        symbol                      :offset-assert 396)
    )
   :method-count-assert 11
   :size-assert         #x190
@@ -17969,8 +17969,8 @@
   :size-assert         #x34
   :flag-assert         #xb00000034
   (:methods
-    (ocean-map-method-9 () none) ;; 9 ;; (set-height! (_type_ float) none)
-    (ocean-map-method-10 () none) ;; 10 ;; (get-base-height (_type_) float)
+    (set-height! (_type_ float) none)
+    (get-base-height (_type_) float)
     )
   )
 
@@ -18007,64 +18007,64 @@
   :size-assert         #x43c
   :flag-assert         #x540000043c
   (:methods
-    (ocean-method-11 () none) ;; 11 ;; (get-height (_type_ vector symbol) float)
-    (ocean-method-12 () none) ;; 12 ;; (draw! (_type_) none)
-    (ocean-method-13 () none) ;; 13 ;; (update-map (_type_) none)
-    (ocean-method-14 () none) ;; 14 ;; (interp-wave (_type_ ocean-wave-info uint float) none)
+    (get-height (_type_ vector symbol) float)
+    (draw! (_type_) none) ;; substantial changes from jak3
+    (update-map (_type_ viewport) none) ;; substantial changes from jak3
+    (add-colors! (_type_ vector ocean-vertex) none) ;; 14 ;; (interp-wave (_type_ ocean-wave-info uint float) none)
     (ocean-method-15 () none) ;; 15 ;; (ocean-method-15 (_type_ matrix matrix) none)
-    (ocean-method-16 () none) ;; 16 ;; (generate-verts (_type_ ocean-vert-array ocean-height-array) none)
-    (ocean-method-17 () none) ;; 17 ;; (add-colors! (_type_ vector ocean-vertex) none)
-    (ocean-method-18 () none) ;; 18 ;; (ocean-method-18 (_type_ (pointer ocean-colors) (pointer ocean-colors)) none)
-    (ocean-method-19 () none) ;; 19 ;; (init-buffer! (_type_ dma-buffer) none)
-    (ocean-method-20 () none) ;; 20 ;; (end-buffer! (_type_ dma-buffer) none)
-    (ocean-method-21 () none) ;; 21 ;; (set-corners! (_type_ float float) float)
-    (ocean-method-22 () none) ;; 22 ;; (ocean-near-add-call (_type_ dma-buffer int) none)
-    (ocean-method-23 () none) ;; 23 ;; (ocean-near-add-call-flush (_type_ dma-buffer int) none)
-    (ocean-method-24 () none) ;; 24 ;; (ocean-near-setup-constants (_type_ ocean-near-constants) none)
-    (ocean-method-25 () none) ;; 25 ;; (ocean-near-add-constants (_type_ dma-buffer) none)
-    (ocean-method-26 () none) ;; 26 ;; (ocean-near-add-heights (_type_ dma-buffer) none)
-    (ocean-method-27 () none) ;; 27 ;; (ocean-near-add-matrices (_type_ dma-buffer vector) none)
-    (ocean-method-28 () none) ;; 28 ;; (ocean-near-add-upload (_type_ dma-buffer uint uint) none)
-    (ocean-method-29 () none) ;; 29 ;; (draw-ocean-near (_type_ dma-buffer) none)
-    (ocean-method-30 () none) ;; 30 ;; (ocean-trans-camera-masks-bit? (_type_ uint uint) symbol)
-    (ocean-method-31 () none) ;; 31 ;; (ocean-trans-mask-ptrs-bit? (_type_ int int) symbol)
-    (ocean-method-32 () none) ;; 32 ;; (ocean-trans-mask-ptrs-set! (_type_ uint uint) symbol)
-    (ocean-method-33 () none) ;; 33 ;; (ocean-trans-add-upload-table (_type_ dma-buffer uint uint int int symbol) none)
-    (ocean-method-34 () none) ;; 34 ;; (ocean-trans-add-upload-strip (_type_ dma-buffer uint uint int int int) none)
-    (ocean-method-35 () none) ;; 35 ;; (ocean-transition-check (_type_ ocean-trans-mask int int vector) none)
-    (ocean-method-36 () none) ;; 36 ;; (ocean-make-trans-camera-masks (_type_ uint uint uint uint) none)
-    (ocean-method-37 () none) ;; 37 ;; (ocean-trans-add-upload (_type_ dma-buffer uint uint) none)
-    (ocean-method-38 () none) ;; 38 ;; (draw-ocean-transition-seams (_type_ dma-buffer) none)
-    (ocean-method-39 () none) ;; 39 ;; (ocean-trans-add-constants (_type_ dma-buffer) none)
-    (ocean-method-40 () none) ;; 40 ;; (draw-ocean-transition (_type_ dma-buffer) none)
-    (ocean-method-41 () none) ;; 41 ;; (ocean-mid-add-call (_type_ dma-buffer int) none)
-    (ocean-method-42 () none) ;; 42 ;; (ocean-mid-add-call-flush (_type_ dma-buffer uint) none)
-    (ocean-method-43 () none) ;; 43 ;; (ocean-matrix*! (_type_ matrix matrix matrix) matrix)
-    (ocean-method-44 () none) ;; 44 ;; (ocean-vector-matrix*! (_type_ vector vector matrix) vector)
-    (ocean-method-45 () none) ;; 45 ;; (ocean-mid-add-matrices (_type_ dma-buffer vector) none)
-    (ocean-method-46 () none) ;; 46 ;; (ocean-mid-check (_type_ pointer int int vector) symbol)
-    (ocean-method-47 () none) ;; 47 ;; (ocean-mid-setup-constants (_type_ ocean-mid-constants) none)
-    (ocean-method-48 () none) ;; 48 ;; (ocean-mid-add-constants (_type_ dma-buffer) none)
-    (ocean-method-49 () none) ;; 49 ;; (ocean-mid-camera-masks-bit? (_type_ uint uint) symbol)
-    (ocean-method-50 () none) ;; 50 ;; (ocean-mid-mask-ptrs-bit? (_type_ uint uint) symbol)
-    (ocean-method-51 () none) ;; 51 ;; (ocean-mid-camera-masks-set! (_type_ uint uint) symbol)
-    (ocean-method-52 () none) ;; 52 ;; (ocean-mid-add-upload (_type_ dma-buffer int int int int float) none)
-    (ocean-method-53 () none) ;; 53 ;; (ocean-mid-add-upload-table (_type_ dma-buffer uint uint (pointer float) int symbol) none)
-    (ocean-method-54 () none) ;; 54 ;; (ocean-mid-add-upload-top (_type_ dma-buffer uint uint) none)
-    (ocean-method-55 () none) ;; 55 ;; (ocean-mid-add-upload-middle (_type_ dma-buffer uint uint) none)
-    (ocean-method-56 () none) ;; 56 ;; (ocean-mid-add-upload-bottom (_type_ dma-buffer uint uint) none)
-    (ocean-method-57 () none) ;; 57 ;; (ocean-seams-add-constants (_type_ dma-buffer) none)
-    (ocean-method-58 () none) ;; 58 ;; (draw-ocean-mid-seams (_type_ dma-buffer) none)
-    (ocean-method-59 () none) ;; 59 ;; (draw-ocean-mid (_type_ dma-buffer) none)
-    (ocean-method-60 () none) ;; 60 ;; (ocean-method-60 (_type_ dma-buffer) none)
-    (ocean-method-61 () none) ;; 61 ;; (ocean-method-61 (_type_ dma-buffer) none)
-    (ocean-method-62 () none) ;; 62 ;; (ocean-method-62 (_type_ dma-buffer) none)
-    (ocean-method-63 () none) ;; 63 ;; (ocean-method-63 (_type_ dma-buffer) none)
-    (ocean-method-64 () none) ;; 64 ;; (ocean-method-64 (_type_ dma-buffer) none)
-    (ocean-method-65 () none) ;; 65 ;; (ocean-method-65 (_type_ dma-buffer) none)
-    (ocean-method-66 () none) ;; 66 ;; (ocean-method-66 (_type_ dma-buffer) none)
-    (ocean-method-67 () none) ;; 67 ;; (ocean-method-67 (_type_ dma-buffer) none)
-    (ocean-method-68 () none) ;; 68 ;; (render-ocean-far (_type_ dma-buffer int) none)
+    (init-buffer! (_type_ dma-buffer) none) ;; 16 ;; (generate-verts (_type_ ocean-vert-array ocean-height-array) none)
+    (ocean-near-add-call (_type_ dma-buffer int) none) ;; 17 ;; 
+    (ocean-near-add-call-flush (_type_ dma-buffer int) none) ;; 18 ;; (ocean-method-18 (_type_ (pointer ocean-colors) (pointer ocean-colors)) none)
+    (ocean-near-setup-constants (_type_ ocean-near-constants viewport) none) ;; 19 ;; 
+    (ocean-near-add-constants (_type_ dma-buffer viewport) none) ;; 20 ;; (end-buffer! (_type_ dma-buffer) none)
+    (ocean-near-add-matrices (_type_ dma-buffer vector viewport) none) ;; 21 ;; (set-corners! (_type_ float float) float)
+    (ocean-near-add-upload (_type_ dma-buffer uint uint viewport) none) ;; 22 ;; 
+    (draw-ocean-near (_type_ dma-buffer viewport) none) ;; 23 ;; 
+    (ocean-trans-camera-masks-bit? (_type_ uint uint) symbol) ;; 24 ;; 
+    (ocean-trans-mask-ptrs-bit? (_type_ int int) symbol) ;; 25 ;; 
+    (ocean-trans-mask-ptrs-set! (_type_ uint uint) symbol) ;; 26 ;; (ocean-near-add-heights (_type_ dma-buffer) none)
+    (ocean-trans-add-upload-table (_type_ dma-buffer uint uint int int symbol viewport) none) ;; 27 ;; (ocean-near-add-matrices (_type_ dma-buffer vector) none)
+    (ocean-trans-add-upload-strip (_type_ dma-buffer uint uint int int int viewport) none) ;; 28 ;; 
+    (ocean-transition-check (_type_ ocean-trans-mask int int vector) none) ;; 29 ;; 
+    (ocean-make-trans-camera-masks (_type_ uint uint uint uint viewport) none) ;; 30 ;; 
+    (ocean-trans-add-upload (_type_ dma-buffer uint uint viewport) none) ;; 31 ;; 
+    (draw-ocean-transition-seams (_type_ dma-buffer viewport) none) ;; 32 ;; 
+    (ocean-trans-add-constants (_type_ dma-buffer) none) ;; 33 ;; 
+    (draw-ocean-transition (_type_ dma-buffer viewport) none) ;; 34 ;; 
+    (ocean-mid-add-call (_type_ dma-buffer int) none) ;; 35 ;; 
+    (ocean-mid-add-call-flush (_type_ dma-buffer uint) none) ;; 36 ;; 
+    (ocean-matrix*! (_type_ matrix matrix matrix) matrix) ;; 37 ;; 
+    (ocean-vector-matrix*! (_type_ vector vector matrix) vector) ;; 38 ;; 
+    (ocean-mid-add-matrices (_type_ dma-buffer vector viewport) none) ;; 39 ;; 
+    (ocean-mid-check (_type_ pointer int int vector viewport) symbol) ;; 40 ;; 
+    (ocean-mid-setup-constants (_type_ ocean-mid-constants viewport) none) ;; 41 ;; 
+    (ocean-mid-add-constants (_type_ dma-buffer viewport) none) ;; 42 ;; 
+    (ocean-mid-camera-masks-bit? (_type_ uint uint) symbol) ;; 43 ;; 
+    (ocean-mid-mask-ptrs-bit? (_type_ uint uint) symbol) ;; 44 ;; 
+    (ocean-mid-camera-masks-set! (_type_ uint uint) symbol) ;; 45 ;; 
+    (ocean-mid-add-upload (_type_ dma-buffer int int int int float viewport) none) ;; 46 ;; 
+    (ocean-mid-add-upload-table (_type_ dma-buffer uint uint (pointer float) int symbol vector) none) ;; 47 ;; 
+    (ocean-mid-add-upload-top (_type_ dma-buffer uint uint viewport) none) ;; 48 ;; 
+    (ocean-mid-add-upload-middle (_type_ dma-buffer uint uint viewport) none) ;; 49 ;; 
+    (ocean-mid-add-upload-bottom (_type_ dma-buffer uint uint viewport) none) ;; 50 ;; 
+    (ocean-seams-add-constants (_type_ dma-buffer) none) ;; 51 ;; 
+    (draw-ocean-mid-seams (_type_ dma-buffer viewport) none) ;; 52 ;; 
+    (draw-ocean-mid (_type_ dma-buffer viewport) none) ;; 53 ;; 
+    (ocean-method-54 (_type_ dma-buffer) none) ;; 54 ;; 60
+    (ocean-method-55 (_type_ dma-buffer) none) ;; 55 ;; 
+    (ocean-method-56 (_type_ dma-buffer) none) ;; 56 ;; 
+    (ocean-method-57 (_type_ dma-buffer) none) ;; 57 ;; 
+    (ocean-method-58 (_type_ dma-buffer) none) ;; 58 ;; 
+    (ocean-method-59 (_type_ dma-buffer) none) ;; 59 ;; 
+    (ocean-method-60 (_type_ dma-buffer) none) ;; 60 ;;
+    (ocean-method-61 (_type_ dma-buffer) none) ;; 61 ;; 
+    (render-ocean-far (_type_ dma-buffer int) none) ;; 62
+    (draw-ocean-far (_type_ dma-buffer viewport) none) ;; 63 - very likely still `draw-ocean-far` but they made substantial changes here (fog and such)
+    (ocean-method-64 () none) ;; 64 ;; 
+    (ocean-method-65 () none) ;; 65 ;; 
+    (ocean-method-66 () none) ;; 66 ;;
+    (ocean-method-67 () none) ;; 67 ;; 
+    (ocean-method-68 () none) ;; 68 ;; 
     (ocean-method-69 () none) ;; 69 ;; (draw-ocean-far (_type_ dma-buffer) none)
     (ocean-method-70 () none) ;; 70 ;; (ocean-texture-setup-constants (_type_ ocean-texture-constants) none)
     (ocean-method-71 () none) ;; 71 ;; (ocean-texture-add-constants (_type_ dma-buffer) none)
@@ -18079,7 +18079,7 @@
     (ocean-method-80 () none) ;; 80 ;; (ocean-method-80 (_type_ dma-buffer) none)
     (ocean-method-81 () none) ;; 81 ;; (draw-envmap-debug (_type_ dma-buffer) none)
     (ocean-method-82 () none) ;; 82 ;; (ocean-method-82 (_type_ dma-buffer float) int)
-    (ocean-method-83 () none) ;; 83 ;; (ocean-method-83 (_type_ dma-buffer sky-upload-data vector4w float) none)
+    (rgba-to-vector! (_type_ vector (pointer int32)) none) ;; 83 ;; (ocean-method-83 (_type_ dma-buffer sky-upload-data vector4w float) none)
     )
   )
 
@@ -19081,6 +19081,12 @@
   :method-count-assert 14
   :size-assert         #x30
   :flag-assert         #xe00000030
+  )
+
+(deftype art-mesh-anim (art-element)
+  "An unused mesh animation."
+  ((data basic :dynamic))
+  :flag-assert #xe00000030
   )
 
 (declare-type merc-eye-anim-block structure)
@@ -34317,7 +34323,7 @@
   :size-assert         #x10
   :flag-assert         #xb00000010
   (:methods
-    (sparticle-launcher-method-9 () none) ;; 9 ;; (get-field-spec-by-id (_type_ sp-field-id) sp-field-init-spec)
+    (get-field-spec-by-id (_type_ sp-field-id) sp-field-init-spec)
     (sparticle-launcher-method-10 () none) ;; 10 ;; (setup-special-textures (_type_ string) none)
     )
   )
@@ -36052,63 +36058,44 @@
 ;; joint                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
-(deftype art-group (art)
-  ((info    file-info            :offset-assert 0) ;; guessed by decompiler
-   (length  int32                :offset-assert 8)
-   (name    string               :offset-assert 4) ;; guessed by decompiler
-   (extra   res-lump             :offset-assert 12) ;; guessed by decompiler
-   (data    art-element :dynamic :offset-assert 28) ;; guessed by decompiler
-   (UNKNOWN UNKNOWN              :offset-assert -1) ;; field could not be read.
-   )
-  :method-count-assert 16
-  :size-assert         #x20
-  :flag-assert         #x1000000020
-  (:methods
-    (art-group-method-14 () none) ;; 14 ;; (link-art-to-master (_type_) art-group)
-    (art-group-method-15 () none) ;; 15 ;; (unlink-art-to-master (_type_) int)
-    )
-  )
-|#
-
-;; (define-extern joint-anim-login function) ;; (function joint-anim-drawable joint-anim-drawable)
-;; (define-extern joint-anim-inspect-elt function) ;; (function joint-anim float joint-anim)
-;; (define-extern jacc-mem-usage function) ;; (function joint-anim-compressed-control memory-usage-block int joint-anim-compressed-control)
-;; (define-extern joint-control-cleanup function) ;; (function joint-control kheap art-joint-anim symbol)
+(define-extern joint-anim-login (function joint-anim-drawable joint-anim-drawable)) ;; 
+(define-extern joint-anim-inspect-elt (function joint-anim float joint-anim)) ;; 
+(define-extern jacc-mem-usage (function joint-anim-compressed-control memory-usage-block int joint-anim-compressed-control)) ;; 
+(define-extern joint-control-cleanup (function joint-control kheap art-joint-anim symbol)) ;; 
 (define-extern joint-control-channel-eval (function joint-control-channel float :behavior process)) ;; 
-;; (define-extern joint-control-channel-eval! function) ;; (function joint-control-channel (function joint-control-channel float float float float) float :behavior process)
+(define-extern joint-control-channel-eval! (function joint-control-channel (function joint-control-channel float float float float) float :behavior process)) ;; 
 (define-extern joint-control-channel-group-eval! (function joint-control-channel art-joint-anim (function joint-control-channel float float float float) int)) ;; 
 (define-extern joint-control-channel-group! (function joint-control-channel art-joint-anim (function joint-control-channel float float float float) int)) ;; 
-;; (define-extern joint-control-copy! function) ;; (function joint-control joint-control joint-control)
-;; (define-extern joint-control-remap! function) ;; (function joint-control art-group art-group pair int string symbol)
-;; (define-extern flatten-joint-control-to-spr function) ;; (function joint-control int)
-;; (define-extern matrix-from-joint-anim-frame function) ;; (function joint-anim-compressed-control int int matrix)
-;; (define-extern matrix-from-control-channel! function) ;; (function matrix joint joint-control-channel matrix)
-;; (define-extern matrix-from-control-pair! function) ;; (function matrix joint-control-channel joint int matrix)
-;; (define-extern matrix-from-control! function) ;; (function matrix-stack joint joint-control symbol matrix)
-;; (define-extern cspace<-cspace! function) ;; (function cspace cspace matrix)
-;; (define-extern cspace<-cspace-normalized! function) ;; (function cspace cspace matrix)
-;; (define-extern cspace<-parent-joint! function) ;; (function cspace (pointer process-drawable) int matrix)
+(define-extern joint-control-copy! (function joint-control joint-control joint-control)) ;; 
+(define-extern joint-control-remap! (function joint-control art-group art-group pair int string symbol)) ;; 
+(define-extern flatten-joint-control-to-spr (function joint-control int)) ;; 
+(define-extern matrix-from-joint-anim-frame (function joint-anim-compressed-control int int matrix)) ;; 
+(define-extern matrix-from-control-channel! (function matrix joint joint-control-channel matrix)) ;; 
+(define-extern matrix-from-control-pair! (function matrix joint-control-channel joint int matrix)) ;; 
+(define-extern matrix-from-control! (function matrix-stack joint joint-control symbol matrix)) ;; 
+(define-extern cspace<-cspace! (function cspace cspace matrix)) ;; 
+(define-extern cspace<-cspace-normalized! (function cspace cspace matrix)) ;; 
+(define-extern cspace<-parent-joint! (function cspace (pointer process-drawable) int matrix)) ;; 
 (define-extern cspace<-transformq! (function cspace transformq matrix))
-;; (define-extern cspace<-transformq+trans! function) ;; (function cspace transformq vector matrix)
-;; (define-extern cspace<-transformq+world-trans! function) ;; (function cspace transformq vector matrix)
-;; (define-extern cspace<-transformq+rot-offset! function) ;; (function cspace transformq vector matrix)
-;; (define-extern cspace-calc-total-matrix! function) ;; (function cspace matrix matrix)
-;; (define-extern cspace<-matrix-no-push-joint! function) ;; (function cspace joint-control matrix)
-;; (define-extern cspace<-matrix-joint! function) ;; (function cspace matrix matrix)
+(define-extern cspace<-transformq+trans! (function cspace transformq vector matrix)) ;; 
+(define-extern cspace<-transformq+world-trans! (function cspace transformq vector matrix)) ;; 
+(define-extern cspace<-transformq+rot-offset! (function cspace transformq vector matrix)) ;; 
+(define-extern cspace-calc-total-matrix! (function cspace matrix matrix)) ;; 
+(define-extern cspace<-matrix-no-push-joint! (function cspace joint-control matrix)) ;; 
+(define-extern cspace<-matrix-joint! (function cspace matrix matrix)) ;; 
 (define-extern cspace<-parented-matrix-joint! (function cspace matrix matrix)) ;; 
-;; (define-extern cspace<-parented-matrix-mirror! function) ;; (function cspace matrix matrix)
+(define-extern cspace<-parented-matrix-mirror! (function cspace matrix matrix)) ;; 
 (define-extern cspace<-parented-matrix-joint-flip-z! (function cspace matrix matrix)) ;; 
-;; (define-extern cspace<-matrix-joint-flip-z! function) ;; (function cspace matrix none)
+(define-extern cspace<-matrix-joint-flip-z! (function cspace matrix none)) ;; 
 (define-extern cspace<-parented-transformq-joint! (function cspace transformq none))
-;; (define-extern cspace<-parented-transformq-joint-flip-z! function) ;; (function cspace transformq none)
-;; (define-extern clear-frame-accumulator function)
-;; (define-extern normalize-frame-quaternions function)
-;; (define-extern decompress-fixed-data-to-accumulator function)
-;; (define-extern decompress-frame-data-to-accumulator function)
-;; (define-extern decompress-frame-data-pair-to-accumulator function)
-;; (define-extern make-joint-jump-tables function) ;; (function int)
-;; (define-extern calc-animation-from-spr function) ;; (function joint-anim-frame int none)
+(define-extern cspace<-parented-transformq-joint-flip-z! (function cspace transformq none)) ;; 
+;; (define-extern clear-frame-accumulator function) ;; wasn't done in jak3, fine
+;; (define-extern normalize-frame-quaternions function) ;; wasn't done in jak3, fine
+;; (define-extern decompress-fixed-data-to-accumulator function) ;; wasn't done in jak3, fine
+;; (define-extern decompress-frame-data-to-accumulator function) ;; wasn't done in jak3, fine
+;; (define-extern decompress-frame-data-pair-to-accumulator function) ;; wasn't done in jak3, fine
+(define-extern make-joint-jump-tables (function int)) ;; 
+(define-extern calc-animation-from-spr (function joint-anim-frame int none)) ;; 
 (define-extern create-interpolated-joint-animation-frame (function joint-anim-frame int joint-control int)) ;; 
 (define-extern create-interpolated2-joint-animation-frame (function joint-anim-frame int joint-control int)) ;; 
 
@@ -37224,7 +37211,7 @@
   )
 |#
 
-;; (define-extern *sky-texture-anim-array* texture-anim-array) ;; (texture-anim-array texture-anim)
+(define-extern *sky-texture-anim-array* (texture-anim-array texture-anim)) ;; 
 (define-extern set-fog-height! (function float none)) ;; 
 (define-extern set-cloud-minmax! (function float float none)) ;; 
 ;; (define-extern *default-pris-texture-anim-array* texture-anim-array)
@@ -37240,7 +37227,7 @@
 ;; (define-extern *fcshield-water-texture-anim-array* texture-anim-array)
 ;; (define-extern *this-way-water-texture-anim-array* texture-anim-array)
 ;; (define-extern this-way-water-texture-anim-func function)
-;; (define-extern *ocean-texture-anim-array* texture-anim-array)
+(define-extern *ocean-texture-anim-array* texture-anim-array)
 ;; (define-extern ocean-texture-anim-time-func function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -38250,7 +38237,6 @@
 ;; mood-funcs                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype default-states (structure)
   ((light light-state  :inline :offset-assert 0)
    (flame flames-state :inline :offset-assert 8)
@@ -38259,9 +38245,7 @@
   :size-assert         #xf
   :flag-assert         #x90000000f
   )
-|#
 
-#|
 (deftype default-exterior-states (structure)
   ((light light-state  :inline :offset-assert 0)
    (flame flames-state :inline :offset-assert 8)
@@ -38270,9 +38254,7 @@
   :size-assert         #xf
   :flag-assert         #x90000000f
   )
-|#
 
-#|
 (deftype mountain-states (structure)
   ((light0 light-state        :inline :offset-assert 0)
    (light1 light-state        :inline :offset-assert 8)
@@ -38288,20 +38270,18 @@
   :size-assert         #x2c
   :flag-assert         #x90000002c
   )
-|#
 
 (define-extern update-mood-default (function mood-context float int none :behavior time-of-day-proc)) ;; 
-;; (define-extern update-mood-copy-parent function) ;; (function mood-context object int none)
-;; (define-extern get-sphere-interp function) ;; (function sphere vector float float float)
-;; (define-extern update-mood-default-exterior (function mood-context float int none :behavior time-of-day-proc))
-;; (define-extern init-mood-mountain function) ;; (function mood-context uint)
-;; (define-extern update-mood-mountain function) ;; (function mood-context float int none :behavior time-of-day-proc)
+(define-extern update-mood-copy-parent (function mood-context object int none))
+(define-extern get-sphere-interp (function sphere vector float float float))
+(define-extern update-mood-default-exterior (function mood-context float int none :behavior time-of-day-proc))
+(define-extern init-mood-mountain (function mood-context uint))
+(define-extern update-mood-mountain (function mood-context float int none :behavior time-of-day-proc))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; mood-funcs2                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype rustyh-states (structure)
   ((effect float  :offset-assert 0)
    )
@@ -38309,9 +38289,7 @@
   :size-assert         #x4
   :flag-assert         #x900000004
   )
-|#
 
-#|
 (deftype garage-states (structure)
   ((switched float  :offset-assert 0)
    )
@@ -38319,39 +38297,28 @@
   :size-assert         #x4
   :flag-assert         #x900000004
   )
-|#
 
-#|
-(deftype default-interior-states (UNKNOWN)
+(deftype default-interior-states (structure)
   ()
-  :method-count-assert 0
-  :size-assert         #x0
-  :flag-assert         #x0
   )
-|#
 
-#|
-(deftype hiphog-states (UNKNOWN)
+(deftype hiphog-states (structure)
   ()
-  :method-count-assert 0
-  :size-assert         #x0
-  :flag-assert         #x0
   )
-|#
 
-;; (define-extern init-mood-fog-default function)
-;; (define-extern init-mood-fog-temple function)
-;; (define-extern init-mood-fog-drome function)
-;; (define-extern update-mood-default-interior (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context none :behavior time-of-day-proc)
-;; (define-extern update-mood-default-interior-ambient (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context none :behavior time-of-day-proc)
-;; (define-extern update-rustyh-lights function)
-;; (define-extern update-mood-rustyh (function mood-context float int none :behavior time-of-day-proc))
+(define-extern init-mood-fog-default (function none))
+(define-extern init-mood-fog-temple (function none))
+(define-extern init-mood-fog-drome (function none))
+(define-extern update-mood-default-interior (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context none :behavior time-of-day-proc)
+(define-extern update-mood-default-interior-ambient (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context none :behavior time-of-day-proc)
+(define-extern update-rustyh-lights (function mood-context none))
+(define-extern update-mood-rustyh (function mood-context float int none :behavior time-of-day-proc))
 (define-extern set-rustyh-effect-light! (function float none))
-;; (define-extern update-hiphog-lights function) ;; (function mood-context none)
-;; (define-extern update-mood-hiphog (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context float none :behavior time-of-day-proc)
-;; (define-extern update-garage-brdroom-lights function)
-;; (define-extern update-mood-garage-brdroom (function mood-context float int none :behavior time-of-day-proc))
-;; (define-extern set-garage-switched! function)
+(define-extern update-hiphog-lights (function mood-context none)) ;; 
+(define-extern update-mood-hiphog (function mood-context float int none :behavior time-of-day-proc)) ;; (function mood-context float none :behavior time-of-day-proc)
+(define-extern update-garage-brdroom-lights (function mood-context none))
+(define-extern update-mood-garage-brdroom (function mood-context float int none :behavior time-of-day-proc))
+(define-extern set-garage-switched! (function float none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; jungle-shared                  ;;
@@ -38879,7 +38846,7 @@
 ;; level                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *max-dma* object) ;; int
+(define-extern *max-dma* int) ;; 
 ;; (define-extern *cached-car-level-index* object)
 (define-extern level-memory-mode->string (function level-memory-mode string)) ;; 
 (define-extern lookup-level-info (function symbol level-load-info)) ;; 
@@ -41915,7 +41882,7 @@
 (define-extern entity-by-name (function string entity)) ;; 
 ;; (define-extern entity-by-type function) ;; (function type entity-actor)
 (define-extern entity-by-aid (function uint entity)) ;; 
-;; (define-extern entity-actor-from-level-name function) ;; (function symbol entity-actor)
+(define-extern entity-actor-from-level-name (function symbol entity-actor)) ;; 
 ;; (define-extern entity-nav-mesh-by-aid function) ;; (function actor-id entity-nav-mesh)
 (define-extern nav-mesh-from-res-tag (function entity symbol int nav-mesh)) ;; 
 ;; (define-extern entity-by-meters function) ;; (function float float float entity-actor)
@@ -42521,9 +42488,9 @@
 ;; ocean                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern init-ocean-far-regs function) ;; (function none)
-;; (define-extern draw-large-polygon-ocean function) ;; (function none)
-;; (define-extern render-ocean-quad function) ;; (function (inline-array ocean-vertex) dma-buffer symbol)
+(define-extern init-ocean-far-regs (function none)) ;; 
+(define-extern draw-large-polygon-ocean (function none)) ;; 
+(define-extern render-ocean-quad (function (inline-array ocean-vertex) dma-buffer symbol)) ;; 
 ;; (define-extern test-seq-read function)
 ;; (define-extern test-worst-read function)
 ;; (define-extern test-seq-write function)
@@ -42536,7 +42503,7 @@
 ;; ocean-mid                      ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern ocean-mid-block object) ;; vu-function
+(define-extern ocean-mid-block vu-function) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ocean-transition               ;;
@@ -42547,14 +42514,14 @@
 ;; ocean-near                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern ocean-near-block object) ;; vu-function
+(define-extern ocean-near-block vu-function) ;; vu-function
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; sparks                         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-extern *sparks-work* sparks-work)
-;; (define-extern sparks-vu1-block object)
+(define-extern sparks-vu1-block vu-function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; eye                            ;;
@@ -42810,6 +42777,9 @@
   :method-count-assert 9
   :size-assert         #x10
   :flag-assert         #x900000010
+  (:methods
+    (new (symbol type joint-exploder-static-params) _type_) ;; 0
+    )
   )
 
 (deftype joint-exploder-list (structure)
@@ -42825,7 +42795,7 @@
   )
 
 (deftype joint-exploder-list-array (inline-array-class)
-  ((data             joint-exploder-list :dynamic :offset-assert 16) ;; guessed by decompiler
+  ((data             joint-exploder-list :dynamic :inline :offset-assert 16) ;; guessed by decompiler
    )
   :method-count-assert 14
   :size-assert         #x10
@@ -42833,7 +42803,8 @@
   )
 
 (deftype joint-exploder (process-drawable)
-  ((die-if-below-y             float                                :offset-assert 248)
+  ((parent                     (pointer process-drawable)           :override)
+   (die-if-below-y             float                                :offset-assert 248)
    (die-if-beyond-xz-dist-sqrd float                                :offset-assert 252)
    (joints                     joint-exploder-joints                :offset-assert 256) ;; guessed by decompiler
    (static-params              joint-exploder-static-params         :offset-assert 260) ;; guessed by decompiler
@@ -42847,23 +42818,23 @@
   :size-assert         #x198
   :flag-assert         #x3c01100198
   (:methods
-    (joint-exploder-method-50 () none) ;; 50
-    (joint-exploder-method-51 () none) ;; 51
-    (joint-exploder-method-52 () none) ;; 52
-    (joint-exploder-method-53 () none) ;; 53
-    (joint-exploder-method-54 () none) ;; 54
-    (joint-exploder-method-55 () none) ;; 55
-    (joint-exploder-method-56 () none) ;; 56
-    (joint-exploder-method-57 () none) ;; 57
-    (joint-exploder-method-58 () none) ;; 58
-    (joint-exploder-method-59 () none) ;; 59
+    (add-joint-to-list "Add a joint to the given linked list of joints." (_type_ joint-exploder-list int) int) ;; 50
+    (update-bbox-for-joint "Update the bounding box to include the joint" (_type_ joint-exploder-list joint-exploder-joint) none) ;; 51
+    (do-collision-response (_type_ joint-exploder-list) none) ;; 52
+    (init-joint-list (_type_) none) ;; 53
+    (remove-from-list-and-reset "Remove a joint from the list and clear its transform" (_type_ joint-exploder-list int) int) ;; 54
+    (final-adjust (_type_ joint-exploder-list int) int) ;; 55
+    (integrate-and-kill (_type_ joint-exploder-list) none) ;; 56
+    (remove-joint-from-list "Remove a joint from the linked list and invalidate the bbox." (_type_ joint-exploder-list int) int) ;; 57
+    (adjust-bbox-for-limits-along-axis (_type_ joint-exploder-list int) joint-exploder-list) ;; 58
+    (adjust-bbox-for-limits (_type_ joint-exploder-list) none) ;; 59
     )
   (:states
     joint-exploder-shatter ;; associated process guessed by decompiler, old: (state joint-exploder)
     )
   )
 
-;; (define-extern joint-exploder-joint-callback function) ;; (function draw-control cspace-array joint-control none)
+(define-extern joint-exploder-joint-callback (function draw-control cspace-array joint-control none)) ;; 
 (define-extern joint-exploder-init-by-other (function skeleton-group int joint-exploder-tuning joint-exploder-static-params object :behavior joint-exploder)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47465,7 +47436,6 @@
   )
 |#
 
-#|
 (deftype keyboard-control (process-drawable)
   ((selected      int32                       :offset-assert 248)
    (pos-x         int32                       :offset-assert 252)
@@ -47479,7 +47449,7 @@
    (left-count    int32                       :offset-assert 284)
    (right-count   int32                       :offset-assert 288)
    (layout-select int32                       :offset-assert 292)
-   (name          basic                       :offset-assert 4)
+   (pad uint32)
    (screen-pos-x  int32                       :offset-assert 300)
    (screen-pos-y  int32                       :offset-assert 304)
    (max-chars     int32                       :offset-assert 308)
@@ -47490,25 +47460,24 @@
   :method-count-assert 55
   :size-assert         #x190
   :flag-assert         #x3701000190
+  (:state-methods
+    idle ;; 51
+    done ;; 52
+    cancel ;; 50
+    )
   (:methods
     (keyboard-control-method-53 () none) ;; 53
     (keyboard-control-method-54 () none) ;; 54
     )
-  (:state-methods
-    done ;; 51
-    cancel ;; 52
-    idle ;; 50
-    )
   )
-|#
 
 ;; (define-extern cpad-or-kbd-pressed-var? function)
 ;; (define-extern kbd-clear! function)
 ;; (define-extern cpad-or-kbd-clear-func! function)
-;; (define-extern *keyboard-proc* object)
-;; (define-extern *keyboard-string-buf* object)
-;; (define-extern *keyboard-init-state* object)
-;; (define-extern *keyboard-layout-default* array)
+(define-extern *keyboard-proc* object)
+(define-extern *keyboard-string-buf* object)
+(define-extern *keyboard-init-state* object)
+(define-extern *keyboard-layout-default* array)
 ;; (define-extern char-allowed function)
 ;; (define-extern set-keyboard-jmod function)
 ;; (define-extern render-entered-text function)

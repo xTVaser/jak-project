@@ -48,6 +48,13 @@
     "generic-light-proc",
     "memcpy",
     "dma-count-until-done",
+    "test-to-from-spr",
+    "test-from-spr",
+    "test-to-spr",
+    "test-seq-read",
+    "test-worst-read",
+    "test-seq-write",
+    "test-worst-write",
     "blerc-a-fragment"
   ],
   "pair_functions_by_name": [
@@ -73,6 +80,7 @@
     "delete-car!",
     "insert-cons!",
     "debug-menu-rebuild",
+    "(method 8 process-tree)",
     "debug-menu-find-from-template",
     "debug-menu-render",
     "debug-menu-context-select-next-or-prev-item",

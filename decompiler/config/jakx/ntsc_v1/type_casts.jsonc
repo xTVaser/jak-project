@@ -7344,5 +7344,957 @@
       "v1",
       "dma-packet"
     ]
+  ],
+  "create-interpolated2-joint-animation-frame": [
+    [
+      [
+        63,
+        67
+      ],
+      "t2",
+      "(inline-array vector)"
+    ],
+    [
+      [
+        91,
+        94
+      ],
+      "t2",
+      "(inline-array vector)"
+    ],
+    [
+      [
+        120,
+        123
+      ],
+      "t2",
+      "(inline-array vector)"
+    ]
+  ],
+  "joint-control-copy!": [
+    [
+      8,
+      "a0",
+      "uint"
+    ],
+    [
+      8,
+      "v1",
+      "uint"
+    ]
+  ],
+  "(method 9 art-joint-anim)": [
+    [
+      9,
+      "v1",
+      "pointer"
+    ]
+  ],
+  "(method 9 art-mesh-geo)": [
+    [
+      20,
+      "s4",
+      "(pointer int16)"
+    ],
+    [
+      [
+        14,
+        19
+      ],
+      "a0",
+      "drawable"
+    ],
+    [
+      10,
+      "v1",
+      "(pointer art)"
+    ],
+    [
+      14,
+      "v1",
+      "(pointer art)"
+    ]
+  ],
+  "(method 9 art)": [
+    [
+      9,
+      "v1",
+      "pointer"
+    ]
+  ],
+  "joint-exploder-joint-callback": [
+    [
+      3,
+      "s4",
+      "joint-exploder"
+    ],
+    [
+      24,
+      "s4",
+      "joint-exploder"
+    ]
+  ],
+  "(method 0 joint-exploder-tuning)": [
+    [
+      [
+        7,
+        85
+      ],
+      "v0",
+      "joint-exploder-tuning"
+    ]
+  ],
+  "joint-control-remap!": [
+    [
+      127,
+      "t9",
+      "(function joint-control joint-control-channel int object)"
+    ],
+    [
+      181,
+      "t9",
+      "(function joint-control joint-control-channel int object)"
+    ],
+    [
+      "_stack_",
+      60,
+      "basic"
+    ]
+  ],
+  "flatten-joint-control-to-spr": [
+    [
+      [
+        201,
+        203
+      ],
+      "a1",
+      "terrain-context"
+    ],
+    [
+      [
+        131,
+        133
+      ],
+      "a0",
+      "terrain-context"
+    ],
+    [
+      [
+        182,
+        184
+      ],
+      "a1",
+      "terrain-context"
+    ],
+    [
+      [
+        164,
+        166
+      ],
+      "a0",
+      "terrain-context"
+    ],
+    [
+      195,
+      "v1",
+      "terrain-context"
+    ],
+    [
+      65,
+      "a3",
+      "(pointer float)"
+    ],
+    [
+      67,
+      "a3",
+      "(pointer float)"
+    ],
+    [
+      [
+        18,
+        47
+      ],
+      "a2",
+      "(inline-array vector)"
+    ],
+    [
+      47,
+      "a2",
+      "pointer"
+    ],
+    [
+      [
+        48,
+        118
+      ],
+      "a2",
+      "(inline-array vector)"
+    ],
+    [
+      118,
+      "a2",
+      "pointer"
+    ],
+    [
+      24,
+      "a3",
+      "(pointer float)"
+    ],
+    [
+      17,
+      "a2",
+      "int"
+    ]
+  ],
+  "(method 58 joint-exploder)": [
+    [
+      222,
+      "s4",
+      "joint-exploder-list"
+    ]
+  ],
+  "(method 11 memory-usage-block)": [
+    [
+      78,
+      "v1",
+      "int"
+    ]
+  ],
+  "(anon-function 2 memory-usage)": [
+    [
+      206,
+      "v1",
+      "collide-shape-moving"
+    ]
+  ],
+  "update-mood-mountain": [
+    [
+      [
+        50,
+        83
+      ],
+      "gp",
+      "mountain-states"
+    ]
+  ],
+  "(method 47 ocean)": [
+    [
+      [
+        53,
+        61
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        63,
+        68
+      ],
+      "v1",
+      "vector4w"
+    ],
+    [
+      [
+        71,
+        150
+      ],
+      "v1",
+      "(inline-array vector4w)"
+    ],
+    [
+      [
+        163,
+        171
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 43 ocean)": [
+    [
+      24,
+      "a0",
+      "(pointer uint8)"
+    ],
+    [
+      26,
+      "v1",
+      "int"
+    ]
+  ],
+  "(method 45 ocean)": [
+    [
+      39,
+      "a0",
+      "(pointer uint8)"
+    ],
+    [
+      47,
+      "v1",
+      "(pointer uint8)"
+    ],
+    [
+      41,
+      "a1",
+      "int"
+    ],
+    [
+      30,
+      "a1",
+      "int"
+    ]
+  ],
+  "(method 8 process-tree)": [
+    [
+      33,
+      "v1",
+      "symbol"
+    ]
+  ],
+  "(method 51 ocean)": [
+    [
+      [
+        7,
+        15
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        18,
+        28
+      ],
+      "a0",
+      "vector"
+    ],
+    [
+      [
+        28,
+        39
+      ],
+      "a0",
+      "vector"
+    ],
+    [
+      [
+        39,
+        50
+      ],
+      "a0",
+      "vector"
+    ],
+    [
+      [
+        51,
+        62
+      ],
+      "v1",
+      "vector"
+    ]
+  ],
+  "(method 53 ocean)": [
+    [
+      [
+        24,
+        29
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      230,
+      "t3",
+      "(pointer uint8)"
+    ]
+  ],
+  "update-garage-brdroom-lights": [
+    [
+      2,
+      "a1",
+      "garage-states"
+    ],
+    [
+      [
+        28,
+        105
+      ],
+      "a0",
+      "garage-states"
+    ]
+  ],
+  "update-rustyh-lights": [
+    [
+      [
+        22,
+        99
+      ],
+      "a0",
+      "rustyh-states"
+    ]
+  ],
+  "update-mood-garage-brdroom": [
+    [
+      [
+        52,
+        103
+      ],
+      "s5",
+      "garage-states"
+    ]
+  ],
+  "(method 42 ocean)": [
+    [
+      [
+        8,
+        17
+      ],
+      "a1",
+      "dma-packet"
+    ]
+  ],
+  "(method 39 ocean)": [
+    [
+      [
+        19,
+        27
+      ],
+      "a1",
+      "dma-packet"
+    ],
+    [
+      29,
+      "s2",
+      "matrix"
+    ],
+    [
+      [
+        47,
+        52
+      ],
+      "s1",
+      "vector"
+    ]
+  ],
+  "(method 35 ocean)": [
+    [
+      [
+        3,
+        12
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 36 ocean)": [
+    [
+      [
+        3,
+        12
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 46 ocean)": [
+    [
+      [
+        58,
+        73
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        86,
+        92
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      103,
+      "v1",
+      "(pointer uint64)"
+    ]
+  ],
+  "(method 17 ocean)": [
+    [
+      [
+        3,
+        12
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 18 ocean)": [
+    [
+      [
+        3,
+        12
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 20 ocean)": [
+    [
+      [
+        8,
+        17
+      ],
+      "a1",
+      "dma-packet"
+    ]
+  ],
+  "(method 22 ocean)": [
+    [
+      [
+        43,
+        52
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      67,
+      "a2",
+      "(pointer int16)"
+    ],
+    [
+      [
+        81,
+        90
+      ],
+      "a1",
+      "vector4w"
+    ],
+    [
+      [
+        90,
+        98
+      ],
+      "v1",
+      "vector4w"
+    ],
+    [
+      [
+        111,
+        127
+      ],
+      "t0",
+      "vector4w"
+    ],
+    [
+      [
+        130,
+        269
+      ],
+      "a1",
+      "(inline-array vector4w)"
+    ]
+  ],
+  "(method 25 ocean)": [
+    [
+      32,
+      "a0",
+      "(pointer int32)"
+    ]
+  ],
+  "(method 24 ocean)": [
+    [
+      29,
+      "a0",
+      "(pointer uint8)"
+    ],
+    [
+      31,
+      "v1",
+      "int"
+    ]
+  ],
+  "(method 27 ocean)": [
+    [
+      [
+        53,
+        61
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        64,
+        68
+      ],
+      "v1",
+      "vector4w"
+    ],
+    [
+      [
+        94,
+        233
+      ],
+      "v1",
+      "(inline-array vector4w)"
+    ],
+    [
+      [
+        246,
+        254
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 54 ocean)": [
+    [
+      [
+        3,
+        191
+      ],
+      "s4",
+      "(inline-array ocean-vertex)"
+    ],
+    [
+      47,
+      "f1",
+      "float"
+    ],
+    [
+      140,
+      "f1",
+      "float"
+    ]
+  ],
+  "(method 34 ocean)": [
+    [
+      "_stack_",
+      40,
+      "ocean-trans-mask"
+    ]
+  ],
+  "(method 33 ocean)": [
+    [
+      [
+        7,
+        15
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        17,
+        51
+      ],
+      "v1",
+      "matrix"
+    ]
+  ],
+  "(method 32 ocean)": [
+    [
+      106,
+      "a1",
+      "(pointer int32)"
+    ],
+    [
+      110,
+      "a3",
+      "(pointer uint8)"
+    ],
+    [
+      112,
+      "a1",
+      "(pointer int32)"
+    ]
+  ],
+  "(method 28 ocean)": [
+    [
+      [
+        45,
+        53
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        62,
+        66
+      ],
+      "v1",
+      "vector4w"
+    ],
+    [
+      [
+        69,
+        148
+      ],
+      "v1",
+      "(inline-array vector4w)"
+    ],
+    [
+      [
+        167,
+        175
+      ],
+      "a0",
+      "dma-packet"
+    ]
+  ],
+  "(method 26 ocean)": [
+    [
+      31,
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      47,
+      "a2",
+      "(pointer uint8)"
+    ],
+    [
+      55,
+      "v1",
+      "(pointer int8)"
+    ],
+    [
+      49,
+      "a1",
+      "int"
+    ],
+    [
+      33,
+      "a1",
+      "int"
+    ]
+  ],
+  "(method 23 ocean)": [
+    [
+      [
+        37,
+        42
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      90,
+      "a1",
+      "(pointer int16)"
+    ]
+  ],
+  "(method 21 ocean)": [
+    [
+      [
+        18,
+        27
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      29,
+      "s2",
+      "matrix"
+    ],
+    [
+      [
+        46,
+        52
+      ],
+      "s1",
+      "vector"
+    ]
+  ],
+  "(method 56 ocean)": [
+    [
+      [
+        3,
+        193
+      ],
+      "s4",
+      "(inline-array ocean-vertex)"
+    ],
+    [
+      47,
+      "f1",
+      "float"
+    ],
+    [
+      141,
+      "f1",
+      "float"
+    ]
+  ],
+  "(method 62 ocean)": [
+    [
+      [
+        4,
+        179
+      ],
+      "s3",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 61 ocean)": [
+    [
+      [
+        3,
+        240
+      ],
+      "gp",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 60 ocean)": [
+    [
+      [
+        3,
+        234
+      ],
+      "gp",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 59 ocean)": [
+    [
+      [
+        3,
+        234
+      ],
+      "gp",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 58 ocean)": [
+    [
+      [
+        3,
+        228
+      ],
+      "gp",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 57 ocean)": [
+    [
+      [
+        3,
+        200
+      ],
+      "s4",
+      "(inline-array ocean-vertex)"
+    ],
+    [
+      48,
+      "f1",
+      "float"
+    ],
+    [
+      144,
+      "f1",
+      "float"
+    ]
+  ],
+  "(method 55 ocean)": [
+    [
+      48,
+      "f1",
+      "float"
+    ],
+    [
+      141,
+      "f1",
+      "float"
+    ],
+    [
+      [
+        3,
+        194
+      ],
+      "s4",
+      "(inline-array ocean-vertex)"
+    ]
+  ],
+  "(method 63 ocean)": [
+    [
+      [
+        237,
+        244
+      ],
+      "s3",
+      "dma-packet"
+    ]
+  ],
+  "(method 13 ocean)": [
+    [
+      [
+        57,
+        62
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        113,
+        117
+      ],
+      "v1",
+      "dma-packet"
+    ],
+    [
+      [
+        193,
+        197
+      ],
+      "v1",
+      "dma-packet"
+    ],
+    [
+      [
+        67,
+        71
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        74,
+        86
+      ],
+      "a1",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        145,
+        150
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        155,
+        158
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        162,
+        174
+      ],
+      "a1",
+      "(pointer uint64)"
+    ]
   ]
 }
