@@ -1059,6 +1059,32 @@
       "(function debug-menu debug-menu symbol)"
     ]
   ],
+  "main": [
+    [
+      17,
+      "(function int none)"
+    ],
+    [
+      15,
+      "(function none)"
+    ],
+    [
+      14,
+      "(function none)"
+    ],
+    [
+      13,
+      "(function none)"
+    ],
+    [
+      5,
+      "(function process-tree symbol)"
+    ],
+    [
+      3,
+      "(function symbol :behavior process)"
+    ]
+  ],
   "memory-usage": [
     [
       2,

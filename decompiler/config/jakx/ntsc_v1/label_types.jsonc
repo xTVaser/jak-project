@@ -4224,5 +4224,51 @@
       "uint64",
       true
     ]
+  ],
+  "texture-anim-tables": [
+    [
+      "L163",
+      "uint64",
+      true
+    ],
+    [
+      "L152",
+      "uint64",
+      true
+    ],
+    [
+      "L151",
+      "uint64",
+      true
+    ],
+    [
+      "L150",
+      "uint64",
+      true
+    ]
+  ],
+  "main": [
+    [
+      "L564",
+      "(pointer time-frame)",
+      2
+    ]
+  ],
+  "net-mgr-muis": [
+    [
+      "L83",
+      "(pointer int32)",
+      32
+    ],
+    [
+      "L82",
+      "(pointer int32)",
+      32
+    ],
+    [
+      "L81",
+      "(pointer int32)",
+      32
+    ]
   ]
 }

@@ -19,6 +19,9 @@
   (ff7 7)
   (ff8 8)
   (ff9 9)
+  (ff10 10)
+  (ff11 11)
+  (ff12 12)
   )
 ;; ---font-flags
 
@@ -71,6 +74,13 @@
   (font-color-42 42)
   (font-color-43 43)
   (font-color-44 44)
+  (font-color-45 45)
+  (font-color-46 46)
+  (font-color-47 47)
+  (font-color-48 48)
+  (font-color-49 49)
+  (font-color-50 50)
+  (font-color-51 51)
   )
 ;; ---font-color
 

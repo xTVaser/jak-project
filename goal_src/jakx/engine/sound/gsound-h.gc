@@ -100,6 +100,45 @@
 ;; ---sound-command
 
 
+;; +++sound-group
+(defenum sound-group
+  :bitfield #t
+  :type uint8
+  (sfx)
+  (music)
+  (dialog) ;; same as jak 1 dialog
+  (sog3)
+  (ambient)
+  (dialog2) ;; more dialog
+  (special)
+  (sog7)
+  (sog8)
+  (sog9)
+  (sog10)
+  (sog11)
+  (sog12)
+  (sog13)
+  (sog14)
+  (sog15)
+  (sog16)
+  (sog17)
+  (sog18)
+  (sog19)
+  (sog20)
+  (sog21)
+  (sog22)
+  (sog23)
+  (sog24)
+  (sog25)
+  (sog26)
+  (sog27)
+  (sog28)
+  (sog29)
+  (sog30)
+  (sog31)
+  )
+;; ---sound-group
+
 ;; DECOMP BEGINS
 
 (define *debug-sound-sliders* #f)

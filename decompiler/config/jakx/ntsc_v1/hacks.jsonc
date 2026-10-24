@@ -64,6 +64,7 @@
     "(method 4 pair)",
     "last",
     "member",
+    "display-loop-main",
     "nmember",
     "cspace-inspect-tree",
     "assoc",

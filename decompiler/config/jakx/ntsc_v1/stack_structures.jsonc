@@ -1494,7 +1494,7 @@
   "(method 71 construction-object)": [
     [
       80,
-      "collide-query"
+      "cquery-with-pad"
     ]
   ],
   "(method 18 ragdoll)": [
@@ -1770,6 +1770,34 @@
   "(method 13 ocean)": [
     [
       16,
+      "vector"
+    ]
+  ],
+  "update-camera": [
+    [
+      16,
+      "camera-free-floating-move-info"
+    ]
+  ],
+  "(method 92 construction-object)": [
+    [
+      16,
+      "sprite-glow-data"
+    ]
+  ],
+  "(code getting-universe-information net-mgr)": [
+    [
+      16,
+      "medius-server-world-status-response"
+    ]
+  ],
+  "camera-slave-debug": [
+    [
+      48,
+      "matrix"
+    ],
+    [
+      144,
       "vector"
     ]
   ]
