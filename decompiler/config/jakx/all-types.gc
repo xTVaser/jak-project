@@ -41399,7 +41399,7 @@
     (reset-recording! (_type_) none) ;; 9
     (reset-targets! (_type_) none) ;; 10
     (rb-debugger-method-11 (_type_ int) int) ;; 11
-    (rb-debugger-method-12 (_type_ int) none) ;; 12
+    (rb-debugger-method-12 (_type_ int) int) ;; 12
     (get-record-count (_type_) int) ;; 13
     (append-target-process! (_type_ process) none) ;; 14
     (insert-target-process! (_type_ int process) none) ;; 15
