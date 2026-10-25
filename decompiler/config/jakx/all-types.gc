@@ -875,7 +875,7 @@
   :flag-assert #x900000010
   )
 
-(define-extern *sql-result* sql-result)
+(define-extern *collapse-quote* symbol)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; gkernel                        ;;
@@ -17359,7 +17359,7 @@
     (setting-control-method-9 () none) ;; 9 ;; (add-setting (_type_ process symbol object object object) connection)
     (setting-control-method-10 () none) ;; 10 ;; (persist-with-delay (_type_ symbol time-frame symbol symbol float int) none)
     (setting-control-method-11 (_type_ int process symbol symbol vector int) none) ;; 11 ;; (set-setting (_type_ process symbol object object object) connection)
-    (setting-control-method-12 () none) ;; 12 ;; (remove-setting (_type_ process symbol) none)
+    (setting-control-method-12 (_type_ int process symbol) none) ;; 12 ;; (remove-setting (_type_ process symbol) none)
     (setting-control-method-13 (_type_ process symbol object object object) none) ;; 13 ;; (kill-persister (_type_ engine-pers object) none)
     (setting-control-method-14 (_type_ symbol int symbol symbol float int) none) ;; 14 ;; (setting-control-method-14 (_type_ object) connectable)
     (setting-control-method-15 (_type_ process symbol symbol int int) none) ;; 15 ;; (get-setting (_type_ object) connectable)
@@ -28534,26 +28534,26 @@
     getting-universe-information
     (dns-lookup net-mgr-game-state) ;; guess, need to decomp `get-host-by-name`
     net-mgr-state-3
+    net-mgr-state-4
+    net-mgr-state-5
+    net-mgr-state-6
+    net-mgr-state-7
+    net-mgr-state-8
+    net-mgr-state-9
+    net-mgr-state-10
+    net-mgr-state-11
+    net-mgr-state-12
+    net-mgr-state-13
+    net-mgr-state-14
+    net-mgr-state-15
+    net-mgr-state-16
+    net-mgr-state-17
+    net-mgr-state-18
+    net-mgr-state-19
+    starting-playback-game
+    playing-playback-game
     ) 
   (:methods
-    (net-mgr-method-20 () none) ;; 20
-    (net-mgr-method-21 () none) ;; 21
-    (net-mgr-method-22 () none) ;; 22
-    (net-mgr-method-23 () none) ;; 23
-    (net-mgr-method-24 () none) ;; 24
-    (net-mgr-method-25 () none) ;; 25
-    (net-mgr-method-26 () none) ;; 26
-    (net-mgr-method-27 () none) ;; 27
-    (net-mgr-method-28 () none) ;; 28
-    (net-mgr-method-29 () none) ;; 29
-    (net-mgr-method-30 () none) ;; 30
-    (net-mgr-method-31 () none) ;; 31
-    (net-mgr-method-32 () none) ;; 32
-    (net-mgr-method-33 () none) ;; 33
-    (net-mgr-method-34 () none) ;; 34
-    (net-mgr-method-35 () none) ;; 35
-    (net-mgr-method-36 () none) ;; 36
-    (net-mgr-method-37 () none) ;; 37
     (net-mgr-method-38 () none) ;; 38
     (net-mgr-method-39 () none) ;; 39
     (net-mgr-method-40 () none) ;; 40
@@ -32064,7 +32064,6 @@
 
    (unknown-bsp-3 uint8 2 :offset 344)
    (unknown-bsp-4 uint8 2 :offset 340)
-
 
    (end uint8 :offset #x18f)
    )
@@ -40294,8 +40293,8 @@
 ;; (define-extern key-assoc function) ;; (function object pair vector4w pair)
 ;; (define-extern *script-form* object) ;; (inline-array script-form)
 ;; (define-extern level-from-heap function) ;; (function int level)
-;; (define-extern *syntax-context* object) ;; script-context
-;; (define-extern *script-context* object) ;; script-context
+(define-extern *syntax-context* script-context) ;; 
+(define-extern *script-context* script-context) ;; script-context
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic-obs                    ;;
@@ -41369,8 +41368,8 @@
   :size-assert         #x160
   :flag-assert         #xb00000160
   (:methods
-    (rb-debug-state-record-method-9 () none) ;; 9
-    (rb-debug-state-record-method-10 () none) ;; 10
+    (rb-debug-state-record-method-9 (_type_) none) ;; 9
+    (rb-debug-state-record-method-10 (_type_) none) ;; 10
     )
   )
 
@@ -41396,18 +41395,19 @@
   :size-assert         #x170
   :flag-assert         #x1500000170
   (:methods
-    (rb-debugger-method-9 () none) ;; 9
-    (rb-debugger-method-10 () none) ;; 10
-    (rb-debugger-method-11 () none) ;; 11
-    (rb-debugger-method-12 () none) ;; 12
-    (rb-debugger-method-13 () none) ;; 13
-    (rb-debugger-method-14 () none) ;; 14
-    (rb-debugger-method-15 () none) ;; 15
-    (rb-debugger-method-16 () none) ;; 16
-    (rb-debugger-method-17 () none) ;; 17
-    (rb-debugger-method-18 () none) ;; 18
-    (rb-debugger-method-19 () none) ;; 19
-    (rb-debugger-method-20 () none) ;; 20
+    (new (symbol type int) _type_) ;; 0
+    (reset-recording! (_type_) none) ;; 9
+    (reset-targets! (_type_) none) ;; 10
+    (rb-debugger-method-11 (_type_ int) int) ;; 11
+    (rb-debugger-method-12 (_type_ int) none) ;; 12
+    (get-record-count (_type_) int) ;; 13
+    (append-target-process! (_type_ process) none) ;; 14
+    (insert-target-process! (_type_ int process) none) ;; 15
+    (rb-debugger-method-16 (_type_ string) none) ;; 16
+    (handle-user-input (_type_) none) ;; 17
+    (rb-debugger-method-18 (_type_ process-drawable) none) ;; 18
+    (rb-debugger-method-19 (_type_ process-drawable) none) ;; 19
+    (rb-debugger-method-20 (_type_) none) ;; 20
     )
   )
 
@@ -41656,7 +41656,7 @@
 
 (define-extern sphere-cull (function vector symbol)) ;; 
 ;; (define-extern guard-band-cull function) ;; (function vector symbol)
-;; (define-extern sphere-in-view-frustum? function) ;; (function sphere symbol)
+(define-extern sphere-in-view-frustum? (function sphere symbol)) ;; 
 ;; (define-extern line-in-view-frustum? function) ;; (function vector vector symbol)
 ;; (define-extern sphere-in-view-frustum-any? function)
 ;; (define-extern line-in-view-frustum-any? function)
@@ -47952,7 +47952,7 @@
 ;; (define-extern get-top-chat-msg function)
 ;; (define-extern add-raw-popup-msg function)
 ;; (define-extern *magic-chat* array)
-;; (define-extern handle-chat-msg function)
+(define-extern handle-chat-msg (function object symbol none))
 ;; (define-extern fake-chat-msg function)
 ;; (define-extern send-chat-with-clan-id function)
 ;; (define-extern send-chat-with-game-id function)
@@ -47965,8 +47965,8 @@
 ;; net-mgr-sysmsg                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *sys-msg-cheat* object)
-;; (define-extern handle-sys-msg function)
+(define-extern *sys-msg-cheat* (pointer int32)) ;; 256
+(define-extern handle-sys-msg (function net-type-system-message-data none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; net-mgr                        ;;
@@ -48037,7 +48037,7 @@
 ;; (define-extern do-net-app-msg-callback function)
 ;; (define-extern net-app-msg-callback function)
 ;; (define-extern lan-game-find-callback function)
-;; (define-extern net-sys-msg-callback function)
+(define-extern net-sys-msg-callback (function net-type-system-message-data none))
 ;; (define-extern kick-machines function)
 ;; (define-extern write-init-complete-msg function)
 ;; (define-extern handle-machine-connect function)
@@ -48323,27 +48323,25 @@
 ;; net-mgr-medius-rooms           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype medius-room (structure)
   ((id            int32      :offset-assert 0)
-   (name          UNKNOWN 32 :offset-assert 4)
+   (name          uint8  32 :offset-assert 4)
    (player-ct     int32      :offset-assert 36)
    (max-players   int32      :offset-assert 40)
    (game-world-ct int32      :offset-assert 44)
    )
+  :pack-me
   :method-count-assert 9
   :size-assert         #x30
   :flag-assert         #x900000030
   )
-|#
 
-#|
 (deftype medius-room-array (structure)
   ((total-ct    int32     :offset-assert 0)
    (base-page   int32     :offset-assert 4)
    (total-pages int32     :offset-assert 8)
    (ct          int32     :offset-assert 12)
-   (data        UNKNOWN 5 :offset-assert 16)
+   (data        medius-room 5 :inline :offset-assert 16)
    )
   :method-count-assert 11
   :size-assert         #x100
@@ -48353,16 +48351,15 @@
     (medius-room-array-method-10 () none) ;; 10
     )
   )
-|#
 
-;; (define-extern *current-room-name* object)
-;; (define-extern *room-clan-id* object)
-;; (define-extern *room-clan-id-2* object)
-;; (define-extern *medius-rooms* object)
-;; (define-extern *last-normal-room* object)
+(define-extern *current-room-name* (pointer uint8)) ;; 128
+(define-extern *room-clan-id* int)
+(define-extern *room-clan-id-2* int)
+(define-extern *medius-rooms* medius-room-array)
+(define-extern *last-normal-room* int)
 ;; (define-extern refresh-rooms-callback function)
 ;; (define-extern refresh-rooms function)
-;; (define-extern *tmp-clan-string* object)
+(define-extern *tmp-clan-string* string)
 ;; (define-extern join-room function)
 ;; (define-extern room-players-refreshing-callback function)
 ;; (define-extern get-players-in-room function)
@@ -48371,7 +48368,7 @@
 ;; (define-extern create-room function)
 ;; (define-extern find-room-by-name function)
 ;; (define-extern ensure-room-is-good function)
-;; (define-extern test-rooms function)
+(define-extern test-rooms (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; net-mgr-medius-games           ;;
@@ -48519,19 +48516,19 @@
 ;; net-mgr-playback               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *playback-stream* file-stream)
-;; (define-extern *playback-name* object)
-;; (define-extern *playback-start-time* object)
-;; (define-extern *playback-log-start-time* object)
-;; (define-extern *playback-buf-mem* object)
-;; (define-extern *playback-buf* object)
-;; (define-extern *playback-next-event-time* object)
-;; (define-extern *playback-time* object)
-;; (define-extern *playback-bytes-left* object)
-;; (define-extern *playback-machine* object)
-;; (define-extern *playback-delay* object)
-;; (define-extern *playback-event-header* object)
-;; (define-extern read-event-header function)
+(define-extern *playback-stream* file-stream)
+(define-extern *playback-name* string)
+(define-extern *playback-start-time* int)
+(define-extern *playback-log-start-time* int)
+(define-extern *playback-buf-mem* (pointer uint32)) ;; 128
+(define-extern *playback-buf* mem-buffer) ;; 4 - some structure that has uint8:0
+(define-extern *playback-next-event-time* int)
+(define-extern *playback-time* int)
+(define-extern *playback-bytes-left* int)
+(define-extern *playback-machine* int)
+(define-extern *playback-delay* int)
+(define-extern *playback-event-header* net-log-event-header) ;; 4
+(define-extern read-event-header (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; net-colarb                     ;;
@@ -48766,8 +48763,8 @@
 ;; (define-extern net-process-mgr-init-by-other function)
 ;; (define-extern spawn-net-entity function)
 ;; (define-extern *net-process-table* array)
-;; (define-extern net-process-mgr-start function)
-;; (define-extern net-process-mgr-stop function)
+(define-extern net-process-mgr-start (function none))
+(define-extern net-process-mgr-stop (function none))
 ;; (define-extern net-process-mgr-handle-aux-msg-recv-end function)
 ;; (define-extern net-process-mgr-handle-aux-msg-recv-end-ack function)
 ;; (define-extern net-process-mgr-handle-aux-msg-spawn-entities function)
@@ -48828,6 +48825,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; capture                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-extern knet-dopen (function string object))
 
 (define-extern gs-set-default-store-image (function gs-store-image-packet int int gs-psm int int int int int)) ;; 
 (define-extern *capture-tga-temp* int)
@@ -49190,7 +49189,7 @@
 ;; (define-extern *lock-stream* file-stream)
 ;; (define-extern *lock-name* object)
 ;; (define-extern *net-log-stream* file-stream)
-;; (define-extern *net-log-name* object)
+(define-extern *net-log-name* string)
 ;; (define-extern *net-ip-string* object)
 ;; (define-extern *net-log-buf-mem* object)
 ;; (define-extern *net-log-buf* object)
@@ -49448,7 +49447,7 @@
 ;; rigid-body-debug               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern adjust-playback-index function)
+(define-extern adjust-playback-index (function rb-debugger int none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; rigid-body-surface             ;;
@@ -50963,6 +50962,7 @@
   :type uint32
   (manip-mode0 0)
   (manip-mode1 1)
+  (manip-mode2 2)
 )
 ;; ---manipulator:manipulator-mode
 
@@ -51103,6 +51103,7 @@
   )
 ;; ---editable-h:editable-filter
 
+(declare-type editable-array basic)
 (deftype editable-region (basic)
   ((changed   symbol           :offset-assert 4) ;; guessed by decompiler
    (locked    symbol           :offset-assert 8) ;; guessed by decompiler
@@ -51120,10 +51121,10 @@
   ;; field on-enter uses ~A with a signed load. field on-inside uses ~A with a signed load. field on-exit uses ~A with a signed load.
   (:methods
     (new (symbol type) _type_) ;; 0 ;; (new (symbol type) _type_)
-    (editable-region-method-9 () none) ;; 9 ;; (save-region! (_type_ editable-array int int) symbol)
-    (editable-region-method-10 () none) ;; 10 ;; (editable-region-method-10 (_type_ int) symbol)
-    (editable-region-method-11 () none) ;; 11 ;; (print-region-info (_type_ vector int) none)
-    (editable-region-method-12 () none) ;; 12 ;; (editable-region-method-12 (_type_) editable-filter)
+    (save-region! (_type_ editable-array int int) symbol)
+    (editable-region-method-10 (_type_ int) symbol)
+    (print-region-info (_type_ vector int) none)
+    (editable-region-method-12 (_type_) editable-filter)
     )
   )
 
@@ -51159,33 +51160,33 @@
   :size-assert         #x1c
   :flag-assert         #x240000001c
   (:methods
-    (editable-method-9 () none) ;; 9 ;; (get-color (_type_) rgba)
-    (editable-method-10 () none) ;; 10 ;; (editable-method-10 (_type_) none)
-    (editable-method-11 () none) ;; 11 ;; (editable-method-11 (_type_ vector) symbol)
-    (editable-method-12 () none) ;; 12 ;; (set-selected! (_type_ symbol) none)
-    (editable-method-13 () none) ;; 13 ;; (editable-method-13 (_type_ vector) float)
-    (editable-method-14 () none) ;; 14 ;; (editable-method-14 (_type_ vector vector) float)
-    (editable-method-15 () none) ;; 15 ;; (editable-method-15 (_type_) vector)
-    (editable-method-16 () none) ;; 16 ;; (editable-method-16 (_type_) float)
-    (editable-method-17 () none) ;; 17 ;; (editable-method-17 (_type_ vector editable-flag) none)
-    (editable-method-18 () none) ;; 18 ;; (editable-method-18 (_type_ vector int) none)
-    (editable-method-19 () none) ;; 19 ;; (editable-method-19 (_type_ vector) none)
-    (editable-method-20 () none) ;; 20 ;; (editable-method-20 (_type_ vector matrix) none)
-    (editable-method-21 () none) ;; 21 ;; (editable-method-21 (_type_ vector) none)
-    (editable-method-22 () none) ;; 22 ;; (editable-method-22 (_type_ vector vector vector vector) none)
-    (editable-method-23 () none) ;; 23 ;; (change-region! (_type_ editable-region) none)
-    (editable-method-24 () none) ;; 24 ;; (editable-method-24 (_type_ editable-array int int) symbol)
-    (editable-method-25 () none) ;; 25 ;; (editable-method-25 (_type_) symbol)
-    (editable-method-26 () none) ;; 26 ;; (editable-method-26 (_type_) none)
-    (editable-method-27 () none) ;; 27 ;; (delete! (_type_ editable) none)
-    (editable-method-28 () none) ;; 28 ;; (editable-method-28 (_type_ editable editable) none)
-    (editable-method-29 () none) ;; 29 ;; (copy-into-editable-array! (_type_ editable-array) editable)
-    (editable-method-30 () none) ;; 30 ;; (editable-method-30 (_type_ editable-flag) none)
-    (editable-method-31 () none) ;; 31 ;; (editable-method-31 (_type_ editable-flag) none)
-    (editable-method-32 () none) ;; 32 ;; (get-null-vec (_type_) vector)
-    (editable-method-33 () none) ;; 33 ;; (get-null-vec2 (_type_ vector) vector)
-    (editable-method-34 () none) ;; 34 ;; (get-level-offset (_type_ editable-array) vector)
-    (editable-method-35 () none) ;; 35 ;; (editable-method-35 (_type_ vector) none)
+    (get-color (_type_) rgba)
+    (editable-method-10 (_type_) none)
+    (editable-method-11 (_type_ vector) symbol)
+    (set-selected! (_type_ symbol) none)
+    (editable-method-13 (_type_ vector) float)
+    (editable-method-14 (_type_ vector vector) float)
+    (editable-method-15 (_type_) vector)
+    (editable-method-16 (_type_) float)
+    (editable-method-17 (_type_ vector editable-flag) none)
+    (editable-method-18 (_type_ vector int) none)
+    (editable-method-19 (_type_ vector) none)
+    (editable-method-20 (_type_ vector matrix) none)
+    (editable-method-21 (_type_ vector) none)
+    (editable-method-22 (_type_ vector vector vector vector) none)
+    (change-region! (_type_ editable-region) none)
+    (editable-method-24 (_type_ editable-array int int) symbol)
+    (editable-method-25 (_type_) symbol)
+    (editable-method-26 (_type_) none)
+    (delete! (_type_ editable) none)
+    (editable-method-28 (_type_ editable editable) none)
+    (copy-into-editable-array! (_type_ editable-array) editable)
+    (editable-method-30 (_type_ editable-flag) none)
+    (editable-method-31 (_type_ editable-flag) none)
+    (get-null-vec (_type_) vector)
+    (get-null-vec2 (_type_ vector) vector)
+    (get-level-offset (_type_ editable-array) vector)
+    (editable-method-35 (_type_ vector) none)
     )
   )
 
@@ -51219,17 +51220,17 @@
   :flag-assert         #x140000007c
   (:methods
     (new (symbol type int) _type_)
-    (editable-array-method-9 () none) ;; 9 ;; (handle-cmd (_type_ editable-command mouse-info object) symbol)
-    (editable-array-method-10 () none) ;; 10 ;; (editable-array-method-10 (_type_ vector int) editable)
-    (editable-array-method-11 () none) ;; 11 ;; (editable-array-method-11 (_type_ vector vector int) none)
-    (editable-array-method-12 () none) ;; 12 ;; (get-length (_type_) int)
-    (editable-array-method-13 () none) ;; 13 ;; (editable-array-method-13 (_type_ symbol) symbol)
-    (editable-array-method-14 () none) ;; 14 ;; (editable-array-method-14 (_type_ editable-command editable-command string) none)
-    (editable-array-method-15 () none) ;; 15 ;; (editable-array-method-15 (_type_ (function editable editable-region symbol) editable-region) (array editable))
-    (editable-array-method-16 () none) ;; 16 ;; (editable-array-method-16 (_type_ editable) none)
-    (editable-array-method-17 () none) ;; 17 ;; (editable-array-method-17 (_type_) none)
-    (editable-array-method-18 () none) ;; 18 ;; (editable-array-method-18 (_type_ vector vector) vector)
-    (editable-array-method-19 () none) ;; 19 ;; (editable-array-method-19 (_type_ string) symbol)
+    (handle-cmd (_type_ editable-command mouse-info object) symbol)
+    (editable-array-method-10 (_type_ vector int) editable)
+    (editable-array-method-11 (_type_ vector vector int) none)
+    (get-length (_type_) int)
+    (editable-array-method-13 (_type_ symbol) symbol)
+    (set-target-fields! (_type_ editable-command editable-command string) none)
+    (editable-array-method-15 (_type_ (function editable editable-region symbol) editable-region) (array editable))
+    (editable-array-method-16 (_type_ editable) none)
+    (editable-array-method-17 (_type_) none)
+    (editable-array-method-18 (_type_ vector vector) vector)
+    (editable-array-method-19 (_type_ string) symbol)
     )
   )
 
@@ -51295,7 +51296,8 @@
   :flag-assert         #x2500000044
   (:methods
     (new (symbol type vector float editable-region) _type_)
-    (editable-entity-method-36 () none) ;; 36 ;; (editable-entity-method-36 (_type_) none)
+    (editable-entity-method-36 (_type_) none)
+    (copy-into-editable-array! (_type_ editable-array) editable-entity :replace)
     )
   )
 
@@ -51305,15 +51307,15 @@
    (normal  vector          :inline :offset-assert 32)
    (center  vector          :inline :offset-assert 48)
    (vertex  editable-point  6       :offset-assert 64) ;; guessed by decompiler
-  ;;  (UNKNOWN UNKNOWN                 :offset-assert -1) ;; field could not be read.
    )
   :method-count-assert 38
   :size-assert         #x58
   :flag-assert         #x2600000058
   (:methods
     (new (symbol type editable-region) _type_)
-    (editable-face-method-36 () none) ;; 36 ;; (editable-face-method-36 (_type_ (inline-array vector)) int)
-    (editable-face-method-37 () none) ;; 37 ;; (editable-face-method-37 (_type_ vector) vector)
+    (editable-face-method-36 (_type_ (inline-array vector)) int)
+    (editable-face-method-37 (_type_ vector) vector)
+    (copy-into-editable-array! (_type_ editable-array) editable-face :replace)
     )
   )
 
@@ -51322,15 +51324,15 @@
    (length  int32             :offset-assert 28)
    (radius  meters            :offset-assert 32)
    (vertex  editable-point  2 :offset-assert 36) ;; guessed by decompiler
-  ;;  (UNKNOWN UNKNOWN           :offset-assert -1) ;; field could not be read.
    )
   :method-count-assert 38
   :size-assert         #x2c
   :flag-assert         #x260000002c
   (:methods
     (new (symbol type editable-region) _type_)
-    (editable-plane-method-36 () none) ;; 36 ;; (editable-plane-method-36 (_type_ (inline-array vector)) int)
-    (editable-plane-method-37 () none) ;; 37 ;; (editable-plane-method-37 (_type_ vector) vector)
+    (editable-plane-method-36 (_type_ (inline-array vector)) int)
+    (editable-plane-method-37 (_type_ vector) vector)
+    (copy-into-editable-array! (_type_ editable-array) editable-plane :replace)
     )
   )
 
@@ -51360,11 +51362,12 @@
   :method-count-assert 54
   :size-assert         #x264
   :flag-assert         #x3601e00264
+  (:state-methods
+    idle)
   (:methods
-    (editable-player-method-50 () none) ;; 50
-    (editable-player-method-51 () none) ;; 51
-    (editable-player-method-52 () none) ;; 52
-    (editable-player-method-53 () none) ;; 53
+    (editable-player-method-21 (_type_) none) ;; 21 ;; (editable-player-method-21 (_type_) none)
+    (editable-player-method-22 (_type_) none) ;; 22
+    (editable-player-method-23 (_type_) symbol) ;; 23
     )
   )
 
@@ -51393,44 +51396,44 @@
 ;; editable                       ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern common-owner function) ;; (function editable editable object)
-;; (define-extern update-light-sphere-from-editable-light function) ;; (function editable-light object)
-;; (define-extern load-editable-lights function) ;; (function editable-array symbol)
-;; (define-extern *editable-sample-region* object) ;; editable-region
-;; (define-extern *editable-light-region* object) ;; editable-region
-;; (define-extern *editable-entity-region* object) ;; editable-region
+(define-extern common-owner (function editable editable object))
+(define-extern update-light-sphere-from-editable-light (function editable-light object))
+(define-extern load-editable-lights (function editable-array symbol))
+(define-extern *editable-sample-region* editable-region)
+(define-extern *editable-light-region* editable-region)
+(define-extern *editable-entity-region* editable-region)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; editable-player                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern cleanup-selection function) ;; (function editable-array object)
-;; (define-extern insert-box function) ;; (function editable-array vector vector object)
-;; (define-extern insert-wall function) ;; (function editable-array vector vector object)
-;; (define-extern update-manipulator-position function) ;; (function editable-array manipulator matrix)
-;; (define-extern execute-select function) ;; (function editable-array editable-command mouse-info manipulator symbol)
-;; (define-extern execute-mouse-move function) ;; (function editable-array editable-command mouse-info manipulator symbol)
-;; (define-extern execute-move function) ;; (function editable-array editable-command mouse-info manipulator symbol)
-;; (define-extern get-light-value function) ;; (function uint float)
-;; (define-extern set-light-value function) ;; (function int float object)
-;; (define-extern keybd-set-time-of-day! function) ;; (function int time-of-day-palette-id object)
-;; (define-extern lookup-bsp-by-name function)
+(define-extern cleanup-selection (function editable-array object))
+(define-extern insert-box (function editable-array vector vector object))
+(define-extern insert-wall (function editable-array vector vector object))
+(define-extern update-manipulator-position (function editable-array manipulator matrix))
+(define-extern execute-select (function editable-array editable-command mouse-info manipulator symbol))
+(define-extern execute-mouse-move (function editable-array editable-command mouse-info manipulator symbol))
+(define-extern execute-move (function editable-array editable-command mouse-info manipulator symbol))
+(define-extern get-light-value (function uint float))
+(define-extern set-light-value (function int float object))
+(define-extern keybd-set-time-of-day! (function int time-of-day-palette-id object))
+(define-extern lookup-bsp-by-name (function level-group symbol level))
 (define-extern editable-player-init (function symbol none :behavior editable-player)) ;; 
-;; (define-extern set-editable-name function) ;; (function string object)
-;; (define-extern select-editable-by-name function) ;; (function string object)
+(define-extern set-editable-name (function string object))
+(define-extern select-editable-by-name (function string object))
 (define-extern *editable-menu-context* debug-menu-context) ;; 
-;; (define-extern editable-menu-command function) ;; (function int object)
-;; (define-extern editable-menu-command-no-close function) ;; (function int object)
-;; (define-extern dm-region-tree-pick-func function) ;; (function symbol debug-menu-msg symbol)
-;; (define-extern dm-editable-flag-pick-func function) ;; (function editable-flag debug-menu-msg symbol)
-;; (define-extern dm-editable-filter0-pick-func function) ;; (function editable-filter debug-menu-msg symbol)
-;; (define-extern dm-editable-filter1-pick-func function) ;; (function editable-filter debug-menu-msg symbol)
-;; (define-extern dm-editable-light-float-func function) ;; (function int debug-menu-msg float float float)
-;; (define-extern dm-cam-externalize2 function) ;; (function symbol debug-menu-msg symbol)
-;; (define-extern dm-editable-boolean-toggle-pick-func function) ;; (function int debug-menu-msg symbol)
-;; (define-extern editable-menu-context-make-menus function) ;; (function debug-menu-context debug-menu-context)
-;; (define-extern insert-sample-camera function) ;; (function symbol object)
-;; (define-extern *debug-hook* object) ;; pair
+(define-extern editable-menu-command (function int object))
+(define-extern editable-menu-command-no-close (function int object))
+(define-extern dm-region-tree-pick-func (function symbol debug-menu-msg symbol))
+(define-extern dm-editable-flag-pick-func (function editable-flag debug-menu-msg symbol))
+(define-extern dm-editable-filter0-pick-func (function editable-filter debug-menu-msg symbol))
+(define-extern dm-editable-filter1-pick-func (function editable-filter debug-menu-msg symbol))
+(define-extern dm-editable-light-float-func (function int debug-menu-msg float float float))
+(define-extern dm-cam-externalize2 (function symbol debug-menu-msg symbol))
+(define-extern dm-editable-boolean-toggle-pick-func (function int debug-menu-msg symbol))
+(define-extern editable-menu-context-make-menus (function debug-menu-context debug-menu-context))
+(define-extern insert-sample-camera (function symbol object))
+(define-extern *debug-hook* pair)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; mysql-nav-graph                ;;
