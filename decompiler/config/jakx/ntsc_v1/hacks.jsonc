@@ -85,7 +85,9 @@
     "~0knodes    = ~d~256hnodes/call   = ~f~%": 2
   },
   "blocks_ending_in_asm_branch": {
+    "(method 26 grid-hash)": [39, 35, 22, 15],
     "(method 16 collide-shape-prim-sphere)": [1, 2],
+    "(method 17 nav-mesh-editable)": [0, 1, 2, 7, 9, 24, 28, 33],
     "load-game-text-info": [20, 21, 22, 24, 25, 26],
     "(method 18 mysql-nav-graph)": [0, 1, 2, 3, 4, 7, 9],
     "dm-play-task-with-continue": [0, 1, 2, 3, 4, 6],
@@ -130,7 +132,9 @@
     "(method 22 collide-cache)": [11, 12, 27, 28],
     "get-host-by-name": [13]
   },
-  "dynamic_format_arg_counts": {},
+  "dynamic_format_arg_counts": {
+    "(trans idle nav-mesh-editor)": [[525, 0]]
+  },
   "mips2c_functions_by_name": [
     "collide-do-primitives",
     "moving-sphere-triangle-intersect",
@@ -171,20 +175,20 @@
     "render-ocean-quad",
     "init-ocean-far-regs",
     "(method 15 ocean)",
-    "(method 19 grid-hash)",
     "(method 20 grid-hash)",
+    "(method 21 grid-hash)",
     "(method 22 grid-hash)",
-    "(method 28 sphere-hash)",
+    "(method 24 grid-hash)",
+    "(method 35 sphere-hash)", // yes
+    "(method 31 sphere-hash)", // yes
+    "(method 34 sphere-hash)", // yes
+    "(method 35 spatial-hash)", // yes
+    "(method 40 spatial-hash)", // yes
+    "(method 38 spatial-hash)", // yes
+    "(method 34 spatial-hash)", // yes
     "(method 32 sphere-hash)",
-    "(method 31 sphere-hash)",
-    "(method 34 sphere-hash)",
     "(method 30 sphere-hash)",
     "(method 37 spatial-hash)",
-    "(method 34 spatial-hash)",
-    "(method 38 spatial-hash)",
-    // "(method 32 spatial-hash)",
-    // "(method 35 spatial-hash)",
-    // "(method 36 spatial-hash)",
     "(method 10 collide-shape-prim-mesh)",
     "(method 10 collide-shape-prim-sphere)",
     "(method 10 collide-shape-prim-group)",

@@ -1117,7 +1117,11 @@
     [[37, 51], "a0", "dma-packet"],
     [[63, 71], "a0", "dma-packet"],
     [[73, 80], "a0", "dma-packet"],
-    [[91, 98], "v1", "(pointer vif-tag)"]
+    [[84, 91], "a0", "vector"],
+    [[92, 100], "a0", "(pointer vif-tag)"],
+    [[110, 115], "a1", "dma-packet"],
+    [[120, 124], "a1", "(pointer uint64)"],
+    [[129, 139], "a0", "(pointer uint64)"]
   ],
   "(event cam-combiner-active)": [
     [103, "gp", "camera-slave"],
@@ -1208,8 +1212,19 @@
     [62, "s5", "collide-mesh-tri"]
   ],
   "lightning-draw": [
+    ["_stack_", 20, "(inline-array gcf-vertex)"],
+    ["_stack_", 176, "gcf-control"],
+    [437, "a1", "(pointer uint128)"],
+    [438, "a0", "(pointer uint128)"],
+    [439, "a1", "(pointer uint128)"],
+    [440, "a0", "(pointer uint128)"],
+    [441, "a1", "pointer"],
+    [442, "a0", "pointer"],
     [442, "v1", "(inline-array vector)"],
-    [425, "v1", "vector"]
+    [425, "v1", "vector"],
+    [[471, 486], "a0", "dma-packet"],
+    [[560, 577], "a0", "dma-packet"],
+    [[598, 603], "a0", "dma-packet"]
   ],
   "target-generic-event-handler": [
     [298, "v1", "(state object object object object target)"],
@@ -1317,16 +1332,16 @@
     [73, "s0", "protect-frame"],
     [106, "t9", "(function object object object object object object none)"]
   ],
+  "clmf-cam-string": [["_stack_", 16, "res-tag"]],
   "cam-layout-do-menu": [
-    [[280, 363], "s4", "clm-list"],
-    [374, "v1", "clm-item"],
-    [[136, 182], "s3", "clm-list"],
-    [209, "a0", "clm-item"],
-    [219, "v1", "clm-item"],
-    [234, "s3", "clm-item"],
-    [239, "v1", "clm-item"],
-    [244, "s3", "clm-item"],
-    [272, "s4", "clm-item"]
+    [[272, 355], "s4", "clm-list"],
+    [366, "v1", "clm-item"],
+    [[128, 174], "s3", "clm-list"],
+    [201, "a0", "clm-item"],
+    [211, "v1", "clm-item"],
+    [226, "s3", "clm-item"],
+    [231, "v1", "clm-item"],
+    [236, "s3", "clm-item"]
   ],
   "cam-layout-save-interesting": [
     [13, "v0", "vector"],
@@ -1443,7 +1458,13 @@
     [[17, 22], "v1", "handle"],
     [[22, 27], "v1", "handle"]
   ],
-  "(method 10 visvol-edit-info)": [[230, "v0", "(pointer float)"]],
+  "(method 10 visvol-edit-info)": [
+    [230, "v0", "(pointer float)"],
+    [460, "v0", "(pointer float)"],
+    [515, "v0", "(pointer float)"],
+    [471, "a0", "vector"],
+    [526, "a0", "vector"]
+  ],
   "(anon-function 210 default-menu)": [
     [[2, 13], "v1", "texture-id"],
     [[18, 29], "a1", "adgif-shader"],
@@ -2031,5 +2052,75 @@
     [180, "a0", "vector"],
     [380, "v0", "vector"]
   ],
-  "debug-set-camera-pos-rot!": [[15, "v1", "vector"]]
+  "debug-set-camera-pos-rot!": [[15, "v1", "vector"]],
+  "add-debug-flat-triangle-noclip": [[[128, 130], "a0", "(pointer uint64)"]],
+  "update-width": [
+    [5, "a0", "nav-graph-editor"],
+    [94, "v0", "float"]
+  ],
+  "nav-graph-set-level": [[5, "v1", "nav-graph-editor"]],
+  "set-minimap-edge-flag": [
+    [5, "v1", "nav-graph-editor"],
+    [8, "v1", "nav-graph-editor"],
+    [11, "v1", "nav-graph-editor"]
+  ],
+  "set-vehicle-edit-mode": [
+    [5, "v1", "nav-graph-editor"],
+    [10, "v1", "nav-graph-editor"]
+  ],
+  "translate-nav-graph": [
+    [33, "v1", "nav-graph-editor"],
+    [14, "v1", "nav-graph-editor"]
+  ],
+  "update-nav-meshes": [
+    [27, "gp", "nav-graph-editor"],
+    [14, "gp", "nav-graph-editor"],
+    [20, "gp", "nav-graph-editor"]
+  ],
+  "delete-node-nav-mesh": [
+    [35, "s5", "nav-graph-editor"],
+    [15, "s5", "nav-graph-editor"]
+  ],
+  "smooth-nav-graph": [[5, "a0", "nav-graph-editor"]],
+  "update-height": [[4, "a1", "nav-graph-editor"]],
+  "draw-square-point": [[[70, 74], "v1", "dma-packet"]],
+  "(event idle nav-mesh-editor)": [
+    [88, "v1", "float"],
+    [90, "v1", "float"],
+    [92, "v1", "float"],
+    [198, "v1", "float"],
+    [198, "a2", "float"],
+    [198, "f30", "float"]
+  ],
+  "(trans idle nav-mesh-editor)": [
+    [429, "v0", "int"],
+    [482, "v0", "int"]
+  ],
+  "tfrag-init-buffer": [[[93, 99], "v1", "dma-packet"]],
+  "add-tfrag-mtx-1": [[[8, 17], "a0", "dma-packet"]],
+  "add-tfrag-mtx-0": [[[8, 17], "a0", "dma-packet"]],
+  "lightning-draw-all": [
+    [33, "v1", "connection"],
+    [34, "s1", "dma-buffer"]
+  ],
+  "shrub-init-frame": [
+    [[14, 19], "a1", "dma-packet"],
+    [[24, 28], "a1", "gs-gif-tag"],
+    [[32, 46], "a0", "(pointer uint64)"]
+  ],
+  "(method 10 grid-hash)": [[12, "a0", "(pointer uint128)"]],
+  "(method 26 grid-hash)": [
+    [191, "a3", "(pointer int8)"],
+    [195, "a1", "(pointer int8)"],
+    [237, "v1", "(pointer uint128)"],
+    [78, "a0", "(pointer uint128)"]
+  ],
+  "(method 11 grid-hash)": [
+    [[141, 147], "t6", "pointer"],
+    [149, "t4", "pointer"],
+    [152, "t1", "pointer"],
+    [128, "t1", "pointer"]
+  ],
+  "(method 29 sphere-hash)": [[44, "s2", "(pointer int8)"]],
+  "net-mgr-notify-connect": [[22, "s4", "connection"]]
 }

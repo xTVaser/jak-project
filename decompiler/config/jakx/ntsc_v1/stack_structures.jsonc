@@ -468,5 +468,92 @@
   "camera-slave-debug": [
     [48, "matrix"],
     [144, "vector"]
-  ]
+  ],
+  "cam-layout-save-interesting": [[16, "vector"]],
+  "cam-layout-save-align": [[16, "vector"]],
+  "cam-layout-save-pivot": [[16, "vector"]],
+  "cam-layout-entity-volume-info-create": [
+    [32, "vector"],
+    [48, "vector"],
+    [64, "vector"],
+    [80, "vector"],
+    [96, "vector"],
+    [128, "vector"],
+    [144, "vector"]
+  ],
+  "add-debug-flat-triangle-noclip": [[16, ["inline-array", "vector4w-3", 2]]],
+  "(method 59 nav-graph-editor)": [[16, "nav-poly"]],
+  "(method 32 nav-graph-editor)": [[16, ["inline-array", "vector", 4]]],
+  "(method 33 nav-graph-editor)": [
+    [16, "vector"],
+    [32, "vector"]
+  ],
+  "(method 30 nav-graph-editor)": [
+    [32, "vector"],
+    [48, ["inline-array", "vector", 2]],
+    [112, "vector"],
+    [128, "vector"],
+    [144, "vector"]
+  ],
+  "(method 36 nav-graph-editor)": [[16, ["inline-array", "vector", 4]]],
+  "(method 38 nav-graph-editor)": [
+    [80, "vector"],
+    [656, "nav-poly"],
+    [880, ["inline-array", "vector", 4]]
+  ],
+  "(method 50 nav-graph-editor)": [
+    [16, "vector"],
+    [32, "vector"]
+  ],
+  "(method 48 nav-graph-editor)": [
+    [48, "vector"],
+    [96, "vector"],
+    [128, "vector"]
+  ],
+  "(method 14 nav-mesh-editable)": [
+    [16, ["inline-array", "vector", 4]],
+    [80, ["inline-array", "vector", 4]]
+  ],
+  "(method 34 nav-graph-editor)": [
+    [16, "vector"],
+    [48, ["inline-array", "vector", 2]]
+  ],
+  "(post draw-closest-minimap nav-graph-editor)": [
+    [64, ["inline-array", "vector", 4]]
+  ],
+  "update-height": [[16, "vector"]],
+  "snap-level-navmesh": [
+    [16, "vector"],
+    [64, "vector"]
+  ],
+  "(method 12 nav-mesh-editable)": [[32, "vector"]],
+  "(method 15 nav-mesh-editable)": [[16, "vector"]],
+  "(method 16 nav-mesh-editable)": [
+    [16, "vector"],
+    [48, "vector"]
+  ],
+  "(method 10 nav-mesh-poly)": [
+    [16, "vector"],
+    [32, "vector"],
+    [48, "vector"],
+    [64, "vector"],
+    [80, "vector"],
+    [96, "vector"],
+    [112, "vector"],
+    [128, "vector"]
+  ],
+  "(method 52 nav-mesh-editor)": [[80, "vector"]],
+  "(trans idle nav-mesh-editor)": [[16, "event-message-block"]],
+  "(method 25 grid-hash)": [
+    [16, "grid-hash-box"],
+    [32, "grid-hash-box"],
+    [48, "vector"],
+    [64, "vector"]
+  ],
+  "(method 26 grid-hash)": [[16, "vector"]],
+  "(method 11 grid-hash)": [
+    [16, "vector"],
+    [32, "vector"]
+  ],
+  "(method 13 grid-hash)": [[16, "sphere"]]
 }

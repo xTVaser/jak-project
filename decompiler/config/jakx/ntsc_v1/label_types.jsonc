@@ -1065,5 +1065,24 @@
     ["L83", "(pointer int32)", 32],
     ["L82", "(pointer int32)", 32],
     ["L81", "(pointer int32)", 32]
-  ]
+  ],
+  "nav-graph-editor": [
+    ["L480", "vector"],
+    ["L479", "vector"],
+    ["L478", "vector"],
+    ["L477", "vector"],
+    ["L476", "vector"],
+    ["L475", "vector"],
+    ["L474", "vector"],
+    ["L473", "vector"]
+  ],
+  "nav-mesh-editor": [
+    ["L567", "uint64", true],
+    ["L511", "(inline-array triangulation-vert)", 256],
+    ["L510", "(inline-array triangulation-vert)", 256],
+    ["L562", "(pointer int32)", 1024],
+    ["L564", "uint64", true],
+    ["L563", "(inline-array vector)", 1024]
+  ],
+  "lightning": [["L93", "uint64", true]]
 }
