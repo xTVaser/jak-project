@@ -2355,10 +2355,230 @@
       "mem-buffer"
     ]
   ],
+  "texture-anim-layer-draw": [
+    [
+      16,
+      "matrix"
+    ],
+    [
+      80,
+      "matrix"
+    ],
+    [
+      144,
+      "matrix"
+    ],
+    [
+      208,
+      "matrix"
+    ]
+  ],
   "handle-sys-msg": [
     [
       96,
       "medius-chat-fwd-message"
+    ]
+  ],
+  "real-fog-texture-anim-func": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "(method 220 wvehicle)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      [
+        "inline-array",
+        "vector",
+        3
+      ]
+    ]
+  ],
+  "wv-player-post-move-update": [
+    [
+      16,
+      "event-message-block"
+    ]
+  ],
+  "(method 133 wvehicle)": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "(method 87 vehicle-wheel)": [
+    [
+      16,
+      "rigid-body-move-work"
+    ]
+  ],
+  "(method 68 wvehicle)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "(method 229 wvehicle)": [
+    [
+      16,
+      "matrix"
+    ]
+  ],
+  "player-wait-control-hook": [
+    [
+      16,
+      "vehicle-controls"
+    ]
+  ],
+  "(enter explode wvehicle)": [
+    [
+      16,
+      "event-message-block"
+    ],
+    [
+      96,
+      "vehicle-controls"
+    ]
+  ],
+  "(post explode wvehicle)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "(enter explode-into-nothing wvehicle)": [
+    [
+      16,
+      "explosion-init-params"
+    ]
+  ],
+  "(method 234 wvehicle)": [
+    [
+      32,
+      "vector4s-3"
+    ],
+    [
+      80,
+      "vector"
+    ],
+    [
+      96,
+      "vector4s-3"
+    ]
+  ],
+  "spt-func-birth-on-height-die-drip-sewer": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-die4": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-die3": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-die2": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-die1": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-height-die-drops": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "part-jungle-bird10-path": [
+    [
+      80,
+      "vector"
+    ],
+    [
+      96,
+      "vector"
+    ]
+  ],
+  "part-jungle-bird9-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-pop": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-height-die": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "spt-func-birth-on-height-die-drip": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
     ]
   ]
 }

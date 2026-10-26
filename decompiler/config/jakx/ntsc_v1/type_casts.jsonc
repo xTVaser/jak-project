@@ -3029,6 +3029,16 @@
       13,
       "v1",
       "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
     ]
   ],
   "forall-particles-runner": [
@@ -3258,6 +3268,11 @@
       83,
       "v1",
       "part-spawner"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
     ]
   ],
   "part-wascitya-fly2-path": [
@@ -3270,6 +3285,16 @@
       82,
       "a0",
       "part-spawner"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
     ]
   ],
   "sp-process-particle-system": [
@@ -10507,6 +10532,2502 @@
       10,
       "v1",
       "process-drawable"
+    ]
+  ],
+  "texture-anim-layer-add-clut-shader": [
+    [
+      [
+        25,
+        30
+      ],
+      "a3",
+      "dma-packet"
+    ],
+    [
+      [
+        35,
+        39
+      ],
+      "a3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        49,
+        68
+      ],
+      "a1",
+      "(pointer uint64)"
+    ]
+  ],
+  "texture-anim-layer-draw": [
+    [
+      30,
+      "s4",
+      "(pointer uint128)"
+    ],
+    [
+      46,
+      "s4",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        174,
+        183
+      ],
+      "s4",
+      "(pointer uint128)"
+    ]
+  ],
+  "move-rg-to-ba-texture-anim-layer-func": [
+    [
+      [
+        330,
+        336
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        341,
+        345
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        348,
+        362
+      ],
+      "v1",
+      "(pointer uint64)"
+    ]
+  ],
+  "fill-rgb-texture-anim-layer-func": [
+    [
+      79,
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      86,
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        89,
+        94
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        96,
+        101
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        107,
+        113
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        118,
+        122
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        129,
+        136
+      ],
+      "v1",
+      "(pointer uint64)"
+    ]
+  ],
+  "texture-anim-draw-mips": [
+    [
+      [
+        119,
+        148
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        125,
+        133
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        134,
+        139
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        140,
+        147
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        149,
+        155
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        167,
+        197
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        173,
+        181
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        183,
+        188
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        189,
+        196
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        198,
+        204
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        222,
+        230
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        216,
+        246
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        232,
+        237
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        238,
+        245
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        247,
+        253
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        265,
+        301
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        271,
+        279
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        281,
+        286
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        290,
+        300
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        302,
+        308
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        320,
+        357
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        326,
+        334
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        336,
+        342
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        346,
+        356
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        358,
+        364
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        376,
+        413
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        382,
+        390
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        392,
+        398
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        402,
+        412
+      ],
+      "a0",
+      "(pointer float)"
+    ],
+    [
+      [
+        414,
+        420
+      ],
+      "v1",
+      "(pointer int32)"
+    ]
+  ],
+  "texture-anim-draw-ocean-mips": [
+    [
+      [
+        26,
+        33
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        99,
+        110
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        172,
+        183
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        234,
+        247
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        300,
+        313
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        364,
+        377
+      ],
+      "v1",
+      "(pointer uint128)"
+    ]
+  ],
+  "update-texture-anim": [
+    [
+      [
+        207,
+        233
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        212,
+        224
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        226,
+        232
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        234,
+        240
+      ],
+      "v1",
+      "(pointer int32)"
+    ]
+  ],
+  "(method 9 texture-anim)": [
+    [
+      5,
+      "v1",
+      "symbol"
+    ],
+    [
+      11,
+      "v1",
+      "symbol"
+    ],
+    [
+      "_stack_",
+      16,
+      "texture-page"
+    ],
+    [
+      17,
+      "v1",
+      "symbol"
+    ],
+    [
+      23,
+      "v1",
+      "symbol"
+    ]
+  ],
+  "copy-alpha-texture-anim-layer-func": [
+    [
+      [
+        92,
+        169
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        95,
+        106
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        108,
+        116
+      ],
+      "t0",
+      "(pointer float)"
+    ],
+    [
+      [
+        117,
+        122
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        125,
+        133
+      ],
+      "t0",
+      "(pointer float)"
+    ],
+    [
+      [
+        141,
+        150
+      ],
+      "a3",
+      "(pointer float)"
+    ],
+    [
+      [
+        151,
+        156
+      ],
+      "a3",
+      "(pointer int32)"
+    ],
+    [
+      [
+        159,
+        168
+      ],
+      "a2",
+      "(pointer float)"
+    ],
+    [
+      [
+        169,
+        174
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        180,
+        185
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        190,
+        194
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        134,
+        139
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        201,
+        204
+      ],
+      "v1",
+      "(pointer uint64)"
+    ]
+  ],
+  "copy-clut-alpha-texture-anim-layer-func": [
+    [
+      [
+        87,
+        164
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        90,
+        101
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        103,
+        111
+      ],
+      "t0",
+      "(pointer float)"
+    ],
+    [
+      [
+        112,
+        117
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        120,
+        128
+      ],
+      "t0",
+      "(pointer float)"
+    ],
+    [
+      [
+        129,
+        134
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        136,
+        145
+      ],
+      "a3",
+      "(pointer float)"
+    ],
+    [
+      [
+        146,
+        151
+      ],
+      "a3",
+      "(pointer int32)"
+    ],
+    [
+      [
+        154,
+        163
+      ],
+      "a2",
+      "(pointer float)"
+    ],
+    [
+      [
+        164,
+        169
+      ],
+      "a1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        175,
+        180
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        196,
+        199
+      ],
+      "v1",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        185,
+        188
+      ],
+      "a0",
+      "(pointer uint64)"
+    ]
+  ],
+  "set-alpha-texture-anim-layer-func": [
+    [
+      [
+        89,
+        109
+      ],
+      "a0",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        91,
+        100
+      ],
+      "t1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        102,
+        108
+      ],
+      "t1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        110,
+        118
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        122,
+        127
+      ],
+      "a1",
+      "dma-packet"
+    ],
+    [
+      [
+        132,
+        136
+      ],
+      "a1",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        143,
+        146
+      ],
+      "a0",
+      "(pointer uint64)"
+    ]
+  ],
+  "set-clut-alpha-texture-anim-layer-func": [
+    [
+      [
+        68,
+        84
+      ],
+      "t0",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        70,
+        75
+      ],
+      "t4",
+      "(pointer int32)"
+    ],
+    [
+      [
+        85,
+        91
+      ],
+      "t0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        97,
+        102
+      ],
+      "a3",
+      "dma-packet"
+    ],
+    [
+      [
+        107,
+        110
+      ],
+      "a3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        118,
+        121
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        77,
+        83
+      ],
+      "t3",
+      "(pointer int32)"
+    ]
+  ],
+  "texture-anim-cloud-clut-init": [
+    [
+      15,
+      "a0",
+      "texture-page"
+    ]
+  ],
+  "real-fog-texture-anim-func": [
+    [
+      [
+        21,
+        174
+      ],
+      "a1",
+      "(pointer uint32)"
+    ],
+    [
+      [
+        287,
+        292
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        297,
+        301
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        303,
+        307
+      ],
+      "v1",
+      "(pointer uint64)"
+    ]
+  ],
+  "dma-buffer-add-ref-texture": [
+    [
+      [
+        49,
+        54
+      ],
+      "a3",
+      "dma-packet"
+    ],
+    [
+      [
+        66,
+        69
+      ],
+      "a3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        79,
+        87
+      ],
+      "a2",
+      "dma-packet"
+    ]
+  ],
+  "texture-page-default-allocate": [
+    [
+      51,
+      "a3",
+      "(pointer int32)"
+    ]
+  ],
+  "texture-page-font-allocate": [
+    [
+      33,
+      "a3",
+      "(pointer int32)"
+    ]
+  ],
+  "(method 13 texture-page)": [
+    [
+      [
+        44,
+        47
+      ],
+      "a0",
+      "(pointer uint64)"
+    ]
+  ],
+  "(method 11 texture-pool)": [
+    [
+      [
+        216,
+        219
+      ],
+      "a0",
+      "(pointer uint64)"
+    ]
+  ],
+  "texture-page-login": [
+    [
+      33,
+      "v0",
+      "texture-page"
+    ]
+  ],
+  "(method 220 wvehicle)": [
+    [
+      118,
+      "s2",
+      "process-drawable"
+    ],
+    [
+      120,
+      "s2",
+      "process-drawable"
+    ],
+    [
+      144,
+      "s2",
+      "process-drawable"
+    ]
+  ],
+  "wv-player-post-move-update": [
+    [
+      664,
+      "v1",
+      "process-focusable"
+    ],
+    [
+      671,
+      "v1",
+      "process-focusable"
+    ],
+    [
+      272,
+      "v1",
+      "float"
+    ]
+  ],
+  "(method 61 wvehicle)": [
+    [
+      9,
+      "a1",
+      "vector"
+    ]
+  ],
+  "(enter explode vehicle-wheel)": [
+    [
+      14,
+      "v1",
+      "float"
+    ]
+  ],
+  "whoosh-shake-camera": [
+    [
+      32,
+      "s2",
+      "wvehicle"
+    ]
+  ],
+  "(method 202 wvehicle)": [
+    [
+      27,
+      "a0",
+      "process-drawable"
+    ]
+  ],
+  "(post vehicle-target vehicle-reticle-on-them)": [
+    [
+      11,
+      "gp",
+      "wvehicle"
+    ]
+  ],
+  "(enter explode wvehicle)": [
+    [
+      475,
+      "a0",
+      "process"
+    ],
+    [
+      487,
+      "a0",
+      "process"
+    ],
+    [
+      612,
+      "gp",
+      "process-drawable"
+    ],
+    [
+      738,
+      "v1",
+      "handle"
+    ],
+    [
+      629,
+      "v1",
+      "float"
+    ]
+  ],
+  "(enter explode-into-nothing wvehicle)": [
+    [
+      49,
+      "a0",
+      "process"
+    ],
+    [
+      61,
+      "a0",
+      "process"
+    ]
+  ],
+  "(post sink wvehicle)": [
+    [
+      59,
+      "a1",
+      "process-drawable"
+    ]
+  ],
+  "(method 212 wvehicle)": [
+    [
+      [
+        8,
+        12
+      ],
+      "v1",
+      "(pointer uint128)"
+    ]
+  ],
+  "(method 62 wvehicle)": [
+    [
+      [
+        19,
+        484
+      ],
+      "gp",
+      "wvehicle-physics-work"
+    ]
+  ],
+  "(method 234 wvehicle)": [
+    [
+      16,
+      "a0",
+      "vector"
+    ],
+    [
+      79,
+      "a0",
+      "vector"
+    ]
+  ],
+  "(method 249 wvehicle)": [
+    [
+      228,
+      "a0",
+      "process-focusable"
+    ]
+  ],
+  "render-eyes-32": [
+    [
+      [
+        71,
+        75
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        82,
+        87
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      122,
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        125,
+        132
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        133,
+        137
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        139,
+        145
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        146,
+        150
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        152,
+        158
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        226,
+        230
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        232,
+        239
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        240,
+        244
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        251,
+        255
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        256,
+        261
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        245,
+        250
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        251,
+        255
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        269,
+        273
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        280,
+        285
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        307,
+        312
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        317,
+        320
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        325,
+        328
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        353,
+        357
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        367,
+        371
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        372,
+        377
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        378,
+        382
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        383,
+        388
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        394,
+        399
+      ],
+      "a0",
+      "dma-packet"
+    ],
+    [
+      [
+        359,
+        366
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        404,
+        407
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        412,
+        415
+      ],
+      "a0",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        422,
+        426
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        433,
+        438
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        506,
+        510
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        512,
+        519
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        520,
+        524
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        531,
+        535
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        536,
+        541
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        525,
+        530
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        549,
+        553
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        560,
+        565
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        633,
+        637
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        639,
+        646
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        647,
+        651
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        658,
+        662
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        663,
+        668
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        652,
+        657
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        702,
+        706
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        713,
+        718
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        802,
+        806
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        808,
+        814
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        815,
+        819
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        826,
+        830
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        831,
+        836
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        844,
+        848
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        855,
+        860
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        820,
+        825
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        826,
+        830
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        831,
+        836
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        944,
+        948
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        950,
+        956
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        957,
+        961
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        962,
+        967
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        968,
+        972
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        973,
+        978
+      ],
+      "v1",
+      "(pointer int32)"
+    ]
+  ],
+  "render-eyes-64": [
+    [
+      [
+        71,
+        75
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        82,
+        87
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        119,
+        123
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        125,
+        132
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        133,
+        137
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        139,
+        145
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        146,
+        150
+      ],
+      "a0",
+      "(pointer int32)"
+    ],
+    [
+      [
+        152,
+        158
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        180,
+        185
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        190,
+        193
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        198,
+        201
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        226,
+        230
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        232,
+        239
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        240,
+        244
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        245,
+        250
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        251,
+        255
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        256,
+        261
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        269,
+        273
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        280,
+        285
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        307,
+        312
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        317,
+        320
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        325,
+        328
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        353,
+        357
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        359,
+        366
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        367,
+        371
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        372,
+        377
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        378,
+        382
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        383,
+        388
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        422,
+        426
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        433,
+        438
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        460,
+        465
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        470,
+        473
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        478,
+        481
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        506,
+        510
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        512,
+        519
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        520,
+        524
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        525,
+        530
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        531,
+        535
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        531,
+        535
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        536,
+        541
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        549,
+        553
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        560,
+        565
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        587,
+        592
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        597,
+        600
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        605,
+        608
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        633,
+        637
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        639,
+        646
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        647,
+        651
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        652,
+        657
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        658,
+        662
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        663,
+        668
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        702,
+        706
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        713,
+        718
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        755,
+        760
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        765,
+        768
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        773,
+        776
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        802,
+        806
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        808,
+        814
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        815,
+        819
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        820,
+        825
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        826,
+        830
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        831,
+        836
+      ],
+      "v1",
+      "(pointer int32)"
+    ],
+    [
+      [
+        844,
+        848
+      ],
+      "v1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        855,
+        860
+      ],
+      "s3",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        897,
+        902
+      ],
+      "a2",
+      "dma-packet"
+    ],
+    [
+      [
+        907,
+        910
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        915,
+        918
+      ],
+      "a2",
+      "(pointer uint64)"
+    ],
+    [
+      [
+        944,
+        948
+      ],
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      [
+        950,
+        956
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        957,
+        961
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        962,
+        967
+      ],
+      "t2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        968,
+        972
+      ],
+      "a2",
+      "(pointer int32)"
+    ],
+    [
+      [
+        973,
+        978
+      ],
+      "v1",
+      "(pointer int32)"
+    ]
+  ],
+  "part-jungle-bird9-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird8-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird7-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird6-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird5-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird4-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird3-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird2-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-jungle-bird1-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird10-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-wascitya-fly1-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird9-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird8-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird7-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird6-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird5-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird4-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird3-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird2-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      83,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      87,
+      "a0",
+      "part-tracker"
+    ]
+  ],
+  "part-cliffs-bird1-path": [
+    [
+      13,
+      "v1",
+      "int"
+    ],
+    [
+      87,
+      "v1",
+      "part-tracker"
+    ],
+    [
+      91,
+      "a0",
+      "part-tracker"
     ]
   ]
 }

@@ -34,6 +34,7 @@
     "(method 22 level)",
     "(method 11 medius-cache)",
     "(method 13 race-line)",
+    "adgif-shader<-texture!",
     "symlink2",
     "(method 17 bounding-box)",
     "quad-copy!",
@@ -383,6 +384,12 @@
       [
         525,
         0
+      ]
+    ],
+    "locate-sub": [
+      [
+        68,
+        3
       ]
     ]
   },

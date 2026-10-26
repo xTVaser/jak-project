@@ -5300,7 +5300,7 @@
 (define-extern *cheat-mode* symbol) ;; 
 ;; (define-extern cpad-invalid! function) ;; (function cpad-info cpad-info)
 (define-extern analog-input (function int float float float float float)) ;; 
-;; (define-extern cpad-set-buzz! function) ;; (function cpad-info int int time-frame none)
+(define-extern cpad-set-buzz! (function cpad-info int int time-frame none)) ;; 
 (define-extern *cpad-list* cpad-list) ;; 
 (define-extern *cpad-debug* symbol) ;; 
 ;; (define-extern service-cpads function) ;; (function cpad-list)
@@ -6956,25 +6956,25 @@
   :flag-assert         #x1c000002d0
   (:methods
     (new (symbol type) _type_) ;; 0 ;; (new (symbol type) _type_)
-    (texture-pool-method-9 () none) ;; 9 ;; (initialize! (_type_) _type_)
-    (texture-pool-method-10 () none) ;; 10 ;; (print-usage (_type_) _type_)
+    (initialize! (_type_) _type_)
+    (print-usage (_type_) _type_)
     (setup-font-texture (_type_) none)
-    (texture-pool-method-12 () none) ;; 12 ;; (allocate-defaults (_type_) none)
-    (texture-pool-method-13 () none) ;; 13 ;; (login-level-textures (_type_ level int (pointer texture-id)) none)
-    (texture-pool-method-14 () none) ;; 14 ;; (add-level-tpage-dma (_type_ level tpage-category bucket-id) none)
-    (texture-pool-method-15 () none) ;; 15 ;; (allocate-vram-words! (_type_ int) int)
-    (texture-pool-method-16 () none) ;; 16 ;; (allocate-segment (_type_ texture-pool-segment int) texture-pool-segment)
-    (texture-pool-method-17 () none) ;; 17 ;; (unload-page (_type_ texture-page) none)
-    (texture-pool-method-18 () none) ;; 18 ;; (get-common-page-slot-by-id (_type_ int) int)
-    (texture-pool-method-19 () none) ;; 19 ;; (update-warp-and-hud (_type_) none)
-    (texture-pool-method-20 () none) ;; 20 ;; (update-sprites (_type_) none)
-    (texture-pool-method-21 () none) ;; 21 ;; (mark-hud-warp-sprite-dirty (_type_) none)
-    (texture-pool-method-22 () none) ;; 22 ;; (lay-out-sprite-tex (_type_) none)
-    (texture-pool-method-23 () none) ;; 23 ;; (lay-out-hud-tex (_type_) none)
-    (texture-pool-method-24 () none) ;; 24 ;; (lay-out-warp-tex (_type_) none)
-    (texture-pool-method-25 () none) ;; 25 ;; (clear-ids (_type_) none)
-    (texture-pool-method-26 () none) ;; 26
-    (texture-pool-method-27 () none) ;; 27
+    (allocate-defaults (_type_) none)
+    (login-level-textures (_type_ level int (pointer texture-id)) none)
+    (add-level-tpage-dma (_type_ level tpage-category bucket-id) none)
+    (allocate-vram-words! (_type_ int) int)
+    (allocate-segment (_type_ texture-pool-segment int) texture-pool-segment)
+    (unload-page (_type_ texture-page) none)
+    (get-common-page-slot-by-id (_type_ int) int) ;; 
+    (update-warp-and-hud (_type_) none)
+    (update-sprites (_type_) none)
+    (mark-hud-warp-sprite-dirty (_type_ (pointer int32)) symbol) ;; 21 a guess on the second arg until we find a caller
+    (lay-out-car-tex (_type_ level) none) ;; 22 
+    (lay-out-driver-tex (_type_ level) none) ;; 23 
+    (lay-out-sprite-tex (_type_) none) ;; 24 ;; 
+    (lay-out-hud-tex (_type_) none) ;; 25 ;; 
+    (lay-out-warp-tex (_type_) none) ;; 26
+    (clear-ids (_type_) none) ;; 27
     )
   )
 
@@ -7028,6 +7028,7 @@
    (size         uint32                :offset-assert 44)
    (uv-dist      float                 :offset-assert 48)
    (pad          uint32        3       :offset-assert 52) ;; guessed by decompiler
+   (texture-unk-1 int32 :offset 52 :score 1)
    (masks        texture-masks :inline :offset-assert 64)
    )
   :method-count-assert 9
@@ -7081,12 +7082,12 @@
   :size-assert         #x80
   :flag-assert         #xf00000080
   (:methods
-    (texture-page-method-9 () none) ;; 9 ;; (remove-data-from-heap (_type_ kheap) _type_)
-    (texture-page-method-10 () none) ;; 10 ;; (get-leftover-block-count (_type_ int int) int)
-    (texture-page-method-11 () none) ;; 11 ;; (relocate-dests! (_type_ int int) none)
-    (texture-page-method-12 () none) ;; 12 ;; (add-to-dma-buffer (_type_ dma-buffer tex-upload-mode) int)
-    (texture-page-method-13 () none) ;; 13 ;; (upload-now! (_type_ tex-upload-mode) none)
-    (texture-page-method-14 () none) ;; 14
+    (remove-data-from-heap (_type_ kheap) _type_)
+    (get-leftover-block-count (_type_ int int) int)
+    (relocate-dests! (_type_ int int) none)
+    (add-to-dma-buffer (_type_ dma-buffer tex-upload-mode) int)
+    (upload-now! (_type_ tex-upload-mode) none)
+    (allocate-vram! (_type_ int) uint) ;; 14
     )
   )
 
@@ -7138,7 +7139,7 @@
   (:methods
     (relocate (_type_ kheap (pointer uint8)) none :replace) ;; 7
     (unlink-shaders-in-heap "Iterate through all adgifs, splicing out ones that are in the given heap." (_type_ kheap) int) ;; 9
-    (texture-page-dir-method-10 (_type_) none)
+    (find-entry (_type_ level uint) texture-page-dir-entry)
     )
   :flag-assert #xb00000014
   )
@@ -7303,9 +7304,9 @@
    (func-id      symbol                                          :offset-assert 4 :overlay-at func) ;; guessed by decompiler
    (init-func    (function texture-anim int)                     :offset-assert 8) ;; guessed by decompiler
    (init-func-id symbol                                          :offset-assert 8 :overlay-at init-func) ;; guessed by decompiler
-   (mip-func     function                                           :offset-assert 12)
+   (mip-func     (function dma-buffer texture none)                                           :offset-assert 12)
    (mip-func-id  symbol                                           :offset-assert 12 :overlay-at mip-func)
-   (time-func    function                                           :offset-assert 16)
+   (time-func    (function texture-anim none)                                           :offset-assert 16)
    (time-func-id symbol                                           :offset-assert 16 :overlay-at time-func)
    (tex          texture                                         :offset-assert 20) ;; guessed by decompiler
    (tex-name     string                                          :offset-assert 24) ;; guessed by decompiler
@@ -8537,7 +8538,7 @@
    (art-group                 load-dir-art-group                             :offset-assert 116) ;; guessed by decompiler
    (info                      level-load-info                                :offset-assert 120) ;; guessed by decompiler
    (level-TODO-01 int32 :offset-assert 124)
-   (texture-page-dir          texture-page-segment                                11 :inline    :offset-assert 128) ;; TODO - a guess, seems to fit though
+   (texture-page-dir          texture-page-dir-entry                                 11 :inline    :offset-assert 128) ;; TODO - a guess, seems to fit though
    (loaded-texture-page       texture-page                           16      :offset-assert 260) ;; guessed by decompiler
    (loaded-texture-page-count int32                                          :offset-assert 324)
    (entity                    entity-links-array                             :offset-assert 328) ;; guessed by decompiler
@@ -17181,9 +17182,11 @@
    (audio-language          uint8               :offset-assert 652) ;; language-enum
    (unknown-usd-34             int32             11 :offset-assert 656) ;; added
    (unknown-sym-1 symbol :offset 676) ;; display-loop-main
+   (unknown-usd-uint64 uint64 :offset 688) ;; (enter player-control vehicle)
    (unknown-float-1 float :offset 696) ;; display-loop-main
    (special-volume          float               :offset-assert 700)
    (unknown-usd-35             int32             17 :offset-assert 704) ;; added
+   (unknown-usd-36 uint32 :offset 720) ;; (method 129 wvehicle)
    (unknown-uint32-1 uint32 :offset 748)
    (unknown-uint32-2 uint32 :offset 752)
    (unknown-float float :offset 756)
@@ -18171,54 +18174,54 @@
 ;; texture                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern texture-bpp function) ;; (function gs-psm int)
-;; (define-extern texture-qwc function) ;; (function int int gs-psm int)
-;; (define-extern physical-address function) ;; (function pointer pointer)
-;; (define-extern dma-buffer-add-ref-texture function) ;; (function dma-buffer pointer int int gs-psm none)
-;; (define-extern gs-find-block function) ;; (function int int gs-psm int)
-;; (define-extern gs-page-width function) ;; (function gs-psm int)
-;; (define-extern gs-page-height function) ;; (function gs-psm int)
-;; (define-extern gs-block-width function) ;; (function gs-psm int)
-;; (define-extern gs-block-height function) ;; (function gs-psm int)
-;; (define-extern gs-largest-block function) ;; (function int int gs-psm int)
-;; (define-extern gs-blocks-used function) ;; (function int int gs-psm int)
-;; (define-extern texture-page-default-allocate function) ;; (function texture-pool texture-page kheap int texture-page)
-;; (define-extern texture-page-common-allocate function) ;; (function texture-pool texture-page kheap int texture-page)
-;; (define-extern texture-page-font-allocate function) ;; (function texture-pool texture-page kheap int texture-page)
-;; (define-extern locate-sub function)
-;; (define-extern warp-locate-sub function)
+(define-extern texture-bpp (function gs-psm int))
+(define-extern texture-qwc (function int int gs-psm int))
+(define-extern physical-address (function pointer pointer))
+(define-extern dma-buffer-add-ref-texture (function dma-buffer pointer int int gs-psm none)) ;; 
+(define-extern gs-find-block (function int int gs-psm int))
+(define-extern gs-page-width (function gs-psm int))
+(define-extern gs-page-height (function gs-psm int))
+(define-extern gs-block-width (function gs-psm int))
+(define-extern gs-block-height (function gs-psm int))
+(define-extern gs-largest-block (function int int gs-psm int))
+(define-extern gs-blocks-used (function int int gs-psm int))
+(define-extern texture-page-default-allocate (function texture-pool texture-page kheap int texture-page)) ;; 
+(define-extern texture-page-common-allocate (function texture-pool texture-page kheap int texture-page)) ;; 
+(define-extern texture-page-font-allocate (function texture-pool texture-page kheap int texture-page)) ;; 
+(define-extern locate-sub (function level int int string int))
+(define-extern warp-locate-sub (function level int int string int))
 (define-extern texture-page-common-boot-allocate (function texture-pool texture-page kheap int texture-page)) ;; 
 (define-extern upload-vram-data (function dma-buffer int pointer int int none)) ;; 
-;; (define-extern upload-vram-pages function) ;; (function texture-pool texture-pool-segment texture-page tex-upload-mode bucket-id int)
-;; (define-extern upload-vram-pages-car function)
-;; (define-extern update-vram-pages function) ;; (function texture-pool texture-pool-segment texture-page tex-upload-mode int)
-;; (define-extern upload-vram-pages-pris function) ;; (function texture-pool texture-pool-segment texture-page bucket-id (pointer int32) int)
-;; (define-extern texture-page-level-allocate function) ;; (function texture-pool texture-page kheap int texture-page)
-;; (define-extern texture-page-size-check function) ;; (function texture-pool level symbol int)
-;; (define-extern upload-textures function) ;; (function texture-pool none)
-;; (define-extern *txt-dma-list* object) ;; dma-buffer
-;; (define-extern texture-relocate function) ;; (function dma-buffer texture int gs-psm int dma-buffer)
-;; (define-extern relocate-later function) ;; (function symbol)
-;; (define-extern texture-page-login function) ;; (function texture-id (function texture-pool texture-page kheap int texture-page) kheap texture-page-dir-entry)
+(define-extern upload-vram-pages (function texture-pool texture-pool-segment texture-page tex-upload-mode bucket-id int)) ;; 
+(define-extern upload-vram-pages-car (function texture-pool texture-page bucket-id int))
+(define-extern update-vram-pages (function texture-pool texture-pool-segment texture-page tex-upload-mode int)) ;; 
+(define-extern upload-vram-pages-pris (function texture-pool texture-pool-segment texture-page bucket-id (pointer int32) int)) ;; 
+(define-extern texture-page-level-allocate (function texture-pool texture-page kheap int texture-page)) ;; 
+(define-extern texture-page-size-check (function texture-pool level symbol int))
+(define-extern upload-textures (function texture-pool none))
+(define-extern *txt-dma-list* dma-buffer) ;; 
+(define-extern texture-relocate (function dma-buffer texture int gs-psm int dma-buffer)) ;; 
+(define-extern relocate-later (function symbol)) ;; 
+(define-extern texture-page-login (function texture-id (function texture-pool texture-page kheap int texture-page) kheap texture-page-dir-entry)) ;; 
 (define-extern lookup-texture-by-id (function texture-id texture)) ;; 
 (define-extern lookup-texture-by-id-fast (function texture-id texture)) ;; 
 (define-extern lookup-texture-by-name (function string string (pointer texture-page) texture)) ;; 
 (define-extern lookup-texture-id-by-name (function string string texture-id)) ;; 
 (define-extern lookup-level-texture-by-name (function string level (pointer texture-page) texture)) ;; 
-;; (define-extern lookup-tex-id-from-texture function) ;; (function texture texture-id)
+(define-extern lookup-tex-id-from-texture (function texture texture-id)) ;; 
 (define-extern lookup-level-texture-id-by-name (function string level int texture-id)) ;; 
-;; (define-extern *shader-list* object) ;; pair
+(define-extern *shader-list* pair) ;; 
 (define-extern *edit-shader* texture-id) ;; 
-;; (define-extern link-texture-by-id function) ;; (function texture-id adgif-shader texture-page-dir-entry)
-;; (define-extern unlink-textures-by-level function)
+(define-extern link-texture-by-id (function texture-id adgif-shader texture-page-dir-entry)) ;; 
+(define-extern unlink-textures-by-level (function level none))
 (define-extern adgif-shader<-texture! (function adgif-shader texture adgif-shader)) ;; 
 (define-extern adgif-shader-update! (function adgif-shader texture none)) ;; 
-;; (define-extern adgif-shader<-texture-with-update! function) ;; (function adgif-shader texture adgif-shader)
-;; (define-extern hack-texture function) ;; (function texture float)
+(define-extern adgif-shader<-texture-with-update! (function adgif-shader texture adgif-shader)) ;; 
+(define-extern hack-texture (function texture float)) ;; 
 (define-extern adgif-shader-login (function adgif-shader texture)) ;; 
 (define-extern adgif-shader-login-no-remap (function adgif-shader texture)) ;; 
-;; (define-extern adgif-shader-login-fast function) ;; (function adgif-shader texture)
-;; (define-extern adgif-shader-login-no-remap-fast function) ;; (function adgif-shader texture)
+(define-extern adgif-shader-login-fast (function adgif-shader texture))
+(define-extern adgif-shader-login-no-remap-fast (function adgif-shader texture))
 (define-extern adgif-shader<-texture-simple! (function adgif-shader texture adgif-shader)) ;; 
 (define-extern set-dirty-mask! (function level int int int none)) ;; 
 (define-extern texture-page-dir-inspect (function texture-page-dir symbol none)) ;; 
@@ -30957,6 +30960,7 @@
   (turret 32)
   (no-gravity 33)
   (gun-no-target 34)
+  (fs35 35)
   )
 ;; ---process-focusable:focus-status
 
@@ -37197,6 +37201,8 @@
 ;; texture-anim                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define-extern *slime-clut* (pointer uint8))
+
 (define-extern *texture-anim-work* texture-anim-work) ;; 
 (define-extern texture-anim-layer-interp (function texture-anim-layer float none))
 (define-extern texture-anim-layer-add-shader (function dma-buffer texture-anim-layer int none))
@@ -37211,7 +37217,7 @@
 (define-extern texture-anim-draw-mip-shader (function dma-buffer texture int none))
 (define-extern clear-texture-ids (function texture none))
 (define-extern texture-anim-draw-mips (function dma-buffer texture none))
-;; (define-extern texture-anim-draw-ocean-mips function)
+(define-extern texture-anim-draw-ocean-mips (function dma-buffer texture none))
 (define-extern update-texture-anim (function bucket-id texture-anim-array none))
 (define-extern no-alpha-texture-anim-layer-func (function dma-buffer uint int int texture-anim-layer float int))
 (define-extern copy-alpha-texture-anim-layer-func (function dma-buffer uint int int texture-anim-layer float int))
@@ -37230,7 +37236,7 @@
 (define-extern make-alpha-ramp-clut (function (pointer uint32) none))
 (define-extern texture-anim-alpha-ramp-clut-upload (function dma-buffer texture-anim none))
 (define-extern texture-anim-alpha-ramp-clut-init (function texture-anim none))
-;; (define-extern texture-anim-override-size-init function)
+(define-extern texture-anim-override-size-init (function texture-anim none))
 (define-extern texture-anim-change-mt8h-init (function texture-anim none))
 (define-extern *texture-anim-pages-table* (pointer uint8))
 (define-extern *texture-anim-mip-array* (pointer uint16))
@@ -37923,9 +37929,9 @@
 ;; (define-extern birth-func-set-vel-2d function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)
 ;; (define-extern birth-func-set-vel-range function)
 (define-extern birth-func-texture-group (function int sparticle-cpuinfo sparticle-launchinfo none)) ;; 
-;; (define-extern rot-to-particle function) ;; (function degrees sprite-vec-data-2d matrix none)
+(define-extern rot-to-particle (function degrees sprite-vec-data-2d matrix none)) ;; 
 ;; (define-extern rot-to-particle-no-flip function)
-;; (define-extern birth-func-flip-based-on-scale function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
+(define-extern birth-func-flip-based-on-scale (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)) ;; 
 ;; (define-extern sparticle-2d-spline-align function) ;; (function object sparticle-cpuinfo sprite-vec-data-2d object none)
 ;; (define-extern sparticle-2d-spline-align-no-flip function)
 (define-extern sparticle-2d-spline-align-instant (function object sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
@@ -41072,6 +41078,7 @@
     )
   )
 
+(declare-type rigid-body-surface structure)
 (deftype rigid-body-impact (structure)
   ((point    vector      :inline :offset-assert 0)
    (normal   vector      :inline :offset-assert 16)
@@ -41080,7 +41087,7 @@
    (pat      pat-surface         :offset-assert 52) ;; guessed by decompiler
    (process  process             :offset-assert 56) ;; guessed by decompiler
    (prim-id  uint32              :offset-assert 60)
-   (surface  basic               :offset-assert 64)
+   (surface  rigid-body-surface               :offset-assert 64)
    )
   :pack-me
   :method-count-assert 9
@@ -41194,21 +41201,21 @@
   (:methods
     (new (symbol type) _type_) ;; 0 ;; (new (symbol type process) _type_)
     (rigid-body-control-method-9 () none) ;; 9 ;; (rigid-body-control-method-9 (_type_ collide-shape-moving float) none)
-    (rigid-body-control-method-10 () none) ;; 10 ;; (rigid-body-control-method-10 (_type_ rigid-body-object float float) object)
-    (rigid-body-control-method-11 () none) ;; 11 ;; (update-rbody-transform! (_type_ collide-shape-moving) none)
+    (rigid-body-control-method-10 (_type_ rigid-body-object float float) object)
+    (rigid-body-control-method-11 (_type_ vector) none) ;; 11 ;; (update-rbody-transform! (_type_ collide-shape-moving) none)
     (rigid-body-control-method-12 (_type_ float) none)
-    (rigid-body-control-method-13 () none) ;; 13 ;; (init-velocities! (_type_) none)
+    (rigid-body-control-method-13 (_type_) none) ;; 13 ;; (init-velocities! (_type_) none)
     (rigid-body-control-method-14 () none) ;; 14 ;; (rigid-body-control-method-14 (_type_ float) none)
     (rigid-body-control-method-15 () none) ;; 15 ;; (rigid-body-control-method-15 (_type_) none)
     (rigid-body-control-method-16 () none) ;; 16 ;; (reset-force-and-torque! (_type_) none)
-    (rigid-body-control-method-17 () none) ;; 17 ;; (reset-momentum! (_type_) none)
-    (rigid-body-control-method-18 (_type_ vector) none) ;; 18 ;; (apply-impact! (_type_ vector vector) none)
+    (rigid-body-control-method-17 (_type_) none) ;; 17 ;; (reset-momentum! (_type_) none)
+    (apply-impact! (_type_ vector vector) none)
     (rigid-body-control-method-19 () none) ;; 19 ;; (rigid-body-control-method-19 (_type_ vector vector) none)
-    (rigid-body-control-method-20 () none) ;; 20 ;; (add-force! (_type_ vector) none)
-    (rigid-body-control-method-21 () none) ;; 21 ;; (rigid-body-control-method-21 (_type_ vector vector float) none)
+    (add-force! (_type_ vector) none)
+    (rigid-body-control-method-21 (_type_ vector) none) ;; 21 ;; (rigid-body-control-method-21 (_type_ vector vector float) none)
     (rigid-body-control-method-22 () none) ;; 22 ;; (rigid-body-control-method-22 (_type_ vector vector) none)
-    (rigid-body-control-method-23 () none) ;; 23 ;; (rigid-body-control-method-23 (_type_ vector vector) none)
-    (rigid-body-control-method-24 () none) ;; 24 ;; (rigid-body-control-method-24 (_type_ vector vector) none)
+    (rigid-body-control-method-23 (_type_ vector vector) none)
+    (rigid-body-control-method-24 (_type_ vector vector) none)
     (rigid-body-control-method-25 () none) ;; 25 ;; (rigid-body-control-method-25 (_type_ vector) vector)
     (rigid-body-control-method-26 () none) ;; 26 ;; (rigid-body-control-method-26 (_type_) none)
     (rigid-body-control-method-27 () none) ;; 27 ;; (init! (_type_ rigid-body-info vector quaternion (function rigid-body-object float)) none)
@@ -41294,34 +41301,34 @@
     active ;; 60
     )
   (:methods
-    (rigid-body-object-method-61 (_type_ int) none) ;; 61
-    (rigid-body-object-method-62 () none) ;; 62
+    (rigid-body-object-method-61 (_type_) none) ;; 61
+    (rigid-body-object-method-62 (_type_ float) none) ;; 62
     (rigid-body-object-method-63 () none) ;; 63
     (rigid-body-object-method-64 (_type_ rigid-body-object-constants) none) ;; 64
-    (rigid-body-object-method-65 (_type_) none) ;; 65
+    (rigid-body-object-method-65 (_type_ vector) none) ;; 65
     (rigid-body-object-method-66 (_type_) float) ;; 66
     (rigid-body-object-method-67 () none) ;; 67
-    (rigid-body-object-method-68 () none) ;; 68
-    (rigid-body-object-method-69 (_type_) none) ;; 69
+    (rigid-body-object-method-68 (_type_ rigid-body-object object) none) ;; 68
+    (set-callbacks! (_type_) none) ;; 69
     (rigid-body-object-method-70 (_type_) none) ;; 70
     (rigid-body-object-method-71 (_type_) none) ;; 71
-    (rigid-body-object-method-72 () none) ;; 72
-    (rigid-body-object-method-73 () none) ;; 73
-    (rigid-body-object-method-74 () none) ;; 74
-    (rigid-body-object-method-75 () none) ;; 75
-    (rigid-body-object-method-76 () none) ;; 76
-    (rigid-body-object-method-77 () none) ;; 77
-    (rigid-body-object-method-78 () none) ;; 78
-    (rigid-body-object-method-79 () none) ;; 79
-    (rigid-body-object-method-80 (_type_ rigid-body-impact) none) ;; 80
-    (rigid-body-object-method-81 () none) ;; 81
+    (rigid-body-object-method-72 (_type_) none) ;; 72
+    (rigid-body-object-method-73 (_type_) none) ;; 73
+    (rigid-body-object-method-74 (_type_) none) ;; 74
+    (rigid-body-object-method-75 (_type_) none) ;; 75
+    (rigid-body-object-method-76 (_type_) none) ;; 76
+    (rigid-body-object-method-77 (_type_) none) ;; 77
+    (rigid-body-object-method-78 (_type_) none) ;; 78
+    (rigid-body-object-method-79 (_type_) none) ;; 79
+    (rigid-body-object-method-80 (_type_ rigid-body-impact) symbol) ;; 80
+    (rigid-body-object-method-81 (_type_) none) ;; 81
     (rigid-body-object-method-82 (_type_ object rigid-body-object-constants) none) ;; 82
-    (rigid-body-object-method-83 () none) ;; 83
-    (rigid-body-object-method-84 () none) ;; 84
+    (rigid-body-object-method-83 (_type_) none) ;; 83
+    (rigid-body-object-method-84 (_type_) none) ;; 84
     (rigid-body-object-method-85 (_type_) none) ;; 85
-    (rigid-body-object-method-86 () none) ;; 86
-    (rigid-body-object-method-87 () none) ;; 87
-    (rigid-body-object-method-88 () none) ;; 88
+    (rigid-body-object-method-86 (_type_) none) ;; 86
+    (rigid-body-object-method-87 (_type_) none) ;; 87
+    (rigid-body-object-method-88 (_type_) none) ;; 88
     )
   )
 
@@ -41336,7 +41343,7 @@
   (:methods
     (rigid-body-queue-method-9 () none) ;; 9 ;; (init-queue! (_type_ process) none)
     (rigid-body-queue-method-10 () none) ;; 10 ;; (rigid-body-queue-method-10 (_type_) none)
-    (rigid-body-queue-method-11 () none) ;; 11 ;; (rigid-body-queue-method-11 (_type_ process) none)
+    (rigid-body-queue-method-11 (_type_ rigid-body-object) none) ;; 11 ;; (rigid-body-queue-method-11 (_type_ process) none)
     (rigid-body-queue-method-12 () none) ;; 12 ;; (rigid-body-queue-method-12 (_type_ int int) none)
     (rigid-body-queue-method-13 () none) ;; 13 ;; (rigid-body-queue-method-13 (_type_ int process) none)
     (rigid-body-queue-method-14 () none) ;; 14 ;; (rigid-body-queue-method-14 (_type_ int) none)
@@ -41660,7 +41667,7 @@
 ;; (define-extern line-in-view-frustum? function) ;; (function vector vector symbol)
 ;; (define-extern sphere-in-view-frustum-any? function)
 ;; (define-extern line-in-view-frustum-any? function)
-;; (define-extern find-nearest-camera-distance function)
+(define-extern find-nearest-camera-distance (function vector float))
 (define-extern vis-cull (function int symbol)) ;; 
 ;; (define-extern vis-cull-debug function) ;; (function work-area int symbol)
 ;; (define-extern error-sphere function) ;; (function drawable-error string none)
@@ -43812,10 +43819,11 @@
   )
 ;; ---vehicle-h:vehicle-wheel-flag
 
+(declare-type wvehicle vehicle)
 (deftype vehicle-wheel-info (structure)
   ((local-pos          vector                                                                   :inline :offset-assert 0)
    (flags              vehicle-wheel-flag                                                                           :offset-assert 16) ;; vehicle-wheel-flag
-   (callback           function         :offset-assert 24) ;; (function rigid-body-object vehicle-wheel-state vehicle-wheel-info none)
+   (callback           (function wvehicle none)         :offset-assert 24) ;; (function rigid-body-object vehicle-wheel-state vehicle-wheel-info none)
    (inertia            float                                                                            :offset-assert 28)
    (radius             float                                                                            :offset-assert 32)
    (susp-arm-length    float                                                                            :offset-assert 36)
@@ -44207,9 +44215,9 @@
   (:methods
     (vehicle-section-method-9 (_type_ rigid-body-object art-group int) none) ;; 9
     (vehicle-section-method-10 () none) ;; 10
-    (vehicle-section-method-11 () none) ;; 11
+    (vehicle-section-method-11 (_type_ wvehicle) none) ;; 11
     (vehicle-section-method-12 () none) ;; 12
-    (vehicle-section-method-13 () none) ;; 13
+    (vehicle-section-method-13 (_type_ float) none) ;; 13
     (vehicle-section-method-14 () none) ;; 14
     (vehicle-section-method-15 () none) ;; 15
     (vehicle-section-method-16 () none) ;; 16
@@ -44307,6 +44315,7 @@
 ;; ---vehicle-h:vehicle-flag
 
 ;; TODO - jakx more misaligned inline arrays?
+(declare-type driver process-focusable)
 (deftype vehicle (rigid-body-object)
   ((self                     vehicle                      :override)
    (info rigid-body-vehicle-constants :override)
@@ -44316,12 +44325,13 @@
    (damage-matrix                   matrix                              2       :inline :offset-assert 304)
    (damage-direction                vector                              :inline :offset-assert 432)
    (camera-pos                      vector                              :inline :offset-assert 448)
-   (pad2 uint32 2)
+   (vehicle-unk-handle handle)
    (control-hook                    (function vehicle vehicle-controls)         :offset-assert 472) ;; guessed by decompiler
    (control-mask                    vehicle-controls                            :offset-assert 476)
    (impact-callback                 basic                                       :offset-assert 480)
    (controls                        vehicle-controls                    :inline :offset-assert 484)
    (prev-controls                   vehicle-controls                    :inline :offset-assert 508)
+   (unk-vehicle-int32-3 uint32 :offset 532) ;; (enter sink wvehicle)
    (impact                          rigid-body-impact                   :inline :offset-assert 544)
    (target-acceleration             vector                              :inline :offset-assert 624)
    (impact-local-pos                vector                              :inline :offset-assert 640)
@@ -44335,14 +44345,16 @@
    (pad3 uint32)
    (speed-factor                    float                                       :offset-assert 700)
    (pad4 uint32 6)
+   (unk-vehicle-float-5 float :offset 724)
    (behavior                        uint64                                      :offset-assert 728)
    (cam-view                        int8                                        :offset-assert 736)
    (pad5 uint32)
    (cam-speed-interp                float                                       :offset-assert 744)
    (camera-dist                     float                                       :offset-assert 748)
-   (pad6 uint32 3)
-   (impact-proc                     uint64                                      :offset-assert 768) ;; handle
-   (net-player                      uint64                                      :offset-assert 776)
+   (vehicle-unk-handle1 handle 1 :offset 752) ;; dumb
+   (pad6 uint32)
+   (impact-proc                     handle                                      :offset-assert 768) ;; handle
+   (net-player                      handle                                      :offset-assert 776) ;; probably net-player
    (pad7 uint32)
    (impact-time                     uint32                                      :offset-assert 788)
    (prev-impact-time                uint32                                      :offset-assert 792)
@@ -44351,7 +44363,9 @@
    (pad9 uint32 3)
    (physics-enabled-time            uint32                                      :offset-assert 824)
    (pad10 uint32 7)
+   (unknown-vehicle-uint16-1 uint16 :offset 848)
    (water-height                    float                                       :offset-assert 856)
+   (vehicle-float-2 float :offset 908)
    (vehicle-sections vehicle-section 12 :inline :offset 1024 :score 1) ;; added, look at any of the `wcar files`
   ;;  (vehicle-section-00 vehicle-section :offset 1024 :score 999)
   ;;  (vehicle-section-02 vehicle-section :offset 1088 :score 999)
@@ -44375,7 +44389,8 @@
    (player-id                       int8                                        :offset-assert 2120)
    (killed-by                       int8                                        :offset-assert 2121)
    (killed-with                     int8                                        :offset-assert 2122)
-   (pad12 uint32 2)
+   (vehicle-int32-1 int32 :offset 2124) ;; vehicle:180
+   (pad12 uint32)
    (last-warp-time                  int32                                       :offset-assert 2132)
    (last-sent-vehicle-control-flags uint8                                       :offset-assert 2136)
    )
@@ -44383,17 +44398,29 @@
   :size-assert         #x859
   :flag-assert         #xcc07d00859
   ;; field vehicle-flag is likely a value type.
+  (:state-methods
+    inactive
+    waiting
+    vehicle-3
+    player-control
+    crash
+    explode
+    die
+    restart
+    net-remote-control
+    ghost
+    )
   (:methods
-    (vehicle-method-89 (_type_) none) ;; 89 ;; (init-reverse (_type_ vehicle-controls) none)
-    (vehicle-method-90 (_type_) none) ;; 90 ;; (control-hook-ai (_type_ vehicle-controls) none)
-    (vehicle-method-91 (_type_) none) ;; 91 ;; (control-hook-player (_type_) none)
-    (vehicle-method-92 (_type_) none) ;; 92 ;; (vehicle-method-92 (_type_ vehicle-controls) none)
-    (vehicle-method-93 (_type_) none) ;; 93 ;; (vehicle-method-93 (_type_) none)
-    (vehicle-method-94 (_type_) none) ;; 94 ;; (vehicle-method-94 (_type_) none)
-    (vehicle-method-95 (_type_) none) ;; 95 ;; (vehicle-method-95 (_type_ vector float) none)
-    (vehicle-method-96 (_type_) none) ;; 96 ;; (vehicle-method-96 (_type_ float) none)
-    (vehicle-method-97 (_type_) none) ;; 97 ;; (vehicle-method-97 (_type_ float vehicle-physics-work) none)
-    (vehicle-method-98 (_type_) none) ;; 98 ;; (vehicle-method-98 (_type_) none)
+    ;; (vehicle-method-89 (_type_) none) ;; 89 ;; (init-reverse (_type_ vehicle-controls) none)
+    ;; (vehicle-method-90 (_type_) none) ;; 90 ;; (control-hook-ai (_type_ vehicle-controls) none)
+    ;; (vehicle-method-91 (_type_) none) ;; 91 ;; (control-hook-player (_type_) none)
+    ;; (vehicle-method-92 (_type_) none) ;; 92 ;; (vehicle-method-92 (_type_ vehicle-controls) none)
+    ;; (vehicle-method-93 (_type_) none) ;; 93 ;; (vehicle-method-93 (_type_) none)
+    ;; (vehicle-method-94 (_type_) none) ;; 94 ;; (vehicle-method-94 (_type_) none)
+    ;; (vehicle-method-95 (_type_) none) ;; 95 ;; (vehicle-method-95 (_type_ vector float) none)
+    ;; (vehicle-method-96 (_type_) none) ;; 96 ;; (vehicle-method-96 (_type_ float) none)
+    ;; (vehicle-method-97 (_type_) none) ;; 97 ;; (vehicle-method-97 (_type_ float vehicle-physics-work) none)
+    ;; (vehicle-method-98 (_type_) none) ;; 98 ;; (vehicle-method-98 (_type_) none)
     (vehicle-method-99 (_type_) none) ;; 99 ;; (vehicle-method-99 (_type_) none)
     (vehicle-method-100 (_type_) none) ;; 100 ;; (vehicle-method-100 (_type_) none)
     (vehicle-method-101 (_type_) none) ;; 101 ;; (vehicle-method-101 (_type_) none)
@@ -44406,99 +44433,99 @@
     (vehicle-method-108 (_type_) none) ;; 108 ;; (vehicle-method-108 (_type_ int) none)
     (vehicle-method-109 (_type_) none) ;; 109 ;; (vehicle-method-109 (_type_) none)
     (vehicle-method-110 (_type_) none) ;; 110 ;; (vehicle-method-110 (_type_) none)
-    (vehicle-method-111 (_type_) none) ;; 111 ;; (get-linear-accel! (_type_ vector) none)
+    (vehicle-method-111 (_type_ vector quaternion) none) ;; 111 ;; (get-linear-accel! (_type_ vector) none)
     (vehicle-method-112 (_type_) none) ;; 112 ;; (copy-vehicle-controls! (_type_ vehicle-controls) none)
     (vehicle-method-113 (_type_) none) ;; 113 ;; (vehicle-method-113 (_type_ vector int int) none)
     (vehicle-method-114 (_type_) none) ;; 114 ;; (vehicle-method-114 (_type_ int) none)
     (vehicle-method-115 (_type_) none) ;; 115 ;; (vehicle-method-115 (_type_) none)
-    (vehicle-method-116 () none) ;; 116 ;; (vehicle-method-116 (_type_ symbol) none)
-    (vehicle-method-117 () none) ;; 117 ;; (vehicle-method-117 (_type_) none)
-    (vehicle-method-118 () none) ;; 118 ;; (vehicle-method-118 (_type_) none)
-    (vehicle-method-119 () none) ;; 119 ;; (vehicle-method-119 (_type_) none)
-    (vehicle-method-120 () none) ;; 120 ;; (apply-gravity (_type_ float) none)
-    (vehicle-method-121 () none) ;; 121 ;; (apply-gravity1 (_type_ float) none)
-    (vehicle-method-122 () none) ;; 122 ;; (vehicle-method-122 (_type_) none)
-    (vehicle-method-123 () none) ;; 123 ;; (vehicle-method-123 (_type_) none)
-    (vehicle-method-124 () none) ;; 124 ;; (vehicle-method-124 (_type_) none)
-    (vehicle-method-125 () none) ;; 125 ;; (vehicle-method-125 (_type_) none)
-    (vehicle-method-126 () none) ;; 126 ;; (vehicle-method-126 (_type_) none)
-    (vehicle-method-127 () none) ;; 127 ;; (check-player-get-on (_type_ process-focusable) symbol)
-    (vehicle-method-128 () none) ;; 128 ;; (vehicle-method-128 (_type_) symbol)
-    (vehicle-method-129 () none) ;; 129 ;; (vehicle-method-129 (_type_) none)
+    (vehicle-method-116 (_type_) none) ;; 116 ;; (vehicle-method-116 (_type_ symbol) none)
+    (vehicle-method-117 (_type_) none) ;; 117 ;; (vehicle-method-117 (_type_) none)
+    (vehicle-method-118 (_type_) none) ;; 118 ;; (vehicle-method-118 (_type_) none)
+    (vehicle-method-119 (_type_) none) ;; 119 ;; (vehicle-method-119 (_type_) none)
+    (vehicle-method-120 (_type_) none) ;; 120 ;; (apply-gravity (_type_ float) none)
+    (vehicle-method-121 (_type_) none) ;; 121 ;; (apply-gravity1 (_type_ float) none)
+    (vehicle-method-122 (_type_) none) ;; 122 ;; (vehicle-method-122 (_type_) none)
+    (setup-wheel-callbacks! (_type_) none) ;; 123 ;; (vehicle-method-123 (_type_) none)
+    (remove-wheel-callbacks! (_type_) none) ;; 124 ;; (vehicle-method-124 (_type_) none)
+    (vehicle-method-125 (_type_) none) ;; 125 ;; (vehicle-method-125 (_type_) none)
+    (vehicle-method-126 (_type_) none) ;; 126 ;; (vehicle-method-126 (_type_) none)
+    (vehicle-method-127 (_type_) none) ;; 127 ;; (check-player-get-on (_type_ process-focusable) symbol)
+    (vehicle-method-128 (_type_) none) ;; 128 ;; (vehicle-method-128 (_type_) symbol)
+    (vehicle-method-129 (_type_ vehicle-controls) none) ;; 129 ;; (vehicle-method-129 (_type_) none)
     (vehicle-method-130 () none) ;; 130 ;; (vehicle-method-130 (_type_) none)
     (vehicle-method-131 () none) ;; 131 ;; (vehicle-method-131 (_type_ traffic-object-spawn-params) none)
     (vehicle-method-132 () none) ;; 132 ;; (vehicle-method-132 (_type_ traffic-object-spawn-params) none)
-    (vehicle-method-133 () none) ;; 133 ;; (vehicle-method-133 (_type_ traffic-object-spawn-params) none)
-    (vehicle-method-134 () none) ;; 134 ;; (vehicle-method-134 (_type_) none)
-    (vehicle-method-135 () none) ;; 135 ;; (vehicle-method-135 (_type_) none)
-    (vehicle-method-136 () none) ;; 136 ;; (vehicle-method-136 (_type_) none)
-    (vehicle-method-137 () none) ;; 137 ;; (vehicle-method-137 (_type_) none)
-    (vehicle-method-138 () none) ;; 138 ;; (vehicle-method-138 (_type_) none)
+    (vehicle-method-133 (_type_ vehicle-controls) none) ;; 133 ;; (vehicle-method-133 (_type_ traffic-object-spawn-params) none)
+    (vehicle-method-134 (_type_) none) ;; 134 ;; (vehicle-method-134 (_type_) none)
+    (vehicle-method-135 (_type_) none) ;; 135 ;; (vehicle-method-135 (_type_) none)
+    (vehicle-method-136 (_type_ sphere float) none) ;; 136 ;; (vehicle-method-136 (_type_) none)
+    (vehicle-method-137 (_type_) none) ;; 137 ;; (vehicle-method-137 (_type_) none)
+    (vehicle-method-138 (_type_ float) float) ;; 138 ;; (vehicle-method-138 (_type_) none)
     (vehicle-method-139 () none) ;; 139 ;; (vehicle-method-139 (_type_) none)
     (vehicle-method-140 () none) ;; 140 ;; (vehicle-method-140 (_type_) none)
     (vehicle-method-141 () none) ;; 141 ;; (vehicle-method-141 (_type_) symbol)
     (vehicle-method-142 () none) ;; 142 ;; (vehicle-method-142 (_type_) none)
     (vehicle-method-143 () none) ;; 143 ;; (vehicle-method-143 (_type_ process) object)
     (vehicle-method-144 (_type_) none) ;; 144 ;; (vehicle-method-144 (_type_) none)
-    (vehicle-method-145 () none) ;; 145 ;; (vehicle-method-145 (_type_) none)
-    (vehicle-method-146 () none) ;; 146 ;; (vehicle-method-146 (_type_ vector) none)
-    (vehicle-method-147 () none) ;; 147 ;; (vehicle-method-147 (_type_) none)
-    (vehicle-method-148 () none) ;; 148 ;; (vehicle-method-148 (_type_) none)
-    (vehicle-method-149 () none) ;; 149 ;; (vehicle-method-149 (_type_) none)
-    (vehicle-method-150 () none) ;; 150 ;; (vehicle-method-150 (_type_) none)
-    (vehicle-method-151 () none) ;; 151 ;; (set-hit-points (_type_ float) none)
-    (vehicle-method-152 () none) ;; 152
-    (vehicle-method-153 () none) ;; 153
-    (vehicle-method-154 () none) ;; 154
-    (vehicle-method-155 () none) ;; 155
-    (vehicle-method-156 () none) ;; 156
-    (vehicle-method-157 () none) ;; 157
-    (vehicle-method-158 () none) ;; 158
-    (vehicle-method-159 () none) ;; 159
-    (vehicle-method-160 () none) ;; 160
-    (vehicle-method-161 () none) ;; 161
-    (vehicle-method-162 () none) ;; 162
-    (vehicle-method-163 () none) ;; 163
-    (vehicle-method-164 () none) ;; 164
-    (vehicle-method-165 () none) ;; 165
-    (vehicle-method-166 () none) ;; 166
-    (vehicle-method-167 () none) ;; 167
-    (vehicle-method-168 () none) ;; 168
+    (vehicle-method-145 (_type_) none) ;; 145 ;; (vehicle-method-145 (_type_) none)
+    (vehicle-method-146 (_type_) none) ;; 146 ;; (vehicle-method-146 (_type_ vector) none)
+    (vehicle-method-147 (_type_) none) ;; 147 ;; (vehicle-method-147 (_type_) none)
+    (vehicle-method-148 (_type_) none) ;; 148 ;; (vehicle-method-148 (_type_) none)
+    (vehicle-method-149 (_type_ vector int) none) ;; 149 ;; (vehicle-method-149 (_type_) none)
+    (vehicle-method-150 (_type_) none) ;; 150 ;; (vehicle-method-150 (_type_) none)
+    (vehicle-method-151 (_type_) none) ;; 151 ;; (set-hit-points (_type_ float) none)
+    (vehicle-method-152 (_type_) none) ;; 152
+    (vehicle-method-153 (_type_) none) ;; 153
+    (vehicle-method-154 (_type_ symbol) none) ;; 154
+    (vehicle-method-155 (_type_) none) ;; 155
+    (vehicle-method-156 (_type_) none) ;; 156
+    (vehicle-method-157 (_type_) none) ;; 157
+    (vehicle-method-158 (_type_ float) none) ;; 158
+    (vehicle-method-159 (_type_ float) none) ;; 159
+    (vehicle-method-160 (_type_) none) ;; 160
+    (vehicle-method-161 (_type_) none) ;; 161
+    (vehicle-method-162 (_type_) none) ;; 162
+    (vehicle-method-163 (_type_) none) ;; 163
+    (vehicle-method-164 (_type_) none) ;; 164
+    (vehicle-method-165 (_type_) none) ;; 165
+    (vehicle-method-166 (_type_) none) ;; 166
+    (vehicle-method-167 (_type_) none) ;; 167
+    (vehicle-method-168 (_type_) none) ;; 168
     (vehicle-method-169 (_type_) none) ;; 169
     (vehicle-method-170 (_type_) none) ;; 170
-    (vehicle-method-171 () none) ;; 171
-    (vehicle-method-172 () none) ;; 172
-    (vehicle-method-173 () none) ;; 173
-    (vehicle-method-174 () none) ;; 174
-    (vehicle-method-175 () none) ;; 175
-    (vehicle-method-176 () none) ;; 176
-    (vehicle-method-177 () none) ;; 177
-    (vehicle-method-178 () none) ;; 178
-    (vehicle-method-179 () none) ;; 179
-    (vehicle-method-180 () none) ;; 180
-    (vehicle-method-181 () none) ;; 181
-    (vehicle-method-182 () none) ;; 182
-    (vehicle-method-183 () none) ;; 183
-    (vehicle-method-184 () none) ;; 184
-    (vehicle-method-185 () none) ;; 185
-    (vehicle-method-186 () none) ;; 186
-    (vehicle-method-187 () none) ;; 187
-    (vehicle-method-188 () none) ;; 188
-    (vehicle-method-189 () none) ;; 189
-    (vehicle-method-190 () none) ;; 190
-    (vehicle-method-191 () none) ;; 191
-    (vehicle-method-192 () none) ;; 192
-    (vehicle-method-193 () none) ;; 193
-    (vehicle-method-194 () none) ;; 194
-    (vehicle-method-195 () none) ;; 195
-    (vehicle-method-196 () none) ;; 196
-    (vehicle-method-197 () none) ;; 197
-    (vehicle-method-198 () none) ;; 198
-    (vehicle-method-199 () none) ;; 199
-    (vehicle-method-200 () none) ;; 200
-    (vehicle-method-201 () none) ;; 201
-    (vehicle-method-202 () none) ;; 202
-    (vehicle-method-203 () none) ;; 203
+    (vehicle-method-171 (_type_) none) ;; 171
+    (vehicle-method-172 (_type_) none) ;; 172
+    (vehicle-method-173 (_type_) none) ;; 173
+    (clear-wheel-rev! (_type_) none) ;; 174
+    (vehicle-method-175 (_type_) none) ;; 175
+    (vehicle-method-176 (_type_ vector) none) ;; 176
+    (vehicle-method-177 (_type_) none) ;; 177
+    (vehicle-method-178 (_type_) none) ;; 178
+    (vehicle-method-179 (_type_) none) ;; 179
+    (vehicle-method-180 (_type_) none) ;; 180
+    (vehicle-method-181 (_type_) none) ;; 181
+    (vehicle-method-182 (_type_) none) ;; 182
+    (vehicle-method-183 (_type_) none) ;; 183
+    (vehicle-method-184 (_type_) none) ;; 184
+    (vehicle-method-185 (_type_) none) ;; 185
+    (vehicle-method-186 (_type_) none) ;; 186
+    (vehicle-method-187 (_type_) none) ;; 187
+    (vehicle-method-188 (_type_) none) ;; 188
+    (vehicle-method-189 (_type_) none) ;; 189
+    (vehicle-method-190 (_type_) none) ;; 190
+    (vehicle-method-191 (_type_) none) ;; 191
+    (vehicle-method-192 (_type_) none) ;; 192
+    (vehicle-method-193 (_type_) none) ;; 193
+    (vehicle-method-194 (_type_) none) ;; 194
+    (vehicle-method-195 (_type_) none) ;; 195
+    (vehicle-method-196 (_type_) none) ;; 196
+    (vehicle-method-197 (_type_) none) ;; 197
+    (vehicle-method-198 (_type_) none) ;; 198
+    (vehicle-method-199 (_type_) none) ;; 199
+    (vehicle-method-200 (_type_) none) ;; 200
+    (vehicle-method-201 (_type_ driver) none) ;; 201
+    (vehicle-method-202 (_type_ int) none) ;; 202
+    (vehicle-method-203 (_type_) none) ;; 203
     )
   )
 
@@ -45095,7 +45122,7 @@
    (position       vector       :inline :offset-assert 16)
    (velocity       vector       :inline :offset-assert 32)
    (nav-location   nav-location :inline :offset-assert 48)
-   (handle         uint64               :offset-assert 56)
+   (handle         handle               :offset-assert 56)
    )
   :method-count-assert 9
   :size-assert         #x40
@@ -45164,10 +45191,12 @@
   :flag-assert         #x900000004
   )
 
+(declare-type wvehicle-probe-work structure)
+(declare-type wvehicle-physics-work structure)
 (deftype wvehicle (vehicle)
   ((net-extra                      wvehicle-net-extra        :inline :offset-assert 2140)
-   (antenna                        uint64                            :offset-assert 2152)
-   (fire-tracker                   uint64                            :offset-assert 2160)
+   (antenna                        handle                            :offset-assert 2152)
+   (fire-tracker                   handle                            :offset-assert 2160)
    (race                           race-control              :inline :offset-assert 2168)
    (ai                             wvehicle-ai-state         :inline :offset-assert 2192)
    (engine-rev                     float                             :offset-assert 2328)
@@ -45234,8 +45263,8 @@
    (jump-time                      uint32                            :offset-assert 3912)
    (no-slide-time                  uint32                            :offset-assert 3916)
    (slide-distance                 float                             :offset-assert 3920)
-   (power-slide-hud                uint64                            :offset-assert 3928)
-   (hang-time-hud                  uint64                            :offset-assert 3936)
+   (power-slide-hud                handle                            :offset-assert 3928)
+   (hang-time-hud                  handle                            :offset-assert 3936)
    (hang-time                      float                             :offset-assert 3944)
    (next-slide-sound-play-distance float                             :offset-assert 3948)
    (attached-array                 handle                    16      :offset-assert 3952) ;; guessed by decompiler
@@ -45281,81 +45310,82 @@
    (hack-armed-right               basic                             :offset-assert 4640)
    (hack-armed-left                basic                             :offset-assert 4644)
    (shake-amount                   float                             :offset-assert 4648)
-   (whoosh-sound-id                uint32                            :offset-assert 4652)
-   (sink-sound-id                  uint32                            :offset-assert 4656)
+   (whoosh-sound-id                sound-id                            :offset-assert 4652)
+   (sink-sound-id                  sound-id                            :offset-assert 4656)
    )
   :method-count-assert 272
   :size-assert         #x1234
   :flag-assert         #x11011b01234
+  (:state-methods
+    hostile
+    race-waiting
+    race-racing
+    race-finished
+    explode-into-nothing
+    sink)
   (:methods
-    (wvehicle-method-204 () none) ;; 204
-    (wvehicle-method-205 () none) ;; 205
-    (wvehicle-method-206 () none) ;; 206
-    (wvehicle-method-207 () none) ;; 207
-    (wvehicle-method-208 () none) ;; 208
-    (wvehicle-method-209 () none) ;; 209
-    (wvehicle-method-210 () none) ;; 210
-    (wvehicle-method-211 () none) ;; 211
-    (wvehicle-method-212 () none) ;; 212
+    (wvehicle-method-210 (_type_ float wvehicle-physics-work) none) ;; 210
+    (wvehicle-method-211 (_type_ wvehicle-probe-work) none) ;; 211
+    (post-move-callback (_type_) none) ;; 212
     (wvehicle-method-213 (_type_ art-group symbol) none) ;; 213
-    (wvehicle-method-214 () none) ;; 214
-    (wvehicle-method-215 () none) ;; 215
-    (wvehicle-method-216 () none) ;; 216
-    (wvehicle-method-217 () none) ;; 217
-    (wvehicle-method-218 () none) ;; 218
-    (wvehicle-method-219 () none) ;; 219
-    (wvehicle-method-220 () none) ;; 220
-    (wvehicle-method-221 () none) ;; 221
-    (wvehicle-method-222 () none) ;; 222
+    (wvehicle-method-214 (_type_ float) none) ;; 214
+    (wvehicle-method-215 (_type_) none) ;; 215
+    (wvehicle-method-216 (_type_ float) none) ;; 216
+    (wheel-callback (_type_) none) ;; 217
+    (wvehicle-method-218 (_type_) none) ;; 218
+    (wvehicle-method-219 (_type_) none) ;; 219
+    (wvehicle-method-220 (_type_) none) ;; 220
+    (wvehicle-method-221 (_type_ int) none) ;; 221
+    (wvehicle-method-222 (_type_) none) ;; 222
     (wvehicle-method-223 (_type_) none) ;; 223
-    (wvehicle-method-224 () none) ;; 224
-    (wvehicle-method-225 () none) ;; 225
+    (wvehicle-method-224 (_type_ float int) float) ;; 224
+    (clear-idle-throttle! (_type_) none) ;; 225
     (wvehicle-method-226 () none) ;; 226
-    (wvehicle-method-227 () none) ;; 227
-    (wvehicle-method-228 () none) ;; 228
-    (wvehicle-method-229 () none) ;; 229
-    (wvehicle-method-230 () none) ;; 230
-    (wvehicle-method-231 () none) ;; 231
-    (wvehicle-method-232 () none) ;; 232
-    (wvehicle-method-233 () none) ;; 233
-    (wvehicle-method-234 () none) ;; 234
-    (wvehicle-method-235 () none) ;; 235
-    (wvehicle-method-236 () none) ;; 236
-    (wvehicle-method-237 () none) ;; 237
-    (wvehicle-method-238 () none) ;; 238
-    (wvehicle-method-239 () none) ;; 239
-    (wvehicle-method-240 () none) ;; 240
-    (wvehicle-method-241 () none) ;; 241
-    (wvehicle-method-242 () none) ;; 242
-    (wvehicle-method-243 () none) ;; 243
-    (wvehicle-method-244 () none) ;; 244
-    (wvehicle-method-245 () none) ;; 245
-    (wvehicle-method-246 () none) ;; 246
-    (wvehicle-method-247 () none) ;; 247
-    (wvehicle-method-248 () none) ;; 248
-    (wvehicle-method-249 () none) ;; 249
-    (wvehicle-method-250 () none) ;; 250
-    (wvehicle-method-251 () none) ;; 251
-    (wvehicle-method-252 () none) ;; 252
-    (wvehicle-method-253 () none) ;; 253
-    (wvehicle-method-254 () none) ;; 254
-    (wvehicle-method-255 () none) ;; 255
-    (wvehicle-method-256 () none) ;; 256
-    (wvehicle-method-257 () none) ;; 257
-    (wvehicle-method-258 () none) ;; 258
-    (wvehicle-method-259 () none) ;; 259
-    (wvehicle-method-260 () none) ;; 260
-    (wvehicle-method-261 () none) ;; 261
-    (wvehicle-method-262 () none) ;; 262
-    (wvehicle-method-263 () none) ;; 263
-    (wvehicle-method-264 () none) ;; 264
-    (wvehicle-method-265 () none) ;; 265
-    (wvehicle-method-266 () none) ;; 266
-    (wvehicle-method-267 () none) ;; 267
-    (wvehicle-method-268 () none) ;; 268
-    (wvehicle-method-269 () none) ;; 269
-    (wvehicle-method-270 () none) ;; 270
-    (wvehicle-method-271 () none) ;; 271
+    (get-rider-attach-point-count (_type_) int) ;; 227
+    (wvehicle-method-228 (_type_ vector int) none) ;; 228
+    (wvehicle-method-229 (_type_ vector int) none) ;; 229
+    (wvehicle-method-230 (_type_ vector) none) ;; 230
+    (wvehicle-method-231 (_type_ int) process) ;; 231
+    (wvehicle-method-232 (_type_ int object) none) ;; 232
+    (wvehicle-method-233 (_type_ object) none) ;; 233
+    (wvehicle-method-234 (_type_) none) ;; 234
+    (wvehicle-method-235 (_type_ vector vector vector) none) ;; 235
+    (wvehicle-method-236 (_type_) none) ;; 236
+    (wvehicle-method-237 (_type_) none) ;; 237
+    (wvehicle-method-238 (_type_) none) ;; 238
+    (wvehicle-method-239 (_type_) none) ;; 239
+    (wvehicle-method-240 (_type_) none) ;; 240
+    (wvehicle-method-241 (_type_) none) ;; 241
+    (wvehicle-method-242 (_type_) none) ;; 242
+    (wvehicle-method-243 (_type_) none) ;; 243
+    (wvehicle-method-244 (_type_) none) ;; 244
+    (wvehicle-method-245 (_type_) none) ;; 245
+    (wvehicle-method-246 (_type_) none) ;; 246
+    (wvehicle-method-247 (_type_) none) ;; 247
+    (wvehicle-method-248 (_type_) none) ;; 248
+    (wvehicle-method-249 (_type_ vector float int) none) ;; 249
+    (wvehicle-method-250 (_type_) none) ;; 250
+    (wvehicle-method-251 (_type_ vector vector) none) ;; 251
+    (wvehicle-method-252 (_type_) none) ;; 252
+    (wvehicle-method-253 (_type_) none) ;; 253
+    (wvehicle-method-254 (_type_) none) ;; 254
+    (wvehicle-method-255 (_type_) none) ;; 255
+    (wvehicle-method-256 (_type_) none) ;; 256
+    (wvehicle-method-257 (_type_) none) ;; 257
+    (wvehicle-method-258 (_type_) none) ;; 258
+    (wvehicle-method-259 (_type_) none) ;; 259
+    (wvehicle-method-260 (_type_) none) ;; 260
+    (wvehicle-method-261 (_type_) none) ;; 261
+    (wvehicle-method-262 (_type_ int) symbol) ;; 262
+    (wvehicle-method-263 (_type_) none) ;; 263
+    (wvehicle-method-264 (_type_) none) ;; 264
+    (wvehicle-method-265 (_type_) none) ;; 265
+    (wvehicle-method-266 (_type_) none) ;; 266
+    (wvehicle-method-267 (_type_) none) ;; 267
+    (wvehicle-method-268 (_type_) none) ;; 268
+    (wvehicle-method-269 (_type_) none) ;; 269
+    (wvehicle-method-270 (_type_ float int) none) ;; 270
+    (wvehicle-method-271 (_type_) none) ;; 271
     )
   )
 
@@ -45466,8 +45496,8 @@
     (net-player-method-62 () none) ;; 62
     (net-player-method-63 () none) ;; 63
     (net-player-method-64 () none) ;; 64
-    (net-player-method-65 () none) ;; 65
-    (net-player-method-66 () none) ;; 66
+    (net-player-method-65 (_type_ int) none) ;; 65
+    (net-player-method-66 (_type_ float) none) ;; 66
     (net-player-method-67 () none) ;; 67
     (net-player-method-68 () none) ;; 68
     (net-player-method-69 () none) ;; 69
@@ -49453,30 +49483,28 @@
 ;; rigid-body-surface             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *rigid-body-surfaces* object)
+(define-extern *rigid-body-surfaces* (inline-array rigid-body-surface))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; rigid-body                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
-(deftype debug-rigid-body-move (structure)
-  ((vel-dot-norm    float                      :offset-assert 0)
-   (time-step-scale float                      :offset-assert 4)
-   (best-u          float                      :offset-assert 8)
-   (i-step          int8                       :offset-assert 12)
-   (proc2           basic                      :offset-assert 16)
-   (rbody2          basic                      :offset-assert 20)
-   (best-my-prim    basic                      :offset-assert 24)
-   (bsphere         sphere             :inline :offset-assert 32)
-   (impact-info     rigid-body-impact  :inline :offset-assert 48)
-   (rbody           rigid-body-control :inline :offset-assert 132)
-   )
-  :method-count-assert 9
-  :size-assert         #x1b4
-  :flag-assert         #x9000001b4
-  )
-|#
+;; (deftype debug-rigid-body-move (structure)
+;;   ((vel-dot-norm    float                      :offset-assert 0)
+;;    (time-step-scale float                      :offset-assert 4)
+;;    (best-u          float                      :offset-assert 8)
+;;    (i-step          int8                       :offset-assert 12)
+;;    (proc2           basic                      :offset-assert 16)
+;;    (rbody2          basic                      :offset-assert 20)
+;;    (best-my-prim    basic                      :offset-assert 24)
+;;    (bsphere         sphere             :inline :offset-assert 32)
+;;    (impact-info     rigid-body-impact  :inline :offset-assert 48)
+;;    (rbody           rigid-body-control :inline :offset-assert 132)
+;;    )
+;;   :method-count-assert 9
+;;   :size-assert         #x1b4
+;;   :flag-assert         #x9000001b4
+;;   )
 
 #|
 (deftype rigid-body-work (structure)
@@ -49577,7 +49605,6 @@
   )
 |#
 
-#|
 (deftype rigid-body-move-work (structure)
   ((cquery          collide-query      :inline :offset-assert 0)
    (mat             matrix             :inline :offset-assert 544)
@@ -49611,7 +49638,6 @@
   :size-assert         #x3b4
   :flag-assert         #x9000003b4
   )
-|#
 
 ;; (define-extern *debug-move-rigid-body* object)
 ;; (define-extern *rigid-body-work* object) ;; rigid-body-work
@@ -49652,7 +49678,7 @@
     )
   )
 
-;; (define-extern *rigid-body-queue* object)
+(define-extern *rigid-body-queue* rigid-body-queue)
 (define-extern *rigid-body-queue-manager* rigid-body-queue-manager) ;; 
 ;; (define-extern *rb-line-sphere-test* object)
 ;; (define-extern rb-line-sphere-test-update function)
@@ -50417,7 +50443,7 @@
 ;; (define-extern *tmp-rigid-body-control* object)
 ;; (define-extern *vehicle-shadow-control* shadow-control) ;; shadow-control
 ;; (define-extern *vehicle-shadow-control-disabled* shadow-control) ;; shadow-control
-;; (define-extern vehicle-event-handler function) ;; (function process int symbol event-message-block object :behavior vehicle)
+(define-extern vehicle-event-handler (function process int symbol event-message-block object :behavior vehicle)) ;; 
 ;; (define-extern get-player-id function)
 ;; (define-extern twiddle-collision-cache-verts function)
 ;; (define-extern vehicle-damage-local-space-0 function)
@@ -50448,8 +50474,8 @@
 ;; vehicle-states                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern vehicle-idle-post function)
-;; (define-extern player-wait-control-hook function)
+(define-extern vehicle-idle-post (function none :behavior vehicle))
+(define-extern player-wait-control-hook (function vehicle none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; vehicle-manager                ;;
@@ -52871,7 +52897,7 @@
 ;; race-manager                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *race-state* object) ;; race-state
+(define-extern *race-state* race-state) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; net-anim                       ;;
@@ -53249,10 +53275,10 @@
 ;; explosion                      ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *explosion-effect-suppress* object)
+(define-extern *explosion-effect-suppress* explosion) ;; a guess
 ;; (define-extern explosion-init-by-other function) ;; (function explosion-init-params object :behavior explosion)
 ;; (define-extern explosion-spawn-legacy-version function) ;; (function process-drawable type explosion-init-params (pointer process))
-;; (define-extern explosion-spawn function) ;; (function explosion-init-params process-drawable none)
+(define-extern explosion-spawn (function explosion-init-params process-drawable none)) ;; 
 ;; (define-extern find-closest-solid-sphere-prim function) ;; (function collide-shape vector collide-spec collide-shape-prim)
 ;; (define-extern *explosion-debug-sphere* object) ;; sphere
 ;; (define-extern explosion-handle-touch-with-ccheck function)
@@ -55997,18 +56023,17 @@
 
 ;; (define-extern *power-slide-hud-single* array)
 ;; (define-extern *power-slide-hud-single-proc* object)
-;; (define-extern spawn-power-slide-hud-single function)
+(define-extern spawn-power-slide-hud-single (function process))
 ;; (define-extern *hang-time-hud-single* array)
 ;; (define-extern *hang-time-hud-single-proc* object)
-;; (define-extern spawn-hang-time-hud-single function)
+(define-extern spawn-hang-time-hud-single (function process))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-wheel                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype vehicle-wheel-init-params (structure)
-  ((vehicle  basic                  :offset-assert 0)
+  ((vehicle  vehicle                  :offset-assert 0)
    (skel     skeleton-group         :offset-assert 4) ;; guessed by decompiler
    (level    symbol                 :offset-assert 8) ;; guessed by decompiler
    (radius   float                  :offset-assert 12)
@@ -56020,30 +56045,27 @@
   :size-assert         #x40
   :flag-assert         #x900000040
   )
-|#
 
-#|
 (deftype vehicle-wheel (rigid-body-object)
   ((camera-dist float  :offset-assert 288)
    )
   :method-count-assert 93
   :size-assert         #x124
   :flag-assert         #x5d00a00124
-  (:methods
-    (vehicle-wheel-method-92 () none) ;; 92
-    )
   (:state-methods
-    idle ;; 59
-    die ;; 91
     explode ;; 89
     fade-out ;; 90
+    die ;; 91
+    idle ;; 59
+    )
+  (:methods
+    (vehicle-wheel-method-92 (_type_ int int) none) ;; 92
     )
   )
-|#
 
-;; (define-extern *vehicle-wheel-constants* object) ;; rigid-body-object-constants
-;; (define-extern vehicle-wheel-init-by-other function) ;; (function vehicle-wheel-init-params object :behavior vehicle-wheel)
-;; (define-extern vehicle-wheel-spawn function) ;; (function process vehicle-wheel-init-params vehicle-wheel)
+(define-extern *vehicle-wheel-constants* rigid-body-object-constants)
+(define-extern vehicle-wheel-init-by-other (function vehicle-wheel-init-params object :behavior vehicle-wheel))
+(define-extern vehicle-wheel-spawn (function process vehicle-wheel-init-params vehicle-wheel))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-part                  ;;
@@ -56140,7 +56162,6 @@
 ;; wvehicle-effects               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype wvehicle-wheel-launcher-spec (structure)
   ((mat                    matrix              :offset-assert 0)
    (particle-system        sparticle-system    :offset-assert 4) ;; guessed by decompiler
@@ -56158,13 +56179,12 @@
    (ptr-part-birth-accum   uint32              :offset-assert 52)
    (ptr-streak-birth-accum uint32              :offset-assert 56)
    )
+  :pack-me
   :method-count-assert 9
   :size-assert         #x3c
   :flag-assert         #x90000003c
   )
-|#
 
-#|
 (deftype wvehicle-part-work (structure)
   ((streak             spark-launch-params          :inline :offset-assert 0)
    (local-mat          matrix                       :inline :offset-assert 80)
@@ -56220,20 +56240,16 @@
   :size-assert         #x3b0
   :flag-assert         #x9000003b0
   )
-|#
 
-#|
 (deftype tire-trail-crumb (light-trail-breadcrumb)
   ((offset vector :inline :offset-assert 16)
-   (uu     float          :offset-assert 28)
+   (uu     float          :offset 28)
    )
   :method-count-assert 9
   :size-assert         #x20
   :flag-assert         #x900000020
   )
-|#
 
-#|
 (deftype tire-trail (light-trail)
   ()
   :method-count-assert 25
@@ -56244,27 +56260,24 @@
     (tire-trail-method-24 () none) ;; 24
     )
   )
-|#
 
-#|
 (deftype tire-trail-tracker (light-trail-tracker)
   ()
   :method-count-assert 24
   :size-assert         #xbc
   :flag-assert         #x18003000bc
+  (:state-methods
+    tracking ;; 15
+    )
   (:methods
     (tire-trail-tracker-method-22 () none) ;; 22
     (tire-trail-tracker-method-23 () none) ;; 23
     )
-  (:state-methods
-    tracking ;; 15
-    )
   )
-|#
 
-;; (define-extern *wheel-trail-info* object) ;; light-trail-composition
-;; (define-extern tire-trail-tracker-init-by-other function) ;; (function light-trail-tracker-spawn-params object :behavior tire-trail-tracker)
-;; (define-extern spawn-tire-trail-tracker function) ;; (function process light-trail-tracker-spawn-params tire-trail-tracker)
+(define-extern *wheel-trail-info* light-trail-composition) ;; 
+(define-extern tire-trail-tracker-init-by-other (function light-trail-tracker-spawn-params object :behavior tire-trail-tracker))
+(define-extern spawn-tire-trail-tracker (function process light-trail-tracker-spawn-params tire-trail-tracker))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-sounds                ;;
@@ -56333,7 +56346,6 @@
 ;; vehicle-reticle                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype reticle-sprite-info (structure)
   ((offset-x float            :offset-assert 0)
    (offset-y float            :offset-assert 4)
@@ -56348,35 +56360,23 @@
   :size-assert         #x2e
   :flag-assert         #x90000002e
   )
-|#
 
-#|
 (deftype vehicle-reticle-base (process)
-  ((owner      uint64  :offset-assert 144)
+  ((owner      handle  :offset-assert 144)
    (state-time uint64  :offset-assert 152)
    )
   :method-count-assert 15
   :size-assert         #xa0
   :flag-assert         #xf001000a0
-  (:methods
-    (vehicle-reticle-base-method-9 () none) ;; 9
-    (vehicle-reticle-base-method-10 () none) ;; 10
-    (vehicle-reticle-base-method-11 () none) ;; 11
-    (vehicle-reticle-base-method-12 () none) ;; 12
-    (vehicle-reticle-base-method-13 () none) ;; 13
-    (vehicle-reticle-base-method-14 () none) ;; 14
-    )
   )
-|#
 
-#|
 (deftype vehicle-reticle-on-me (vehicle-reticle-base)
   ((targeted-by                  uint64    :offset-assert 160)
-   (hsprites-base                UNKNOWN 3 :offset-assert 176)
-   (hsprites-missinc-static      UNKNOWN 2 :offset-assert 368)
-   (hsprites-missinc-spinner     UNKNOWN 1 :offset-assert 496)
-   (hsprites-missinc-converge    UNKNOWN 2 :offset-assert 560)
-   (hsprites-peacemaker-converge UNKNOWN 4 :offset-assert 688)
+   (hsprites-base                hud-sprite 3 :inline :offset-assert 176)
+   (hsprites-missinc-static      hud-sprite 2 :inline :offset-assert 368)
+   (hsprites-missinc-spinner     hud-sprite 1 :inline :offset-assert 496)
+   (hsprites-missinc-converge    hud-sprite 2 :inline :offset-assert 560)
+   (hsprites-peacemaker-converge hud-sprite 4 :inline :offset-assert 688)
    (side-parts-kickout           float     :offset-assert 944)
    (missile-by                   uint64    :offset-assert 952)
    (missile-by-last-seen         uint64    :offset-assert 960)
@@ -56394,11 +56394,9 @@
     peacemaker-incoming-abort ;; 19
     )
   )
-|#
 
-#|
 (deftype vehicle-reticle-on-them (vehicle-reticle-base)
-  ((hsprites     UNKNOWN 11 :offset-assert 160)
+  ((hsprites     hud-sprite 11 :inline :offset-assert 160)
    (spinner-rate uint64     :offset-assert 864)
    (lockon-sound uint32     :offset-assert 872)
    )
@@ -56410,37 +56408,36 @@
     vehicle-target ;; 16
     )
   )
-|#
 
-;; (define-extern reticle-wad-on-me-base array)
-;; (define-extern reticle-wad-on-me-missile-static array)
-;; (define-extern reticle-wad-on-me-missile-spinner array)
-;; (define-extern reticle-wad-on-me-missile-converge array)
-;; (define-extern reticle-wad-on-me-peacemaker-converge array)
-;; (define-extern reticle-wad-on-him-base array)
-;; (define-extern reticle-on-him-spinner object)
-;; (define-extern reticle-on-him-color-enemy object)
-;; (define-extern reticle-on-him-spinner-color-enemy object)
-;; (define-extern reticle-allowed? function)
-;; (define-extern vehicle-reticle-base-init-by-other function)
-;; (define-extern vehicle-reticle-base-trans function)
-;; (define-extern v-reticle-update-missile function)
-;; (define-extern vehicle-reticle-on-me-init-by-other function)
+(define-extern reticle-wad-on-me-base (array reticle-sprite-info))
+(define-extern reticle-wad-on-me-missile-static (array reticle-sprite-info))
+(define-extern reticle-wad-on-me-missile-spinner (array reticle-sprite-info))
+(define-extern reticle-wad-on-me-missile-converge (array reticle-sprite-info))
+(define-extern reticle-wad-on-me-peacemaker-converge (array reticle-sprite-info))
+(define-extern reticle-wad-on-him-base (array reticle-sprite-info))
+(define-extern reticle-on-him-spinner reticle-sprite-info)
+(define-extern reticle-on-him-color-enemy rgba)
+(define-extern reticle-on-him-spinner-color-enemy rgba)
+(define-extern reticle-allowed? (function vehicle symbol))
+(define-extern vehicle-reticle-base-init-by-other (function process none :behavior vehicle-reticle-base))
+(define-extern vehicle-reticle-base-trans (function none :behavior vehicle-reticle-base))
+(define-extern v-reticle-update-missile (function vehicle-reticle-on-them process none))
+(define-extern vehicle-reticle-on-me-init-by-other (function process none :behavior vehicle-reticle-on-me))
 ;; (define-extern vehicle-reticle-on-me-helper-missile-inc function)
 ;; (define-extern vehicle-reticle-on-me-helper-peacemaker-inc function)
-;; (define-extern vehicle-reticle-on-them-init-by-other function)
+(define-extern vehicle-reticle-on-them-init-by-other (function none :behavior vehicle-reticle-on-them))
 ;; (define-extern targeting-reticle-for-this-weapon-type? function)
-;; (define-extern targeting-reticle-line-of-sight? function)
+(define-extern targeting-reticle-line-of-sight? (function vehicle-reticle-on-them process process symbol))
 ;; (define-extern draw-reticle-on-them function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle                       ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *freeze-hangtime* object)
-;; (define-extern wv-player-post-move-update function)
-;; (define-extern find-nearest-camera function)
-;; (define-extern estimate-eng-torque-from-gear function)
+(define-extern *freeze-hangtime* symbol)
+(define-extern wv-player-post-move-update (function wvehicle int float none))
+(define-extern find-nearest-camera (function vector camera-combiner))
+(define-extern estimate-eng-torque-from-gear (function wvehicle float int float))
 ;; (define-extern plot-engine-torque-curve function)
 ;; (define-extern plot-x-with-transform function)
 ;; (define-extern vehicle-handle->net-player function)
@@ -56462,49 +56459,29 @@
 ;; wvehicle-util                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype vehicle-respawn-invul (process)
   ((vehicle uint64  :offset-assert 144)
    )
   :method-count-assert 16
   :size-assert         #x98
   :flag-assert         #x1000100098
-  (:methods
-    (vehicle-respawn-invul-method-9 () none) ;; 9
-    (vehicle-respawn-invul-method-10 () none) ;; 10
-    (vehicle-respawn-invul-method-11 () none) ;; 11
-    (vehicle-respawn-invul-method-12 () none) ;; 12
-    (vehicle-respawn-invul-method-13 () none) ;; 13
-    (vehicle-respawn-invul-method-14 () none) ;; 14
-    )
   (:state-methods
     idle ;; 15
     )
   )
-|#
 
-#|
 (deftype vehicle-suppress-look (process)
   ((vehicle uint64  :offset-assert 144)
    )
   :method-count-assert 16
   :size-assert         #x98
   :flag-assert         #x1000100098
-  (:methods
-    (vehicle-suppress-look-method-9 () none) ;; 9
-    (vehicle-suppress-look-method-10 () none) ;; 10
-    (vehicle-suppress-look-method-11 () none) ;; 11
-    (vehicle-suppress-look-method-12 () none) ;; 12
-    (vehicle-suppress-look-method-13 () none) ;; 13
-    (vehicle-suppress-look-method-14 () none) ;; 14
-    )
   (:state-methods
     idle ;; 15
     )
   )
-|#
 
-(define-extern whoosh-shake-camera (function vector int int none))
+(define-extern whoosh-shake-camera (function vector float float none))
 ;; (define-extern vehicle-respawn-invul-init-by-other function)
 ;; (define-extern vehicle-respawn-invul-spawn function)
 ;; (define-extern vehicle-suppress-look-init-by-other function)
@@ -56537,13 +56514,12 @@
 ;; wvehicle-states                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *old-vector* object)
+(define-extern *old-vector* vector)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-physics               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype wvehicle-wheel-work (structure)
   ((side-dir    vector :inline :offset-assert 0)
    (forward-dir vector :inline :offset-assert 16)
@@ -56553,11 +56529,9 @@
   :size-assert         #x30
   :flag-assert         #x900000030
   )
-|#
 
-#|
 (deftype wvehicle-physics-work (structure)
-  ((wheel-work-array      UNKNOWN 4       :offset-assert 0)
+  ((wheel-work-array      wvehicle-wheel-work 4  :inline     :offset-assert 0)
    (mat                   matrix  :inline :offset-assert 192)
    (force                 vector  :inline :offset-assert 256)
    (velocity              vector  :inline :offset-assert 272)
@@ -56597,9 +56571,7 @@
   :size-assert         #x220
   :flag-assert         #x900000220
   )
-|#
 
-#|
 (deftype wvehicle-probe-work (structure)
   ((mat               matrix        :inline :offset-assert 0)
    (world-pos         vector        :inline :offset-assert 64)
@@ -56618,7 +56590,6 @@
   :size-assert         #x2bc
   :flag-assert         #x9000002bc
   )
-|#
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -56774,8 +56745,8 @@
 ;; wvehicle-race                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern check-travel function)
-;; (define-extern *previous-angle* object)
+(define-extern check-travel (function vector float float none))
+(define-extern *previous-angle* vector)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-net                   ;;
@@ -57504,14 +57475,14 @@
 ;; (define-extern race-player-behind-more-than function)
 ;; (define-extern v-wpn-get-selection-table function)
 ;; (define-extern v-wpn-mask-selection-table! function)
-;; (define-extern v-wpn-pack-msg function)
+(define-extern v-wpn-pack-msg (function wvehicle mem-buffer none))
 ;; (define-extern v-wpn-unpack-msg! function)
-;; (define-extern vehicle-get-weapon-level function)
+(define-extern vehicle-get-weapon-level (function vehicle uint int))
 ;; (define-extern global-turbo-suppressor-set! function)
 ;; (define-extern should-suppress-eco? function)
 ;; (define-extern rapid-fire-control-emitter-from-world function)
 ;; (define-extern rapid-fire-control-initialize-from-vehicle function)
-;; (define-extern is-friendly-fire-helper function)
+(define-extern is-friendly-fire-helper (function object wvehicle none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wcar-skel                      ;;
@@ -60568,7 +60539,7 @@
 (define-extern spt-birth-func-brightness-tree-root-splinters (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern spt-birth-func-brightness-jungle-snake-dust (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern spt-func-birth-on-height-die (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
-(define-extern spt-birth-func-part-jungle-waterspout-head (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-birth-func-part-jungle-waterspout-head (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
 (define-extern *range-color-lava-geyser-flame* curve-color-fast) ;; curve-color-fast
 (define-extern *range-alpha-lava-geyser-flame* curve2d-fast) ;; curve2d-fast
 (define-extern *range-scale-lava-geyser-flame-x* curve2d-fast) ;; curve2d-fast

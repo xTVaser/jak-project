@@ -4437,5 +4437,34 @@
       "(pointer int32)",
       256
     ]
+  ],
+  "rigid-body-surface": [
+    [
+      "L1",
+      "(inline-array rigid-body-surface)",
+      8
+    ]
+  ],
+  "vehicle-reticle": [
+    [
+      "L343",
+      "rgba",
+      true
+    ],
+    [
+      "L342",
+      "rgba",
+      true
+    ]
+  ],
+  "wvehicle-states": [
+    [
+      "L160",
+      "vector"
+    ],
+    [
+      "L159",
+      "vector"
+    ]
   ]
 }

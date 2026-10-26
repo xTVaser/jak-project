@@ -1737,6 +1737,12 @@
       "(function object editable-filter)"
     ]
   ],
+  "wvehicle-wheel": [
+    [
+      18,
+      "(function collide-shape-prim none)"
+    ]
+  ],
   "trajectory": [
     [
       15,
