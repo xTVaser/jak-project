@@ -1112,11 +1112,19 @@
   "(method 40 nav-state)": [
     [
       128,
-      "vector"
+      [
+        "inline-array",
+        "vector",
+        1
+      ]
     ],
     [
       144,
-      "vector"
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
     ]
   ],
   "(method 53 nav-state)": [
@@ -1616,7 +1624,11 @@
     ],
     [
       32,
-      "collide-query"
+      [
+        "inline-array",
+        "collide-query",
+        1
+      ]
     ]
   ],
   "(method 10 visvol-edit-info)": [
@@ -2618,7 +2630,11 @@
     ],
     [
       48,
-      "vector"
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
     ]
   ],
   "(method 11 nav-control)": [
@@ -2715,6 +2731,110 @@
         "vector",
         2
       ]
+    ]
+  ],
+  "(method 19 nav-mesh)": [
+    [
+      16,
+      "nav-ray"
+    ]
+  ],
+  "(method 21 nav-control)": [
+    [
+      16,
+      "nav-ray"
+    ]
+  ],
+  "(post idle peak-snowball)": [
+    [
+      48,
+      "peak-obs-stackvar0"
+    ],
+    [
+      128,
+      [
+        "inline-array",
+        "vector",
+        3
+      ]
+    ]
+  ],
+  "(method 17 peak-snowball)": [
+    [
+      48,
+      "peak-obs-stackvar0"
+    ]
+  ],
+  "(method 71 coli-atlas-globe)": [
+    [
+      16,
+      [
+        "inline-array",
+        "collide-query",
+        1
+      ]
+    ],
+    [
+      560,
+      [
+        "inline-array",
+        "vector",
+        3
+      ]
+    ]
+  ],
+  "(method 82 coli-atlas-globe)": [
+    [
+      16,
+      "rigid-body-impact"
+    ],
+    [
+      96,
+      "vector"
+    ]
+  ],
+  "(method 80 coli-atlas-globe)": [
+    [
+      32,
+      "peak-obs-stackvar0"
+    ]
+  ],
+  "(method 45 kras-pump-break)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "(method 52 palm-tree)": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "desarena-obs-stackvar0"
+    ]
+  ],
+  "(method 55 palm-tree)": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "(event vibrate palm-tree)": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "(event idle palm-tree)": [
+    [
+      16,
+      "vector"
     ]
   ]
 }

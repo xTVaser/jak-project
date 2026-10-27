@@ -13,6 +13,20 @@
       "res-tag"
     ]
   ],
+  "(method 11 coli-object-base)": [
+    [
+      "_stack_",
+      16,
+      "res-tag"
+    ]
+  ],
+  "(method 54 coli-statue)": [
+    [
+      "_stack_",
+      16,
+      "res-tag"
+    ]
+  ],
   "execute-math-engine": [
     [
       18,
@@ -13089,6 +13103,34 @@
       73,
       "v1",
       "nav-mesh-link-search-node"
+    ]
+  ],
+  "(method 62 net-simple-destruct)": [
+    [
+      23,
+      "s4",
+      "process-nettable"
+    ]
+  ],
+  "(post idle coli-statue)": [
+    [
+      44,
+      "a1",
+      "rigid-body-object"
+    ]
+  ],
+  "(method 44 kras-pump-break)": [
+    [
+      50,
+      "v1",
+      "kras-pump-break-draw"
+    ]
+  ],
+  "(method 61 kras-pump-break-proxy)": [
+    [
+      20,
+      "a0",
+      "process-nettable"
     ]
   ]
 }

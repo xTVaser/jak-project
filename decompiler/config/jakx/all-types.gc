@@ -28424,7 +28424,7 @@
     (mem-buffer-method-38 (_type_ ) float) ;; 38
     (mem-buffer-method-39 (_type_) uint) ;; 39
     (mem-buffer-method-40 (_type_) float) ;; 40
-    (mem-buffer-method-41 (_type_ mem-buffer) none) ;; 41
+    (mem-buffer-method-41 (_type_ vector) none) ;; 41
     (mem-buffer-method-42 (_type_ (pointer float) (pointer float)) none) ;; 42
     (mem-buffer-method-43 (_type_ (pointer float)) none) ;; 43
     (mem-buffer-method-44 (_type_ mem-buffer) none) ;; 44
@@ -28447,7 +28447,7 @@
   :flag-assert         #xc00000020
   (:methods
     (level-bounding-box-method-9 () none) ;; 9
-    (level-bounding-box-method-10 (_type_ mem-buffer mem-buffer) none) ;; 10
+    (level-bounding-box-method-10 (_type_ vector mem-buffer) none) ;; 10
     (level-bounding-box-method-11 (_type_ object mem-buffer) none) ;; 11
     )
   )
@@ -28717,7 +28717,7 @@
    (desired-owner-idx    int8              :offset-assert 160)
    (net-id               uint16            :offset-assert 162)
    (jump-in-send-pending uint16            :offset-assert 164)
-   (prox                 basic             :offset-assert 168)
+   (prox                 proximity-ownership-params             :offset-assert 168)
    (owner-link           list-link :inline :offset-assert 172)
    (active-link          list-link :inline :offset-assert 180)
    )
@@ -28730,18 +28730,18 @@
     (process-nettable-method-17 (_type_ symbol mem-buffer) none) ;; 17
     (process-nettable-method-18 () none) ;; 18
     (process-nettable-method-19 () none) ;; 19
-    (process-nettable-method-20 () none) ;; 20
+    (process-nettable-method-20 (_type_) none) ;; 20
     (process-nettable-method-21 () none) ;; 21
-    (process-nettable-method-22 () none) ;; 22
+    (process-nettable-method-22 (_type_) none) ;; 22
     (process-nettable-method-23 () none) ;; 23
     (process-nettable-method-24 () none) ;; 24
-    (process-nettable-method-25 () none) ;; 25
-    (process-nettable-method-26 () none) ;; 26
+    (process-nettable-method-25 (_type_) none) ;; 25
+    (process-nettable-method-26 (_type_ int symbol) none) ;; 26
     (process-nettable-method-27 (_type_ symbol) mem-buffer) ;; 27
-    (process-nettable-method-28 () none) ;; 28
+    (process-nettable-method-28 (_type_ mem-buffer) none) ;; 28
     (process-nettable-method-29 (_type_ mem-buffer int int) none) ;; 29
     (process-nettable-method-30 () none) ;; 30
-    (process-nettable-method-31 () none) ;; 31
+    (process-nettable-method-31 (_type_) none) ;; 31
     (process-nettable-method-32 (_type_ entity-actor) none) ;; 32 (method 13 entity-more-perm-hash)
     (process-nettable-method-33 (_type_ entity-actor) none) ;; 33 entity-more-perm-hash-method-14
     (process-nettable-method-34 (_type_ int rgba) none) ;; TODO - guess on the rgba
@@ -30306,8 +30306,8 @@
     (move-to-ground (_type_ float float symbol collide-spec) none) ;; 59 ;; 
     (move-to-ground-point (_type_ vector vector vector) none) ;; 60 ;; 
     (collide-shape-moving-method-61 (_type_ vector int) vector) ;; 61 ;; 
-    (collide-shape-moving-method-62 () none) ;; 62 ;; (compute-acc-due-to-gravity (_type_ vector float) vector)
-    (try-snap-to-surface (_type_ vector float float float) symbol) ;; 63 ;; (rbody-collision (_type_ rigid-body-control float) none)
+    (rbody-collision (_type_ rigid-body-control float) none) ;; 62 ;; (compute-acc-due-to-gravity (_type_ vector float) vector)
+    (try-snap-to-surface (_type_ vector float float float) symbol) ;; 63 ;; 
     (fill-and-try-snap-to-surface (_type_ vector float float float collide-query) symbol)
     (step-collision! (_type_ vector vector float int) float) ;; 65 ;; 
     (collide-shape-moving-method-66 () none) ;; 66 ;; 
@@ -35027,7 +35027,7 @@
     (path-control-method-23 () none) ;; 23 ;; (path-control-method-23 (_type_ vector) float)
     (path-control-method-24 () none) ;; 24 ;; (path-control-method-24 (_type_ vector) float)
     (path-control-method-25 () none) ;; 25 ;; (path-control-method-25 (_type_ vector) float)
-    (path-control-method-26 () none) ;; 26 ;; (path-control-method-26 (_type_ float float) float)
+    (path-control-method-26 (_type_ float float) float)
     (path-control-method-27 () none) ;; 27 ;; (path-control-method-27 (_type_ vector) vector)
     (path-control-method-28 () none) ;; 28 ;; (path-control-method-28 (_type_ vector vector symbol) float)
     (path-control-method-29 () none) ;; 29 ;; (path-control-method-29 (_type_ vector int float) float)
@@ -35525,7 +35525,7 @@
     (OK-navigate-v2! (_type_) none)
     (OK-set-current-poly! (_type_ nav-poly) none)
     (OK-nav-state-method-39 (_type_) none) ;; 39 ;; 
-    (nav-state-method-40 (_type_) none) ;; 40 ;; 
+    (nav-state-method-40 (_type_ vector) symbol) ;; 40 ;; 
     (OK-do-navigation-to-destination (_type_ vector) none) ;; 41 ;; 
     (OK-clamp-vector-to-mesh-cross-gaps (_type_ vector) symbol) ;; 42 ;; 
     (OK-set-target-pos! (_type_ vector) none) ;; 43 ;; 
@@ -35587,7 +35587,7 @@
     (OK-avoid-spheres-1! (_type_ nav-avoid-spheres-params) symbol)
     (OK-avoid-spheres-2! (_type_ nav-avoid-spheres-params) symbol)
     (OK-clamp-vector-to-mesh-cross-gaps (_type_ vector nav-poly vector float symbol clamp-travel-vector-to-mesh-return-info) none) ;; 20 ;;
-    (nav-control-method-21 (_type_) none) ;; 21 ;; (clamp-vector-to-mesh-no-gaps (_type_ vector nav-poly vector clamp-travel-vector-to-mesh-return-info) none)
+    (clamp-vector-to-mesh-no-gaps (_type_ vector nav-poly vector clamp-travel-vector-to-mesh-return-info) none)
     (OK-find-first-sphere-and-update-avoid-params (_type_ vector nav-avoid-spheres-params) float)
     (OK-set-spheres-from-nav-ids (_type_) none) ;; 23 ;; 
     (OK-check-sphere-blocked? (_type_ vector int) symbol)
@@ -38072,7 +38072,7 @@
   :flag-assert         #x1a00001080
   (:methods
     (new (symbol type int) _type_)
-    (gui-control-method-9 () none) ;; 9 ;; (add-process (_type_ process gui-channel gui-action string float time-frame) sound-id)
+    (add-process (_type_ process gui-channel gui-action string float time-frame) sound-id)
     (gui-control-method-10 () none) ;; 10 ;; (remove-process (_type_ process gui-channel) int)
     (gui-control-method-11 () none) ;; 11 ;; (stop-str (_type_ gui-connection) int)
     (gui-control-method-12 () none) ;; 12 ;; (gui-control-method-12 (_type_ process gui-channel gui-action string int float sound-id) sound-id)
@@ -38083,7 +38083,7 @@
     (gui-control-method-17 () none) ;; 17 ;; (get-status (_type_ sound-id) gui-status)
     (gui-control-method-18 () none) ;; 18 ;; (gui-control-method-18 (_type_ gui-channel) symbol)
     (gui-control-method-19 () none) ;; 19 ;; (handle-command-list (_type_ gui-channel gui-connection) symbol)
-    (gui-control-method-20 () none) ;; 20 ;; (sound-params-set! (_type_ sound-id symbol int int int float) gui-connection)
+    (sound-params-set! (_type_ sound-id symbol int int int float symbol) gui-connection)
     (gui-control-method-21 () none) ;; 21 ;; (gui-control-method-21 (_type_ gui-connection) int)
     (gui-control-method-22 () none) ;; 22 ;; (gui-control-method-22 (_type_ gui-connection vector) int)
     (gui-control-method-23 () none) ;; 23 ;; (update-connection (_type_ gui-connection process symbol) none)
@@ -41322,7 +41322,7 @@
     (rigid-body-object-method-79 (_type_) none) ;; 79
     (rigid-body-object-method-80 (_type_ rigid-body-impact) symbol) ;; 80
     (rigid-body-object-method-81 (_type_) none) ;; 81
-    (rigid-body-object-method-82 (_type_ object rigid-body-object-constants) none) ;; 82
+    (rigid-body-object-method-82 (_type_ process-drawable rigid-body-object-constants object object) symbol) ;; 82
     (rigid-body-object-method-83 (_type_) none) ;; 83
     (rigid-body-object-method-84 (_type_) none) ;; 84
     (rigid-body-object-method-85 (_type_) none) ;; 85
@@ -41916,7 +41916,7 @@
 ;; (define-extern *vis-actors* object) ;; symbol
 ;; (define-extern *additional-spawner-count* object)
 ;; (define-extern *additional-spawners* object)
-;; (define-extern register-additional-spawner function)
+(define-extern register-additional-spawner (function process-drawable none))
 ;; (define-extern unregister-spawner-at-index function)
 ;; (define-extern *camera-pos-0* object)
 ;; (define-extern *camera-pos-1* object)
@@ -42104,7 +42104,7 @@
 (define-extern get-nav-mesh (function actor-id nav-mesh)) ;; 
 (define-extern find-nearest-nav-mesh (function vector float int nav-mesh)) ;; 
 ;; (define-extern point-to-poly-boundary function) ;; (function nav-poly vector vector float)
-(define-extern find-first-containing-nav-mesh (function none))
+(define-extern find-first-containing-nav-mesh (function object int symbol none))
 (define-extern find-nav-mesh (function collide-query vector float float float collide-cache nav-mesh))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -46602,7 +46602,7 @@
   (:methods
     (net-simple-destruct-method-60 (_type_ object vector object) none) ;; 60
     (net-simple-destruct-method-61 () none) ;; 61
-    (net-simple-destruct-method-62 () none) ;; 62
+    (net-simple-destruct-method-62 (_type_ object attack-info object object) none) ;; 62
     (net-simple-destruct-method-63 () none) ;; 63
     (net-simple-destruct-method-64 () none) ;; 64
     (net-simple-destruct-method-65 (_type_ matrix) symbol) ;; 65 matrix is a guess for until a caller is found
@@ -59422,12 +59422,12 @@
     active ;; 60
     )
   (:methods
-    (coli-atlas-globe-method-89 () none) ;; 89
-    (coli-atlas-globe-method-90 () none) ;; 90
-    (coli-atlas-globe-method-91 () none) ;; 91
-    (coli-atlas-globe-method-92 () none) ;; 92
-    (coli-atlas-globe-method-93 () none) ;; 93
-    (coli-atlas-globe-method-94 () none) ;; 94
+    (coli-atlas-globe-method-89 (_type_) none) ;; 89
+    (coli-atlas-globe-method-90 (_type_) none) ;; 90
+    (coli-atlas-globe-method-91 (_type_ mem-buffer) none) ;; 91
+    (coli-atlas-globe-method-92 (_type_ mem-buffer) none) ;; 92
+    (coli-atlas-globe-method-93 (_type_) none) ;; 93
+    (coli-atlas-globe-method-94 (_type_) vector) ;; 94
     )
   )
 
@@ -59468,7 +59468,7 @@
 (define-extern coli-statue-init-remote (function mem-buffer none :behavior coli-statue))
 (define-extern *msg-map-coli-statue* (array symbol))
 (define-extern *net-process-class-info-coli-statue* net-process-class-info)
-(define-extern coli-atlas-globe-init-remote (function none :behavior coli-atlas-globe))
+(define-extern coli-atlas-globe-init-remote (function mem-buffer none :behavior coli-atlas-globe))
 (define-extern *msg-map-coli-atlas-globe* (array symbol))
 (define-extern *net-process-class-info-coli-atlas-globe* net-process-class-info)
 (define-extern *coli-atlas-ball-constants* rigid-body-object-constants)
@@ -59541,7 +59541,7 @@
     die ;; 50
     )
   (:methods
-    (coli-break-object-method-51 () none) ;; 51
+    (coli-break-object-method-51 (_type_) none) ;; 51
     )
   )
 
@@ -59607,90 +59607,76 @@
     )
   )
 
-;; (deftype coli-statue-female (coli-statue)
-;;   ()
-;;   :method-count-assert 55
-;;   :size-assert         #x108
-;;   :flag-assert         #x3700800108
-;;   )
+(deftype coli-statue-female (coli-statue)
+  ()
+  :method-count-assert 55
+  :size-assert         #x108
+  :flag-assert         #x3700800108
+  )
 
-;; (deftype coli-statue-base-se (coli-object-base)
-;;   ()
-;;   :method-count-assert 71
-;;   :size-assert         #x128
-;;   :flag-assert         #x4700a00128
-;;   )
+(deftype coli-statue-base-se (coli-object-base)
+  ()
+  :method-count-assert 71
+  :size-assert         #x128
+  :flag-assert         #x4700a00128
+  )
 
-#|
 (deftype coli-statue-base-c-sw (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-nw (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-ne (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-s-se (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-s-sw (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-s-nw (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-#|
 (deftype coli-statue-base-s-ne (coli-object-base)
   ()
   :method-count-assert 71
   :size-assert         #x128
   :flag-assert         #x4700a00128
   )
-|#
 
-;; (define-extern coli-break-object-init-by-other function)
-;; (define-extern coli-statue-female-s-break-spawn function)
-;; (define-extern coli-statue-female-s-break-a-spawn function)
-;; (define-extern coli-statue-female-s-break-b-spawn function)
-;; (define-extern coli-statue-female-c-break-spawn function)
-;; (define-extern coli-statue-female-c-break-a-spawn function)
-;; (define-extern coli-statue-female-c-break-b-spawn function)
+(define-extern coli-break-object-init-by-other (function coli-statue-chain-curved vector quaternion symbol none :behavior coli-break-object))
+(define-extern coli-statue-female-s-break-spawn (function coli-statue-chain-curved vector quaternion none))
+(define-extern coli-statue-female-s-break-a-spawn (function coli-statue-chain-curved vector quaternion none))
+(define-extern coli-statue-female-s-break-b-spawn (function coli-statue-chain-curved vector quaternion none))
+(define-extern coli-statue-female-c-break-spawn (function coli-statue-chain-curved vector quaternion none))
+(define-extern coli-statue-female-c-break-a-spawn (function coli-statue-chain-curved vector quaternion none))
+(define-extern coli-statue-female-c-break-b-spawn (function coli-statue-chain-curved vector quaternion none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; net-collectable-game           ;;
@@ -60038,8 +60024,8 @@
     explode ;; 60
     )
   (:methods
-    (kras-pump-break-proxy-method-61 (_type_) none) ;; 61
-    (kras-pump-break-proxy-method-62 (_type_) none) ;; 62
+    (kras-pump-break-proxy-method-61 (_type_ object attack-info) object) ;; 61
+    (kras-pump-break-proxy-method-62 (_type_ entity-actor) none) ;; 62
     (kras-pump-break-proxy-method-63 (_type_ entity-actor) none) ;; 63
     (kras-pump-break-proxy-method-64 (_type_) none) ;; 64
     )
@@ -60059,7 +60045,7 @@
 
 (deftype kras-pump-break (process-nettable)
   ((exploded basic   :offset-assert 188)
-   (drawable uint64  :offset-assert 192)
+   (drawable handle  :offset-assert 192)
    )
   :method-count-assert 46
   :size-assert         #xc8
@@ -60068,14 +60054,14 @@
     idle ;; 42
     )
   (:methods
-    (kras-pump-break-method-43 () none) ;; 43
-    (kras-pump-break-method-44 () none) ;; 44
-    (kras-pump-break-method-45 () none) ;; 45
+    (kras-pump-break-method-43 (_type_) none) ;; 43
+    (kras-pump-break-method-44 (_type_) none) ;; 44
+    (kras-pump-break-method-45 (_type_) symbol) ;; 45
     )
   )
 
-;; (define-extern kras-pump-break-draw-init-by-other function)
-;; (define-extern kras-pump-break-init-remote function)
+(define-extern kras-pump-break-draw-init-by-other (function kras-pump-break entity-actor basic none :behavior kras-pump-break-draw))
+(define-extern kras-pump-break-init-remote (function int none :behavior kras-pump-break))
 (define-extern *msg-map-kras-pump-break* (array symbol))
 (define-extern *net-process-class-info-kras-pump-break* net-process-class-info)
 (define-extern *kras-pump-debris-params* debris-static-params)
@@ -60384,6 +60370,13 @@
 ;; desarena-obs                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(deftype desarena-obs-stackvar0 (structure)
+  ((quat quaternion :inline)
+   (mat matrix :inline)
+   (vec1 vector :inline)
+   (vec2 vector :inline)
+   (vec3 vector :inline)))
+
 (deftype palm-tree (process-drawable)
   ((root         collide-shape     :override)
    (attack-vel        vector  :inline :offset-assert 256)
@@ -60403,7 +60396,7 @@
     (palm-tree-method-52 (_type_) none) ;; 52
     (palm-tree-method-53 (_type_) none) ;; 53
     (palm-tree-method-54 (_type_ vector) none) ;; 54
-    (palm-tree-method-55 (_type_) none) ;; 55
+    (palm-tree-method-55 (_type_ matrix) none) ;; 55 - matrix is a guess
     )
   )
 
@@ -60428,8 +60421,8 @@
   :flag-assert         #x38015001d4
   )
 
-;; (define-extern desarena-activate function)
-;; (define-extern desarena-deactivate function)
+(define-extern desarena-activate (function none))
+(define-extern desarena-deactivate (function none))
 (define-extern *palm-tree-a-debris-params* debris-static-params)
 (define-extern *palm-tree-b-debris-params* debris-static-params)
 (define-extern *palm-tree-c-debris-params* debris-static-params)
@@ -60788,6 +60781,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; peak-obs                       ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftype peak-obs-stackvar0 (structure)
+  ((quat quaternion :inline)
+   (mat matrix :inline)))
 
 (deftype peak-snowball (rigid-body-object)
   ((target-position  vector :inline :offset-assert 288)
