@@ -5492,13 +5492,6 @@
       "vector"
     ]
   ],
-  "(method 9 entity-more-perm)": [
-    [
-      2,
-      "a0",
-      "pointer"
-    ]
-  ],
   "(method 44 collide-shape)": [
     [
       25,
@@ -7405,6 +7398,16 @@
       27,
       "s4",
       "entity-actor"
+    ],
+    [
+      31,
+      "s4",
+      "entity-actor"
+    ],
+    [
+      35,
+      "t9",
+      "(function process-nettable entity-actor none)"
     ]
   ],
   "dm-debug-actor-lod-dist": [
@@ -13028,6 +13031,64 @@
       91,
       "a0",
       "part-tracker"
+    ]
+  ],
+  "(method 13 entity-more-perm-hash)": [
+    [
+      27,
+      "s4",
+      "entity-actor"
+    ],
+    [
+      31,
+      "s4",
+      "entity-actor"
+    ],
+    [
+      35,
+      "t9",
+      "(function process-nettable entity-actor)"
+    ]
+  ],
+  "(method 9 entity-more-perm)": [
+    [
+      2,
+      "v1",
+      "pointer"
+    ],
+    [
+      2,
+      "a0",
+      "pointer"
+    ]
+  ],
+  "(method 13 nav-link-search-info)": [
+    [
+      36,
+      "v1",
+      "nav-mesh-link-search-node"
+    ],
+    [
+      38,
+      "v1",
+      "nav-mesh-link-search-node"
+    ]
+  ],
+  "(method 41 nav-control)": [
+    [
+      76,
+      "v1",
+      "nav-mesh-link-search-node"
+    ],
+    [
+      81,
+      "v1",
+      "nav-mesh-link-search-node"
+    ],
+    [
+      73,
+      "v1",
+      "nav-mesh-link-search-node"
     ]
   ]
 }
