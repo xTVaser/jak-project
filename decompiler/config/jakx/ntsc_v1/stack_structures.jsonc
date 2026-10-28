@@ -1534,7 +1534,11 @@
   "(event idle can-leaves-floor)": [
     [
       16,
-      "matrix"
+      [
+        "inline-array",
+        "matrix",
+        1
+      ]
     ]
   ],
   "(enter dropped ctf-flag)": [
@@ -2835,6 +2839,164 @@
     [
       16,
       "vector"
+    ]
+  ],
+  "part-menumap-bird1-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird2-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird3-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird4-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird5-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird6-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird7-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird8-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird9-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "part-menumap-bird10-path": [
+    [
+      80,
+      "vector"
+    ]
+  ],
+  "spt-func-menumap-rocket": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "spt-func-menumap-birth-on-die4": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-menumap-birth-on-die3": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-menumap-birth-on-die2": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "spt-func-menumap-birth-on-die1": [
+    [
+      16,
+      "vector"
+    ],
+    [
+      32,
+      "vector"
+    ]
+  ],
+  "birth-func-vws-adopt-velocity": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "check-scorp-shell-level1": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "check-scorp-shell-level2": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "update-engine-mix-state": [
+    [
+      32,
+      "vehicle-wheel-init-params"
+    ]
+  ],
+  "(method 52 garage-turntable)": [
+    [
+      32,
+      "vector"
+    ],
+    [
+      48,
+      "vector"
+    ],
+    [
+      64,
+      "vector"
+    ],
+    [
+      80,
+      [
+        "inline-array",
+        "vector",
+        18
+      ]
+    ]
+  ],
+  "(enter explode kras-pump-break-proxy)": [
+    [
+      16,
+      "event-message-block"
     ]
   ]
 }

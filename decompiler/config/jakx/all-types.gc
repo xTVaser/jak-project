@@ -16396,7 +16396,7 @@
   :flag-assert         #x1400006fb0
   (:methods
     (sparks-work-method-9 () none) ;; 9
-    (sparks-work-method-10 () none) ;; 10
+    (sparks-work-method-10 (_type_ (inline-array vector)) none) ;; 10 inline-array is a guess, see `garage-obs`
     (sparks-work-method-11 () none) ;; 11
     (sparks-work-method-12 () none) ;; 12
     (sparks-work-method-13 () none) ;; 13
@@ -30407,10 +30407,10 @@
    (part            sparticle-launch-control               :offset-assert 328) ;; guessed by decompiler
    (callback        (function part-tracker vector)         :offset-assert 332) ;; guessed by decompiler
    (linger-callback (function part-tracker vector)         :offset-assert 336) ;; guessed by decompiler
-   (duration        uint64                                 :offset-assert 344) ;; time-frame
-   (linger-duration uint64                                 :offset-assert 352) ;; time-frame
-   (state-time      uint64                                 :offset-assert 360) ;; time-frame
-   (target          uint64                                 :offset-assert 368) ;; handle
+   (duration        time-frame                                 :offset-assert 344) ;; time-frame
+   (linger-duration time-frame                                 :offset-assert 352) ;; time-frame
+   (state-time      time-frame                                 :offset-assert 360) ;; time-frame
+   (target          handle                                 :offset-assert 368) ;; handle
    (target-joint    int32                                  :offset-assert 376)
    )
   :method-count-assert 19
@@ -34335,7 +34335,7 @@
   ((sprite       uint32   :offset-assert 0)
    (anim         int32    :offset-assert 4)
    (anim-speed   float    :offset-assert 8)
-   (birth-func   basic    :offset-assert 12)
+   (birth-func   basic    :offset-assert 12) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
    (joint-ppoint int32    :offset-assert 16)
    (num-to-birth float    :offset-assert 20)
    (dataf        float  1 :offset 0) ;; guessed by decompiler
@@ -34599,7 +34599,7 @@
    (clock-index   uint8                                                                              :offset-assert 129)
    (user1-int16   uint16                                                                             :offset-assert 130)
    (key           (pointer sparticle-launch-control)                                                           :offset-assert 132) ;; guessed by decompiler
-   (binding       sparticle-launch-state                                                             :offset-assert 136)
+   (binding       int32                                                             :offset-assert 136) ;; different from jak3
    (data          uint32                                                                     1       :offset 12) ;; guessed by decompiler
    (datab         int8                                                                       4       :offset 12) ;; guessed by decompiler
    (dataf         float                                                                      1       :offset 12) ;; guessed by decompiler
@@ -37932,7 +37932,7 @@
 (define-extern rot-to-particle (function degrees sprite-vec-data-2d matrix none)) ;; 
 ;; (define-extern rot-to-particle-no-flip function)
 (define-extern birth-func-flip-based-on-scale (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)) ;; 
-;; (define-extern sparticle-2d-spline-align function) ;; (function object sparticle-cpuinfo sprite-vec-data-2d object none)
+(define-extern sparticle-2d-spline-align (function object sparticle-cpuinfo sprite-vec-data-2d object none)) ;; 
 ;; (define-extern sparticle-2d-spline-align-no-flip function)
 (define-extern sparticle-2d-spline-align-instant (function object sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
 ;; (define-extern birth-func-inherit-size function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
@@ -44856,7 +44856,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype vehicle-weapon-slot (process-drawable)
-  ((owning-vehicle uint64  :offset-assert 248)
+  ((owning-vehicle handle  :offset-assert 248)
    (ammunition     int8    :offset-assert 256)
    (flags          uint8   :offset-assert 257)
    (in-slot        uint8   :offset-assert 258)
@@ -47570,7 +47570,7 @@
    (local-players              int32     :offset-assert 248)
    (refresh-time               uint32    :offset-assert 252)
    (game-connection-type       uint8     :offset-assert 256)
-   (vehicle-handle             uint64    :offset-assert 264)
+   (vehicle-handle             handle    :offset-assert 264)
    (vehicle-selected           uint8     :offset-assert 272)
    (vehicle-flags              uint64    :offset-assert 280)
    (vehicle-paint-mode         uint64    :offset-assert 288)
@@ -47783,7 +47783,7 @@
     (lobby-menu-manager-method-187 () none) ;; 187
     (lobby-menu-manager-method-188 () none) ;; 188
     (lobby-menu-manager-method-189 () none) ;; 189
-    (lobby-menu-manager-method-190 () none) ;; 190
+    (get-vehicle (_type_) vehicle) ;; 190
     (lobby-menu-manager-method-191 () none) ;; 191
     (lobby-menu-manager-method-192 () none) ;; 192
     (lobby-menu-manager-method-193 () none) ;; 193
@@ -56110,53 +56110,53 @@
 ;; wvehicle-weapons-part          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern birth-func-explosion-adopt-velocity function)
-;; (define-extern birth-func-explosion-aligned-velocity function)
-;; (define-extern birth-func-vws-adopt-velocity function)
-;; (define-extern spt-birth-func-brightness-oil (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
-;; (define-extern spt-func-part-oil-emit function)
-;; (define-extern spt-func-part-oil-emit-sparkle function)
-;; (define-extern check-scorp-shell-level1 function) ;; (function sparticle-system sparticle-cpuinfo vector none)
-;; (define-extern check-scorp-shell-level2 function) ;; (function sparticle-system sparticle-cpuinfo vector none)
+(define-extern birth-func-explosion-adopt-velocity (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-explosion-aligned-velocity (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-vws-adopt-velocity (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern spt-birth-func-brightness-oil (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-part-oil-emit (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-part-oil-emit-sparkle (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern check-scorp-shell-level1 (function sparticle-system sparticle-cpuinfo vector none)) ;; 
+(define-extern check-scorp-shell-level2 (function sparticle-system sparticle-cpuinfo vector none)) ;; (function sparticle-system sparticle-cpuinfo vector none)
 (define-extern *curve-toad-linear-up-red* curve2d-piecewise) ;; 
 (define-extern *trail-color-curve-grenade-yellow* curve-color-fast)
-(define-extern *curve-grenade-linear-toad-trail* curve2d-fast) ;; curve2d-fast
-(define-extern *grenade-1-trail* curve-color-fast)
+(define-extern *curve-grenade-linear-toad-trail* light-trail-composition) ;; curve2d-fast
+(define-extern *grenade-1-trail* light-trail-composition)
 (define-extern *trail-color-curve-grenade-purple* curve-color-fast)
-(define-extern *grenade-2-trail* curve-color-fast)
+(define-extern *grenade-2-trail* light-trail-composition)
 (define-extern *curve-yellow-tracker-linear-up-red* curve2d-piecewise)
 (define-extern *trail-color-curve-yellow-tracker-grenade* curve-color-fast)
 (define-extern *trail-color-curve-red-mine* curve-color-fast)
-(define-extern *curve-yellow-tracker-linear-trail* curve2d-fast)
-(define-extern *yellow-tracking-rocket-trail* curve-color-fast)
+(define-extern *curve-yellow-tracker-linear-trail* light-trail-composition)
+(define-extern *yellow-tracking-rocket-trail* light-trail-composition)
 (define-extern *curve-missile-linear-up* curve2d-fast)
 (define-extern *trail-color-curve-car-missile* curve-color-fast)
 (define-extern *trail-color-curve-car-missile-II* curve-color-fast)
 (define-extern *curve-missile-trail-width* curve2d-fast)
-(define-extern *car-missile-trail* curve-color-fast)
-(define-extern *car-missile-trail-II* curve-color-fast)
+(define-extern *car-missile-trail* light-trail-composition)
+(define-extern *car-missile-trail-II* light-trail-composition)
 (define-extern *trail-color-curve-success-seeker* curve-color-fast)
-(define-extern *success-seeker-trail* curve-color-fast)
+(define-extern *success-seeker-trail* light-trail-composition)
 (define-extern *curve-mine-width* curve2d-piecewise)
 (define-extern *trail-color-purple-mine* curve-color-fast)
 (define-extern *trail-color-red-mine* curve-color-fast)
-(define-extern *mine-trail-red* curve-color-fast)
-(define-extern *mine-trail-purple* curve-color-fast)
-;; (define-extern shield-flash-part-callback function)
+(define-extern *mine-trail-red* light-trail-composition)
+(define-extern *mine-trail-purple* light-trail-composition)
+(define-extern shield-flash-part-callback (function part-tracker none))
 (define-extern *weapon-drone-glow-template* sprite-glow-data)
 (define-extern *weapon-drone-visor-template* sprite-glow-data) ;; doubt it
-(define-extern *wasted-missile-colors* (inline-array rgba))
+(define-extern *wasted-missile-colors* (pointer rgba))
 (define-extern *wasted-missile-vec* vector)
 (define-extern *wasted-missile-origin?* symbol)
-;; (define-extern birth-func-wasted-missile function)
-;; (define-extern birth-func-copy-rotate-z-to-rot-z function)
-;; (define-extern spt-birth-func-b-part-turbo-suppressed (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
-;; (define-extern spt-func-part-turbo-suppressed function)
-;; (define-extern birth-func-adopt-velocity function)
-;; (define-extern sparticle-adopt-accel function)
-;; (define-extern sparticle-seek-owner function)
-;; (define-extern birth-func-dark-eco-bubble function)
-;; (define-extern spt-func-bubble-alternate function)
+(define-extern birth-func-wasted-missile (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-copy-rotate-z-to-rot-z (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern spt-birth-func-b-part-turbo-suppressed (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern spt-func-part-turbo-suppressed (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern birth-func-adopt-velocity (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern sparticle-adopt-accel (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern sparticle-seek-owner (function sparticle-system sparticle-cpuinfo sprite-vec-data-2d float))
+(define-extern birth-func-dark-eco-bubble (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern spt-func-bubble-alternate (function sparticle-system sparticle-cpuinfo sprite-vec-data-2d sparticle-launchinfo object none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-effects               ;;
@@ -56339,7 +56339,7 @@
   :flag-assert         #x900000033
   )
 
-(define-extern update-engine-mix-state (function wvehicle (inline-array wvehicle-engine-mix-state) object none))
+(define-extern update-engine-mix-state (function wvehicle (inline-array wvehicle-engine-mix-state) (inline-array wvehicle-sound-loop-params) none))
 (define-extern *debug-engine-sound-work* vector)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -58909,9 +58909,17 @@
 ;; canyon-obs                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(deftype can-leaves-floor-unk-nested (structure)
+  ((f1 float)
+   (f2 float))
+  :pack-me)
+
+;; who knows whats going on here
 (deftype can-leaves-floor (process-drawable)
   ((root         collide-shape     :override)
-   (pad uint32 2))
+   (cam-leaves-floor-unk1 can-leaves-floor-unk-nested :offset-assert 248)
+   (cam-leaves-floor-unk2 can-leaves-floor-unk-nested :offset-assert 252)
+   )
   :method-count-assert 51
   :size-assert         #x100
   :flag-assert         #x3300700100
@@ -60014,7 +60022,7 @@
    (impact-velocity   vector :inline :offset-assert 272)
    (hit-points        float          :offset-assert 288)
    (start-exploded    symbol          :offset-assert 292)
-   (net-parent        uint64         :offset-assert 296)
+   (net-parent        handle         :offset-assert 296)
    )
   :method-count-assert 65
   :size-assert         #x130
@@ -62610,8 +62618,8 @@
   ((track        joint-mod-rotate-world :inline :offset-assert 256)
    (elbow        joint-mod-rotate-local                4      :inline :offset-assert 288)
    (dest         vector                 :inline :offset-assert 416)
-   (arm-lengths  uint32                4       :offset-assert 432)
-   (dest-angles  uint32                4       :offset-assert 448)
+   (arm-lengths  float                4       :offset-assert 432) ;; actually floats
+   (dest-angles  float                4       :offset-assert 448) ;; actually floats
    (elbow-quat   quaternion                4    :inline   :offset-assert 464)
    (total-length float                          :offset-assert 528)
    (flags        uint64                         :offset-assert 536)
@@ -62623,7 +62631,7 @@
     idle ;; 50
     )
   (:methods
-    (garage-tool-arm-method-51 () none) ;; 51
+    (garage-tool-arm-method-51 (_type_) none) ;; 51
     )
   )
 
@@ -62685,25 +62693,25 @@
 ;; menumap-part                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern spt-func-menumap-birth-on-die1 function)
-;; (define-extern spt-func-menumap-birth-on-die2 function)
-;; (define-extern spt-func-menumap-birth-on-die3 function)
-;; (define-extern spt-func-menumap-birth-on-die4 function)
-;; (define-extern spt-func-menumap-rocket function)
-;; (define-extern *menumap-firework-colors* object)
-;; (define-extern *menumap-firework-vec* object)
-;; (define-extern *menumap-firework-origin?* object)
-;; (define-extern birth-func-menumap-firework function)
-;; (define-extern part-menumap-bird1-path function)
-;; (define-extern part-menumap-bird2-path function)
-;; (define-extern part-menumap-bird3-path function)
-;; (define-extern part-menumap-bird4-path function)
-;; (define-extern part-menumap-bird5-path function)
-;; (define-extern part-menumap-bird6-path function)
-;; (define-extern part-menumap-bird7-path function)
-;; (define-extern part-menumap-bird8-path function)
-;; (define-extern part-menumap-bird9-path function)
-;; (define-extern part-menumap-bird10-path function)
+(define-extern spt-func-menumap-birth-on-die1 (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-menumap-birth-on-die2 (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-menumap-birth-on-die3 (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-menumap-birth-on-die4 (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern spt-func-menumap-rocket (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern *menumap-firework-colors* (pointer rgba))
+(define-extern *menumap-firework-vec* vector)
+(define-extern *menumap-firework-origin?* symbol)
+(define-extern birth-func-menumap-firework (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern part-menumap-bird1-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird2-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird3-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird4-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird5-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird6-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird7-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird8-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird9-path (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern part-menumap-bird10-path (function sparticle-system sparticle-cpuinfo vector none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; lobby-adventure-obs            ;;

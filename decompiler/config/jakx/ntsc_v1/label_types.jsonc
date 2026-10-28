@@ -4466,5 +4466,19 @@
       "L159",
       "vector"
     ]
+  ],
+  "menumap-part": [
+    [
+      "L197",
+      "(pointer rgba)",
+      8
+    ]
+  ],
+  "wvehicle-weapons-part": [
+    [
+      "L142",
+      "(pointer rgba)",
+      8
+    ]
   ]
 }
