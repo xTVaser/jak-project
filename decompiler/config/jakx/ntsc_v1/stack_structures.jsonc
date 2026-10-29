@@ -2486,7 +2486,11 @@
     ],
     [
       96,
-      "vehicle-controls"
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
     ]
   ],
   "(post explode wvehicle)": [
@@ -2505,10 +2509,24 @@
       "explosion-init-params"
     ]
   ],
+  "(method 235 wvehicle)": [
+    [
+      32,
+      [
+        "inline-array",
+        "vector",
+        3
+      ]
+    ]
+  ],
   "(method 234 wvehicle)": [
     [
       32,
-      "vector4s-3"
+      [
+        "inline-array",
+        "vector",
+        3
+      ]
     ],
     [
       80,
@@ -2994,6 +3012,50 @@
     ]
   ],
   "(enter explode kras-pump-break-proxy)": [
+    [
+      16,
+      "event-message-block"
+    ]
+  ],
+  "(method 249 wvehicle)": [
+    [
+      16,
+      "race-line-query-info"
+    ]
+  ],
+  "(method 65 vehicle-debris)": [
+    [
+      16,
+      "vehicle-hardpoint-info"
+    ]
+  ],
+  "(method 87 vehicle-debris)": [
+    [
+      16,
+      [
+        "inline-array",
+        "collide-query",
+        1
+      ]
+    ]
+  ],
+  "(method 185 vehicle)": [
+    [
+      16,
+      "vector"
+    ]
+  ],
+  "(method 136 vehicle)": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
+    ]
+  ],
+  "test-vehicle-weapon": [
     [
       16,
       "event-message-block"

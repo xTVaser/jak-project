@@ -105,6 +105,12 @@
     "~0knodes    = ~d~256hnodes/call   = ~f~%": 2
   },
   "blocks_ending_in_asm_branch": {
+    "upload-vis-bits": [
+      2,
+      6,
+      3,
+      0
+    ],
     "(method 21 nav-control)": [
       7,
       15,
@@ -428,6 +434,9 @@
     ]
   },
   "mips2c_functions_by_name": [
+    "get-string-length-asm",
+    "draw-string3d-asm",
+    "draw-string-asm-packed",
     "collide-do-primitives",
     "moving-sphere-triangle-intersect",
     "calc-animation-from-spr",

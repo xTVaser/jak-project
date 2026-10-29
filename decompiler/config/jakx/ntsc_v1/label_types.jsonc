@@ -3290,6 +3290,20 @@
       "dma-packet"
     ]
   ],
+  "merc-blend-shape": [
+    [
+      "L71",
+      "(pointer int16)",
+      40
+    ]
+  ],
+  "generic-merc": [
+    [
+      "L178",
+      "(inline-array invinitdata)",
+      8
+    ]
+  ],
   "ocean-trans-tables": [
     [
       "L1",
@@ -4479,6 +4493,20 @@
       "L142",
       "(pointer rgba)",
       8
+    ]
+  ],
+  "font": [
+    [
+      "L474",
+      "uint64",
+      true
+    ]
+  ],
+  "vehicle-net": [
+    [
+      "L152",
+      "(pointer int32)",
+      6
     ]
   ]
 }

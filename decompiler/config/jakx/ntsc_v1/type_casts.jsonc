@@ -2453,6 +2453,26 @@
   ],
   "(method 0 ambient-sound)": [
     [
+      "_stack_",
+      16,
+      "sound-spec"
+    ],
+    [
+      "_stack_",
+      64,
+      "res-tag"
+    ],
+    [
+      "_stack_",
+      48,
+      "(pointer float)"
+    ],
+    [
+      "_stack_",
+      32,
+      "sound-name"
+    ],
+    [
       85,
       "s3",
       "sound-spec"
@@ -13443,6 +13463,477 @@
       393,
       "v1",
       "float"
+    ]
+  ],
+  "upload-vis-bits": [
+    [
+      14,
+      "a0",
+      "(pointer uint128)"
+    ],
+    [
+      16,
+      "a1",
+      "(pointer uint128)"
+    ],
+    [
+      22,
+      "a2",
+      "(pointer uint128)"
+    ],
+    [
+      34,
+      "a2",
+      "(pointer uint128)"
+    ]
+  ],
+  "finish-tfrag-water": [
+    [
+      159,
+      "s2",
+      "drawable-inline-array-tfrag"
+    ]
+  ],
+  "bones-mtx-calc-execute": [
+    [
+      67,
+      "v1",
+      "bone-memory"
+    ],
+    [
+      72,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      76,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      80,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      84,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      88,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      92,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      96,
+      "a0",
+      "dma-bank-control"
+    ],
+    [
+      159,
+      "a0",
+      "dma-bank-control"
+    ],
+    [
+      [
+        118,
+        130
+      ],
+      "a0",
+      "pris-mtx"
+    ],
+    [
+      136,
+      "a0",
+      "(inline-array pris-mtx)"
+    ]
+  ],
+  "bones-set-sqwc": [
+    [
+      2,
+      "v1",
+      "dma-bank-control"
+    ]
+  ],
+  "bones-reset-sqwc": [
+    [
+      2,
+      "v1",
+      "dma-bank-control"
+    ]
+  ],
+  "bones-init": [
+    [
+      1,
+      "v1",
+      "bone-memory"
+    ],
+    [
+      6,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      10,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      14,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      18,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      22,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      26,
+      "a1",
+      "bone-memory"
+    ],
+    [
+      44,
+      "a0",
+      "dma-packet"
+    ],
+    [
+      45,
+      "a0",
+      "(pointer uint64)"
+    ]
+  ],
+  "(method 8 prototype-bucket-tie)": [
+    [
+      12,
+      "v1",
+      "prototype-bucket-tie"
+    ]
+  ],
+  "draw-string": [
+    [
+      84,
+      "a0",
+      "float"
+    ],
+    [
+      99,
+      "a0",
+      "float"
+    ]
+  ],
+  "setup-blerc-chains": [
+    [
+      43,
+      "v1",
+      "int"
+    ],
+    [
+      80,
+      "s0",
+      "int"
+    ],
+    [
+      83,
+      "a0",
+      "int"
+    ],
+    [
+      [
+        30,
+        40
+      ],
+      "s1",
+      "merc-fragment-control"
+    ],
+    [
+      41,
+      "v1",
+      "merc-fragment"
+    ],
+    [
+      46,
+      "v1",
+      "(pointer uint8)"
+    ],
+    [
+      59,
+      "a0",
+      "merc-blend-ctrl"
+    ],
+    [
+      [
+        64,
+        76
+      ],
+      "s1",
+      "merc-fragment-control"
+    ],
+    [
+      77,
+      "a1",
+      "merc-blend-ctrl"
+    ],
+    [
+      106,
+      "v1",
+      "(pointer uint32)"
+    ],
+    [
+      108,
+      "v1",
+      "(pointer uint32)"
+    ]
+  ],
+  "texture-usage-init": [
+    [
+      27,
+      "a1",
+      "vector"
+    ]
+  ],
+  "(method 9 merc-fragment)": [
+    [
+      [
+        13,
+        265
+      ],
+      "s1",
+      "adgif-shader"
+    ]
+  ],
+  "(method 9 merc-effect)": [
+    [
+      38,
+      "v1",
+      "merc-eye-ctrl"
+    ],
+    [
+      62,
+      "s4",
+      "pointer"
+    ],
+    [
+      63,
+      "s5",
+      "pointer"
+    ]
+  ],
+  "merc-edge-stats": [
+    [
+      31,
+      "v1",
+      "merc-ctrl"
+    ]
+  ],
+  "(method 8 merc-ctrl)": [
+    [
+      46,
+      "s2",
+      "pointer"
+    ],
+    [
+      [
+        22,
+        45
+      ],
+      "s2",
+      "merc-fragment-control"
+    ],
+    [
+      [
+        89,
+        93
+      ],
+      "a1",
+      "merc-blend-ctrl"
+    ],
+    [
+      103,
+      "a1",
+      "pointer"
+    ]
+  ],
+  "emerc-vu1-init-buffer": [
+    [
+      [
+        100,
+        103
+      ],
+      "v1",
+      "dma-packet"
+    ]
+  ],
+  "emerc-vu1-initialize-chain": [
+    [
+      [
+        12,
+        19
+      ],
+      "gp",
+      "(pointer vif-tag)"
+    ],
+    [
+      [
+        18,
+        67
+      ],
+      "s5",
+      "emerc-vu1-low-mem"
+    ],
+    [
+      90,
+      "gp",
+      "(inline-array dma-packet)"
+    ]
+  ],
+  "merc-vu1-init-buffer": [
+    [
+      [
+        104,
+        107
+      ],
+      "v1",
+      "dma-packet"
+    ]
+  ],
+  "merc-vu1-initialize-chain": [
+    [
+      [
+        13,
+        19
+      ],
+      "gp",
+      "(pointer vif-tag)"
+    ],
+    [
+      [
+        19,
+        120
+      ],
+      "s5",
+      "merc-vu1-low-mem"
+    ],
+    [
+      134,
+      "gp",
+      "(inline-array dma-packet)"
+    ]
+  ],
+  "generic-merc-execute-all": [
+    [
+      120,
+      "v1",
+      "generic-work"
+    ],
+    [
+      122,
+      "v1",
+      "generic-work"
+    ],
+    [
+      124,
+      "v1",
+      "generic-work"
+    ],
+    [
+      64,
+      "v1",
+      "generic-work"
+    ],
+    [
+      66,
+      "v1",
+      "generic-work"
+    ],
+    [
+      68,
+      "v1",
+      "generic-work"
+    ],
+    [
+      85,
+      "a0",
+      "generic-work"
+    ]
+  ],
+  "vehicle-spawn": [
+    [
+      186,
+      "s5",
+      "vehicle"
+    ],
+    [
+      196,
+      "s5",
+      "vehicle"
+    ],
+    [
+      203,
+      "s5",
+      "vehicle"
+    ]
+  ],
+  "(method 65 vehicle-debris)": [
+    [
+      435,
+      "s4",
+      "collide-shape-prim-group"
+    ],
+    [
+      213,
+      "v1",
+      "collide-shape-prim-group"
+    ],
+    [
+      375,
+      "v1",
+      "collide-shape-prim-group"
+    ]
+  ],
+  "vehicle-debris-init-by-other": [
+    [
+      30,
+      "v1",
+      "float"
+    ]
+  ],
+  "(method 137 vehicle)": [
+    [
+      14,
+      "v1",
+      "collide-shape-prim-group"
+    ]
+  ],
+  "test-vehicle-weapon": [
+    [
+      31,
+      "v1",
+      "wvehicle"
+    ]
+  ],
+  "set-veh-weapon": [
+    [
+      24,
+      "v1",
+      "wvehicle"
+    ],
+    [
+      38,
+      "v1",
+      "wvehicle"
     ]
   ]
 }

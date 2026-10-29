@@ -27,6 +27,12 @@
       "(function int)"
     ]
   ],
+  "vehicle-debris": [
+    [
+      15,
+      "(function collide-shape-prim none)"
+    ]
+  ],
   "pov-camera": [
     [
       7,

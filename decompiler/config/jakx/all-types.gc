@@ -8632,6 +8632,7 @@
     )
   )
 
+(declare-type prototype-array-tie array)
 (deftype level-group (basic)
   ((length            int32                    :offset-assert 4)
    ;; copied from jak 3
@@ -8662,7 +8663,7 @@
    (draw-level-count  int32                    :offset-assert 372)
    (draw-level        level            19      :offset-assert 376) ;; guessed by decompiler
    (draw-index-map    uint8            19      :offset-assert 452) ;; guessed by decompiler
-   (shared-ties       basic                    :offset-assert 472)
+   (shared-ties       prototype-array-tie                    :offset-assert 472) ;; a guess, could verify
    (status-cache-sync uint16                   :offset-assert 476)
    (load-order        uint64                   :offset-assert 480)
    (wide-level        level          2       :offset-assert 488)
@@ -15934,6 +15935,7 @@
   (snake 13)
   (daxtermobile 14)
   (drone 15)
+  (vehicle-type-16 16)
 )
 ;; ---car-info-h:vehicle-type
 
@@ -16600,10 +16602,10 @@
   :flag-assert         #x1e000000bb
   (:methods
     (new (symbol type matrix int int float font-color font-flags) _type_)
-    (font-context-method-9 () none) ;; 9 ;; (set-mat! (font-context matrix) font-context)
+    (font-context-method-9 (_type_) none) ;; 9
     (set-origin! (font-context int int) font-context)
-    (font-context-method-11 () none) ;; 11 ;; (set-depth! (font-context int) font-context)
-    (font-context-method-12 () none) ;; 12 ;; (set-w! (font-context float) font-context)
+    (font-context-method-11 (_type_ int) int) ;; 11 ;; (set-depth! (font-context int) font-context)
+    (font-context-method-12 (_type_ int) none) ;; 12 ;; (set-w! (font-context float) font-context)
     (set-mat! (_type_ matrix) none) ;; 13 ;; (set-width! (font-context int) font-context)
     (set-x-y! (_type_ int int) none) ;; 14 ;; (set-height! (font-context int) font-context)
     (set-z! (_type_ int) none) ;; 15 ;; (set-projection! (font-context float) font-context)
@@ -21701,6 +21703,8 @@
   (visible     5) ;; set by prototypes-game-visible-set! to hide things on purpose
   (no-collide  6)
   (tpage-water 7)
+  (protoflag8 8)
+  (protoflag9 9 )
   )
 ;; ---prototype-h:prototype-flags
 
@@ -21860,7 +21864,7 @@
   :size-assert         #x10
   :flag-assert         #xa00000010
   (:methods
-    (prototype-array-tie-method-9 () none) ;; 9 ;; (login (_type_) none)
+    (login (_type_) none)
     )
   )
 
@@ -21876,8 +21880,8 @@
   )
 
 (deftype prototype-node (structure)
-  ((prototype      basic  :offset-assert 0)
-   (level          basic  :offset-assert 4)
+  ((prototype      prototype-bucket  :offset-assert 0)
+   (level          level  :offset-assert 4)
    (id             int16  :offset-assert 8)
    (next-prototype int16  :offset-assert 10)
    (next-child     int16  :offset-assert 12)
@@ -21898,12 +21902,12 @@
   :size-assert         #x2030
   :flag-assert         #xf00002030
   (:methods
-    (prototype-node-group-method-9 () none) ;; 9
-    (prototype-node-group-method-10 () none) ;; 10
-    (prototype-node-group-method-11 () none) ;; 11
-    (prototype-node-group-method-12 () none) ;; 12
-    (prototype-node-group-method-13 () none) ;; 13
-    (prototype-node-group-method-14 () none) ;; 14
+    (prototype-node-group-method-9 (_type_) none) ;; 9
+    (prototype-node-group-method-10 (_type_ prototype-node) prototype-node) ;; 10
+    (prototype-node-group-method-11 (_type_ ) none) ;; 11
+    (prototype-node-group-method-12 (_type_) none) ;; 12
+    (prototype-node-group-method-13 (_type_) none) ;; 13
+    (prototype-node-group-method-14 (_type_) none) ;; 14
     )
   )
 
@@ -28727,7 +28731,7 @@
   (:methods
     (process-nettable-method-15 (_type_ mem-buffer) none) ;; 15
     (process-nettable-method-16 () none) ;; 16
-    (process-nettable-method-17 (_type_ symbol mem-buffer) none) ;; 17
+    (process-nettable-method-17 (_type_ symbol mem-buffer object) none) ;; 17
     (process-nettable-method-18 () none) ;; 18
     (process-nettable-method-19 () none) ;; 19
     (process-nettable-method-20 (_type_) none) ;; 20
@@ -32246,10 +32250,10 @@
     (fill-using-bounding-box (_type_ collide-query) none)
     (collide-cache-method-13 (_type_ collide-query) none) ;; 13 ;; (fill-using-line-sphere (_type_ collide-query) none)
     (fill-using-spheres (_type_ collide-query) none)
-    (reset (_type_) none)
+    (OK-reset (_type_) none)
     (collide-cache-method-16 (_type_ collide-query) float) ;; 16 ;; (probe-using-line-sphere (_type_ collide-query) float)
     (probe-using-spheres (_type_ collide-query) symbol)
-    (fill-from-bg (_type_ (function collide-hash int collide-list collide-query int) (function collide-cache collide-list collide-query none) collide-query) none)
+    (OK-fill-from-bg (_type_ (function collide-hash int collide-list collide-query int) (function collide-cache collide-list collide-query none) collide-query) none)
     (fill-from-fg-boxes (_type_) none)
     (fill-from-fg-line-sphere (_type_ collide-query) none)
     (collide-cache-method-21 () none) ;; 21 ;; (fill-from-water (_type_ water-control) none)
@@ -34498,8 +34502,8 @@
   :flag-assert         #xb00000068
   (:methods
     (new (symbol type sparticle-system uint float symbol float) _type_)
-    (sparticle-subsampler-method-9 () none) ;; 9 ;; (init-with-vec! (_type_ vector) vector)
-    (sparticle-subsampler-method-10 () none) ;; 10 ;; (init-with-mat! (_type_ matrix) matrix)
+    (init-with-vec! (_type_ vector) vector)
+    (init-with-mat! (_type_ matrix) matrix)
     )
   )
 
@@ -36767,7 +36771,6 @@
 ;; merc-blend-shape               ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype blerc-block-header (structure)
   ((tag       generic-merc-tag :inline :offset-assert 0)
    (vtx-count uint32                   :offset-assert 16)
@@ -36779,9 +36782,7 @@
   :size-assert         #x20
   :flag-assert         #x900000020
   )
-|#
 
-#|
 (deftype blerc-block (structure)
   ((output uint8              848     :offset-assert 0) ;; guessed by decompiler
    (header blerc-block-header :inline :offset-assert 848)
@@ -36790,19 +36791,15 @@
   :size-assert         #x370
   :flag-assert         #x900000370
   )
-|#
 
-#|
 (deftype blerc-dcache (structure)
-  ((repl-mult vector 40 :offset-assert 0) ;; guessed by decompiler
+  ((repl-mult vector 40 :inline :offset-assert 0) ;; guessed by decompiler
    )
   :method-count-assert 9
   :size-assert         #x280
   :flag-assert         #x900000280
   )
-|#
 
-#|
 (deftype blerc-globals (structure)
   ((first            uint32  :offset-assert 0)
    (next             uint32  :offset-assert 4)
@@ -36816,9 +36813,7 @@
   :size-assert         #x18
   :flag-assert         #x900000018
   )
-|#
 
-#|
 (deftype blerc-context (structure)
   ((block-a blerc-block :inline :offset-assert 0)
    (dummy   uint8       7312    :offset-assert 880) ;; guessed by decompiler
@@ -36828,34 +36823,33 @@
   :size-assert         #x2370
   :flag-assert         #x900002370
   )
-|#
 
-;; (define-extern *stats-blerc* object) ;; symbol
-;; (define-extern *blerc-globals* object) ;; blerc-globals
-;; (define-extern blerc-stats-init function) ;; (function none)
+(define-extern *stats-blerc* symbol)
+(define-extern *blerc-globals* blerc-globals)
+(define-extern blerc-stats-init (function none))
 (define-extern blerc-init (function none)) ;; 
-;; (define-extern blerc-a-fragment function) ;; function
-;; (define-extern dma-from-spr function) ;; function
-;; (define-extern merc-dma-chain-to-spr function) ;; function
+;; (define-extern blerc-a-fragment function) ;; function - skipped in jak3
+;; (define-extern dma-from-spr function) ;; function - skipped in jak3
+;; (define-extern merc-dma-chain-to-spr function) ;; function - skipped in jak3
 (define-extern blerc-execute (function none)) ;; 
 (define-extern merc-blend-shape (function process-drawable object)) ;; 
-;; (define-extern setup-blerc-chains-for-one-fragment function) ;; (function object object object object object object object)
-;; (define-extern setup-blerc-chains function) ;; (function merc-ctrl (pointer int16) dma-buffer none)
+(define-extern setup-blerc-chains-for-one-fragment (function object object object object object object object))
+(define-extern setup-blerc-chains (function merc-ctrl (pointer int16) dma-buffer none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; merc                           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-extern *texture-login-data* texture-login-data) ;; 
-;; (define-extern texture-usage-init function) ;; (function merc-ctrl symbol)
-;; (define-extern texture-usage-update function) ;; (function texture symbol)
-;; (define-extern merc-stats-display function) ;; (function merc-ctrl none)
+(define-extern texture-usage-init (function merc-ctrl symbol))
+(define-extern texture-usage-update (function texture symbol))
+(define-extern merc-stats-display (function merc-ctrl none))
 (define-extern merc-stats (function none)) ;; 
-;; (define-extern merc-edge-stats function) ;; (function none)
+(define-extern merc-edge-stats (function none))
 (define-extern merc-vu1-add-vu-function (function dma-packet vu-function int dma-gif-packet)) ;; 
-;; (define-extern merc-vu1-initialize-chain function) ;; (function dma-gif-packet int dma-packet)
-;; (define-extern merc-vu1-init-buffer function) ;; (function bucket-id int symbol int)
-;; (define-extern merc-vu1-init-buffers function) ;; (function none)
+(define-extern merc-vu1-initialize-chain (function dma-gif-packet int dma-packet))
+(define-extern merc-vu1-init-buffer (function bucket-id int symbol int int))
+(define-extern merc-vu1-init-buffers (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; emerc                          ;;
@@ -36904,18 +36898,18 @@
 ;; bones                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *bone-calculation-list* object) ;; bone-calculation-list
-;; (define-extern bone-list-init function) ;; (function none)
-;; (define-extern bones-vu0-block object) ;; vu-function
-;; (define-extern bones-set-sqwc function) ;; (function none)
-;; (define-extern bones-reset-sqwc function) ;; (function none)
-;; (define-extern bones-init function) ;; (function dma-buffer none)
-;; (define-extern bones-mtx-calc function) ;; (function (inline-array pris-mtx) (inline-array joint) (inline-array bone) uint object none)
-;; (define-extern bones-mtx-calc-execute function) ;; (function none)
-;; (define-extern dump-qword function) ;; (function qword none)
-;; (define-extern dump-mem function) ;; (function pointer int none)
-;; (define-extern bones-debug function) ;; (function none)
-;; (define-extern dump-bone-mem function) ;; (function none)
+(define-extern *bone-calculation-list* bone-calculation-list)
+(define-extern bone-list-init (function none))
+(define-extern bones-vu0-block vu-function)
+(define-extern bones-set-sqwc (function none))
+(define-extern bones-reset-sqwc (function none))
+(define-extern bones-init (function dma-buffer none))
+(define-extern bones-mtx-calc (function (inline-array pris-mtx) (inline-array joint) (inline-array bone) uint none))
+(define-extern bones-mtx-calc-execute (function none))
+(define-extern dump-qword (function qword none))
+(define-extern dump-mem (function pointer int none))
+(define-extern bones-debug (function none))
+(define-extern dump-bone-mem (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; debug-foreground               ;;
@@ -36931,27 +36925,27 @@
 ;; foreground                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern foreground-vu0-block object) ;; vu-function
-;; (define-extern generic-bucket-state-init function) ;; (function generic-bucket-state none)
-;; (define-extern mercneric-chain-init function) ;; (function mercneric-chain bucket-id none)
-;; (define-extern foreground-init function) ;; (function none)
-;; (define-extern texscroll-make-request function) ;; (function merc-effect none)
+(define-extern foreground-vu0-block vu-function) ;; 
+(define-extern generic-bucket-state-init (function generic-bucket-state none))
+(define-extern mercneric-chain-init (function mercneric-chain bucket-id none))
+(define-extern foreground-init (function none))
+(define-extern texscroll-make-request (function merc-effect none))
 (define-extern texscroll-execute (function none)) ;; 
 (define-extern vu-lights<-light-group! (function vu-lights light-group none)) ;; 
-;; (define-extern foreground-add-mtx-calc function) ;; (function bone-calculation (inline-array pris-mtx) bone-calc-flags bone-calculation)
-;; (define-extern foreground-wrapup function) ;; (function none)
-;; (define-extern *default-shadow-settings* object) ;; shadow-settings
-;; (define-extern foreground-shadow function) ;; (function draw-control (inline-array pris-mtx) pointer pointer)
-;; (define-extern foreground-generic-merc-death function) ;; (function draw-control generic-merc-ctrl none)
-;; (define-extern foreground-generic-merc-add-fragments function) ;; (function merc-effect pointer mercneric-chain pointer)
-;; (define-extern foreground-generic-merc function) ;; (function draw-control pointer int pointer)
-;; (define-extern foreground-merc function) ;; (function draw-control (inline-array pris-mtx) pointer int int object pointer)
-;; (define-extern foreground-emerc function) ;; (function draw-control (inline-array pris-mtx) pointer object int int pointer)
-;; (define-extern foreground-check-longest-edge-asm function) ;; (function draw-control float symbol)
-;; (define-extern foreground-ripple function) ;; (function draw-control merc-ctrl pointer int pointer)
-;; (define-extern foreground-draw function) ;; (function draw-control dma-buffer float none)
-;; (define-extern foreground-draw-hud function) ;; (function draw-control dma-buffer float none)
-;; (define-extern *foreground* object) ;; foreground-globals
+(define-extern foreground-add-mtx-calc (function bone-calculation (inline-array pris-mtx) bone-calc-flags bone-calculation))
+(define-extern foreground-wrapup (function none))
+(define-extern *default-shadow-settings* shadow-settings)
+(define-extern foreground-shadow (function draw-control (inline-array pris-mtx) pointer pointer))
+(define-extern foreground-generic-merc-death (function draw-control generic-merc-ctrl none))
+(define-extern foreground-generic-merc-add-fragments (function merc-effect pointer mercneric-chain pointer))
+(define-extern foreground-generic-merc (function draw-control pointer int pointer))
+(define-extern foreground-merc (function draw-control (inline-array pris-mtx) pointer int int object pointer))
+(define-extern foreground-emerc (function draw-control (inline-array pris-mtx) pointer object int int pointer))
+(define-extern foreground-check-longest-edge-asm (function draw-control float symbol))
+(define-extern foreground-ripple (function draw-control merc-ctrl pointer int pointer))
+(define-extern foreground-draw (function draw-control dma-buffer float none))
+(define-extern foreground-draw-hud (function draw-control dma-buffer float none))
+(define-extern *foreground* foreground-globals)
 (define-extern *foreground-draw-engine* engine) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -36978,45 +36972,44 @@
 ;; generic-effect                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *target-lock* object) ;; object
+(define-extern *target-lock* object) ;; object
 (define-extern *generic-consts* generic-consts) ;; 
-;; (define-extern generic-work-init function) ;; (function generic-bucket-state none)
-;; (define-extern generic-upload-vu0 function) ;; (function none)
-;; (define-extern upload-vu0-program function) ;; (function vu-function pointer none)
-;; (define-extern generic-initialize-without-sync function) ;; (function matrix vu-lights none)
-;; (define-extern generic-initialize function) ;; (function generic-bucket-state matrix vu-lights none)
-;; (define-extern generic-wrapup function) ;; (function generic-bucket-state none)
-;; (define-extern generic-dma-from-spr function)
-;; (define-extern generic-light-proc function)
-;; (define-extern generic-envmap-proc function)
-;; (define-extern generic-prepare-dma-double function)
-;; (define-extern generic-prepare-dma-single function)
-;; (define-extern generic-envmap-dproc function)
-;; (define-extern generic-interp-dproc function)
-;; (define-extern generic-no-light-proc function)
-;; (define-extern generic-no-light-dproc-only function)
-;; (define-extern generic-no-light-dproc function)
-;; (define-extern generic-no-light+envmap function)
-;; (define-extern generic-no-light function)
-;; (define-extern generic-envmap-only-proc function)
-;; (define-extern generic-light function)
-;; (define-extern generic-copy-vtx-dclr-dtex function)
-;; (define-extern generic-none function)
-;; (define-extern generic-none-dma-wait function)
-;; (define-extern *warp-data* object) ;; object
-;; (define-extern generic-warp-source-proc function) ;; (function none)
-;; (define-extern generic-warp-source function) ;; (function gsf-buffer none)
-;; (define-extern generic-warp-dest-proc function)
-;; (define-extern generic-warp-dest function)
-;; (define-extern generic-warp-envmap-dest function)
-;; (define-extern generic-debug-light-proc function)
-;; (define-extern generic-post-debug function)
+(define-extern generic-work-init (function generic-bucket-state none))
+(define-extern generic-upload-vu0 (function none))
+(define-extern upload-vu0-program (function vu-function pointer none)) ;; 
+(define-extern generic-initialize-without-sync (function matrix vu-lights none))
+(define-extern generic-initialize (function generic-bucket-state matrix vu-lights none))
+(define-extern generic-wrapup (function generic-bucket-state none))
+;; (define-extern generic-dma-from-spr function) ;; skipped in jak3
+;; (define-extern generic-light-proc function) ;; NEW
+;; (define-extern generic-envmap-proc function) ;; NEW
+;; (define-extern generic-prepare-dma-double function) ;; NEW
+;; (define-extern generic-prepare-dma-single function) ;; NEW
+;; (define-extern generic-envmap-dproc function) ;; skipped in jak3
+;; (define-extern generic-interp-dproc function) ;; NEW!
+;; (define-extern generic-no-light-proc function) ;; skipped in jak3
+;; (define-extern generic-no-light-dproc-only function) ;; skipped in jak3
+;; (define-extern generic-no-light-dproc function) ;; skipped in jak3
+;; (define-extern generic-no-light+envmap function) ;; skipped in jak3
+;; (define-extern generic-no-light function) ;; skipped in jak3
+;; (define-extern generic-envmap-only-proc function) ;; skipped in jak3
+;; (define-extern generic-light function) ;; skipped in jak3
+;; (define-extern generic-copy-vtx-dclr-dtex function) ;; skipped in jak3
+;; (define-extern generic-none function) ;; skipped in jak3
+;; (define-extern generic-none-dma-wait function) ;; skipped in jak3
+(define-extern *warp-data* object) ;; object
+(define-extern generic-warp-source-proc (function none)) ;; skipped in jak3
+(define-extern generic-warp-source (function gsf-buffer none)) ;; skipped in jak3
+;; (define-extern generic-warp-dest-proc function) ;; NEW
+;; (define-extern generic-warp-dest function) ;; NEW
+;; (define-extern generic-warp-envmap-dest function) ;; NEW
+;; (define-extern generic-debug-light-proc function) ;; skipped in jak3
+;; (define-extern generic-post-debug function) ;; skipped in jak3
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic-merc                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype invinitdata (structure)
   ((count     uint8   :offset-assert 0)
    (init-data uint8   :offset-assert 1)
@@ -37026,28 +37019,25 @@
   :size-assert         #x4
   :flag-assert         #x900000004
   )
-|#
 
-;; (define-extern mercneric-vu0-block object) ;; vu-function
-;; (define-extern *inv-init-table* object) ;; (inline-array invinitdata)
-;; (define-extern generic-merc-init-asm function) ;; (function none)
-;; (define-extern mercneric-matrix-asm function)
+(define-extern mercneric-vu0-block vu-function)
+(define-extern *inv-init-table* (inline-array invinitdata))
+(define-extern generic-merc-init-asm (function none))
+;; (define-extern mercneric-matrix-asm function) ;; skipped in jak3
 ;; (define-extern mercneric-shader-asm function)
-;; (define-extern mercneric-bittable-asm function)
+;; (define-extern mercneric-bittable-asm function) ;; skipped in jak3
 ;; (define-extern mercneric-convert function)
 ;; (define-extern high-speed-reject function)
-;; (define-extern generic-translucent function) ;; (function gsf-buffer none)
+(define-extern generic-translucent (function gsf-buffer none)) ;; 
 ;; (define-extern generic-merc-query function)
 ;; (define-extern generic-merc-death function)
 ;; (define-extern generic-merc-execute-asm function)
-;; (define-extern generic-merc-do-chain function) ;; (function mercneric-chain dma-buffer pointer)
-;; (define-extern generic-merc-execute-all function) ;; (function dma-buffer none)
+(define-extern generic-merc-do-chain (function mercneric-chain dma-buffer pointer))
+(define-extern generic-merc-execute-all (function dma-buffer none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic-tie                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; gsf-vertex is already defined!
 
 ;; (define-extern generic-tie-dma-to-spad function)
 ;; (define-extern generic-tie-dma-to-spad-sync function)
@@ -37064,7 +37054,6 @@
 ;; shadow-cpu                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype shadow-stats (structure)
   ((num-single-tris  uint32  :offset-assert 0)
    (num-double-tris  uint32  :offset-assert 4)
@@ -37077,9 +37066,7 @@
   :size-assert         #x14
   :flag-assert         #x900000014
   )
-|#
 
-#|
 (deftype shadow-dcache (structure)
   ((vtx-table              uint32                :offset-assert 0)
    (single-edge-table      uint32                :offset-assert 4)
@@ -37107,14 +37094,13 @@
   :size-assert         #xb0
   :flag-assert         #x9000000b0
   )
-|#
 
-;; (define-extern *shadow-data* object) ;; shadow-data
-;; (define-extern shadow-invert-z-buf function) ;; (function dma-buffer none)
+(define-extern *shadow-data* shadow-data)
+(define-extern shadow-invert-z-buf (function dma-buffer none))
 (define-extern shadow-make-invert-buf (function none)) ;; 
-;; (define-extern shadow-dma-init function) ;; (function dma-buffer none)
-;; (define-extern shadow-dma-end function) ;; (function dma-buffer gs-rgbaq symbol int none)
-;; (define-extern shadow-vu0-block object) ;; vu-function
+(define-extern shadow-dma-init (function dma-buffer none))
+(define-extern shadow-dma-end (function dma-buffer gs-rgbaq symbol int none))
+(define-extern shadow-vu0-block vu-function)
 ;; (define-extern shadow-xform-verts function) ;; function
 ;; (define-extern shadow-calc-dual-verts function) ;; function
 ;; (define-extern shadow-scissor-edges function) ;; function
@@ -37130,10 +37116,10 @@
 ;; (define-extern shadow-add-single-tris function) ;; function
 ;; (define-extern shadow-add-double-tris function) ;; function
 ;; (define-extern shadow-add-double-edges function) ;; function
-;; (define-extern debug-draw-settings function) ;; (function shadow-settings symbol)
-;; (define-extern shadow-execute function) ;; (function shadow-dma-packet pointer pointer)
-;; (define-extern shadow-vu0-upload function) ;; (function none)
-;; (define-extern shadow-execute-all function) ;; (function dma-buffer none)
+(define-extern debug-draw-settings (function shadow-settings symbol))
+(define-extern shadow-execute (function shadow-dma-packet pointer pointer))
+(define-extern shadow-vu0-upload (function none))
+(define-extern shadow-execute-all (function dma-buffer none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; shadow-vu1                     ;;
@@ -37321,25 +37307,25 @@
   )
 ;; ---font:draw-string-result
 
-;; (define-extern *font-random-generator* object)
-;; (define-extern *font-curve-ghosting* array)
-;; (define-extern *font-curve-ghosting-2* array)
+(define-extern *font-random-generator* random-generator)
+(define-extern *font-curve-ghosting* (array vector))
+(define-extern *font-curve-ghosting-2* (array vector))
 ;; (define-extern evaluate-font-curve function)
 ;; (define-extern in-out-curve function)
-;; (define-extern char-effect-compute-colors function)
+(define-extern char-effect-compute-colors (function font-char-effect int font-color font-context none)) ;; int might be a dma-buffer
 ;; (define-extern char-effect-compute2 function)
-;; (define-extern *loading-pad-leftx* object)
-;; (define-extern *loading-pad-lefty* object)
-;; (define-extern *loading-pad-rightx* object)
-;; (define-extern *loading-pad-righty* object)
+(define-extern *loading-pad-leftx* float)
+(define-extern *loading-pad-lefty* float)
+(define-extern *loading-pad-rightx* float)
+(define-extern *loading-pad-righty* float)
 ;; (define-extern char-effect-compute function)
-;; (define-extern draw-string-init-justify function)
-;; (define-extern draw-string-no-asm function)
-;; (define-extern draw-string-asm-packed function)
-;; (define-extern draw-string3d-asm function)
-;; (define-extern draw-effect-string function)
+(define-extern draw-string-init-justify (function string dma-buffer font-context draw-string-result))
+(define-extern draw-string-no-asm (function string dma-buffer font-context draw-string-result))
+(define-extern draw-string-asm-packed (function string dma-buffer font-context draw-string-result))
+(define-extern draw-string3d-asm (function string dma-buffer font-context draw-string-result))
+(define-extern draw-effect-string (function string dma-buffer font-context draw-string-result))
 (define-extern draw-string (function string dma-buffer font-context draw-string-result)) ;; 
-;; (define-extern get-string-length-asm function)
+(define-extern get-string-length-asm (function string font-context draw-string-result))
 (define-extern get-string-length (function string font-context draw-string-result)) ;; 
 (define-extern draw-string-xy (function string dma-buffer int int font-color font-flags draw-string-result))
 (define-extern draw-string-adv (function string dma-buffer font-context none)) ;; 
@@ -37367,22 +37353,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-extern *background-work* background-work) ;; 
-;; (define-extern background-vu0-block object) ;; vu-function
-;; (define-extern background-upload-vu0 function) ;; (function none)
-;; (define-extern init-background function) ;; (function none)
-;; (define-extern upload-vis-bits function) ;; (function level level bsp-header none)
-;; (define-extern set-background-regs! function) ;; (function level none)
-;; (define-extern set-tie-guard-planes! function)
-;; (define-extern set-shrub-guard-planes! function)
+(define-extern background-vu0-block vu-function) ;; 
+(define-extern background-upload-vu0 (function none))
+(define-extern init-background (function none))
+(define-extern upload-vis-bits (function level level bsp-header int none))
+(define-extern set-background-regs! (function level none))
+(define-extern set-tie-guard-planes! (function level none))
+(define-extern set-shrub-guard-planes! (function level none))
 (define-extern set-subdivide-settings! (function level none)) ;; 
-;; (define-extern finish-shrub function)
-;; (define-extern finish-tfrag function)
-;; (define-extern finish-tfrag-trans function)
-;; (define-extern finish-tfrag-water function)
-;; (define-extern finish-tie function)
-;; (define-extern finish-texture-mask function)
-;; (define-extern finish-texture function)
-;; (define-extern finish-background function) ;; (function none)
+(define-extern finish-shrub (function none))
+(define-extern finish-tfrag (function none))
+(define-extern finish-tfrag-trans (function none))
+(define-extern finish-tfrag-water (function none))
+(define-extern finish-tie (function none))
+(define-extern finish-texture-mask (function none))
+(define-extern finish-texture (function none))
+(define-extern finish-background (function none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; draw-node                      ;;
@@ -37788,7 +37774,6 @@
 ;; sparticle-launcher             ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype sp-queued-launch-particles (structure)
   ((sp-system   sparticle-system           :offset-assert 0) ;; guessed by decompiler
    (sp-launcher sparticle-launcher         :offset-assert 4) ;; guessed by decompiler
@@ -37798,34 +37783,28 @@
   :size-assert         #x20
   :flag-assert         #x900000020
   )
-|#
 
-#|
 (deftype sp-launch-queue (basic)
   ((in-use int32                          :offset-assert 4)
-   (queue  sp-queued-launch-particles 256 :offset-assert 16) ;; guessed by decompiler
+   (queue  sp-queued-launch-particles 256 :inline :offset-assert 16) ;; guessed by decompiler
    )
   :method-count-assert 9
   :size-assert         #x2010
   :flag-assert         #x900002010
   )
-|#
 
-#|
 (deftype particle-adgif-cache (basic)
   ((used    int32           :offset-assert 4)
    (last    uint16          :offset-assert 8)
    (lastgif adgif-shader    :offset-assert 12)
    (tidhash uint16       80 :offset-assert 16) ;; guessed by decompiler
-   (spadgif adgif-shader 80 :offset-assert 176) ;; guessed by decompiler
+   (spadgif adgif-shader 80 :inline :offset-assert 176) ;; guessed by decompiler
    )
   :method-count-assert 9
   :size-assert         #x19b0
   :flag-assert         #x9000019b0
   )
-|#
 
-#|
 (deftype sp-launch-stack (structure)
   ((ra         basic                       :offset-assert 0)
    (dummy0     basic                       :offset-assert 4)
@@ -37850,83 +37829,81 @@
   :flag-assert         #x900000140
   ;; field ra uses ~A with a signed load. field dummy0 uses ~A with a signed load. field dummy1 uses ~A with a signed load. field b-spfic uses ~A with a signed load. field l-spfic uses ~A with a signed load.
   )
-|#
 
-;; sparticle-launcher is already defined!
 
 (define-extern *part-id-table* (array sparticle-launcher)) ;; 
 (define-extern *part-group-id-table* (array sparticle-launch-group)) ;; 
-;; (define-extern *launch-control-table* object)
-;; (define-extern *sp-temp* object) ;; float
+(define-extern *launch-control-table* (array sparticle-launch-control)) ;; 512 items
+(define-extern *sp-temp* float) ;; 
 ;; (define-extern count-launch-controls-in-table function)
-;; (define-extern lookup-part-group-by-name function) ;; (function string sparticle-launch-group)
-;; (define-extern lookup-part-group-pointer-by-name function) ;; (function string (pointer object))
+(define-extern lookup-part-group-by-name (function string sparticle-launch-group)) ;; 
+(define-extern lookup-part-group-pointer-by-name (function string (pointer object))) ;; 
 (define-extern part-group-pointer? (function pointer symbol)) ;; 
-;; (define-extern unlink-part-group-by-heap function) ;; (function kheap int)
-;; (define-extern sp-init-fields! function) ;; (function (pointer float) (inline-array sp-field-init-spec) sp-field-id sp-field-id symbol (inline-array sp-field-init-spec))
+(define-extern unlink-part-group-by-heap (function kheap int)) ;; 
+(define-extern sp-init-fields! (function (pointer float) (inline-array sp-field-init-spec) sp-field-id sp-field-id symbol (inline-array sp-field-init-spec))) ;; 
 (define-extern *sp-launcher-lock* symbol) ;; 
-;; (define-extern *sp-launch-queue* object) ;; sp-launch-queue
-;; (define-extern *sp-launcher-enable* object) ;; symbol
-;; (define-extern particle-setup-adgif function) ;; (function adgif-shader int none)
-;; (define-extern *particle-adgif-cache* object) ;; particle-adgif-cache
-;; (define-extern particle-adgif-cache-flush function) ;; (function none)
-;; (define-extern particle-adgif function) ;; (function adgif-shader texture-id none)
+(define-extern *sp-launch-queue* sp-launch-queue) ;; 
+(define-extern *sp-launcher-enable* symbol) ;; 
+(define-extern particle-setup-adgif (function adgif-shader int none)) ;; 
+(define-extern *particle-adgif-cache* particle-adgif-cache) ;; 
+(define-extern particle-adgif-cache-flush (function none)) ;; 
+(define-extern particle-adgif (function adgif-shader texture-id none)) ;; 
 (define-extern particle-adgif-callback (function adgif-shader texture-id none)) ;; 
-;; (define-extern sp-queue-launch function) ;; (function sparticle-system sparticle-launcher matrix int)
-;; (define-extern sp-adjust-launch function) ;; (function sparticle-launchinfo sparticle-cpuinfo (inline-array sp-field-init-spec) matrix symbol none)
-;; (define-extern sp-euler-convert function) ;; (function sparticle-launchinfo sparticle-cpuinfo none)
-;; (define-extern sp-rotate-system function) ;; (function sparticle-launchinfo sparticle-cpuinfo transformq none)
+(define-extern sp-queue-launch (function sparticle-system sparticle-launcher matrix int))
+(define-extern sp-adjust-launch (function sparticle-launchinfo sparticle-cpuinfo (inline-array sp-field-init-spec) matrix symbol none))
+(define-extern sp-euler-convert (function sparticle-launchinfo sparticle-cpuinfo none))
+(define-extern sp-rotate-system (function sparticle-launchinfo sparticle-cpuinfo transformq none))
 (define-extern sp-launch-particles-var (function sparticle-system sparticle-launcher matrix sparticle-launch-state sparticle-launch-control float none)) ;; 
-;; (define-extern *death-adgif* object) ;; adgif-shader
+(define-extern *death-adgif* adgif-shader) ;; 
 (define-extern sp-launch-particles-death (function sparticle-system sparticle-launcher vector none)) ;; 
 (define-extern sp-clear-queue (function none)) ;; 
-;; (define-extern sp-relaunch-setup-fields function) ;; (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)
+(define-extern sp-relaunch-setup-fields (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)) ;; 
 (define-extern sp-relaunch-particle-2d (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
-;; (define-extern sp-relaunch-particle-3d function) ;; (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)
+(define-extern sp-relaunch-particle-3d (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)) ;; 
 ;; (define-extern get-matching-control-table-index function)
 ;; (define-extern kill-all-particles-with-control function)
 (define-extern execute-particle-local-space-engine (function int none)) ;; 
-;; (define-extern local-space-camera function) ;; (function particle-local-space-info none)
-;; (define-extern local-space-proc-joint function) ;; (function particle-local-space-info none)
+(define-extern local-space-camera (function particle-local-space-info none))
+(define-extern local-space-proc-joint (function particle-local-space-info none))
 ;; (define-extern local-space-proc-root function)
 ;; (define-extern spawn-level-particles-for-camera function)
-;; (define-extern execute-part-engine function) ;; (function none)
+(define-extern execute-part-engine (function none)) ;;
 ;; (define-extern check-particles function)
-;; (define-extern sparticle-track-root function) ;; (function object sparticle-cpuinfo vector none)
-;; (define-extern sparticle-track-root-prim function) ;; (function object sparticle-cpuinfo vector none)
-;; (define-extern sparticle-track-joint function) ;; (function sparticle-system sparticle-cpuinfo vector none)
-;; (define-extern sparticle-turn-to-vel function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none)
-;; (define-extern sparticle-rotate-to-vel-3d function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d vector none)
-;; (define-extern birth-func-clean function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern birth-func-process-clock function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern birth-func-copy-rot-color function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern *global-toggle* object) ;; int
-;; (define-extern birth-func-copy2-rot-color function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern birth-func-copy-omega-to-z function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern birth-func-random-next-time function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern sparticle-respawn-heights function) ;; (function sparticle-system sparticle-cpuinfo vector none)
-;; (define-extern sparticle-respawn-timer function) ;; (function sparticle-system sparticle-cpuinfo vector none)
+(define-extern sparticle-track-root (function object sparticle-cpuinfo vector none))
+(define-extern sparticle-track-root-prim (function object sparticle-cpuinfo vector none))
+(define-extern sparticle-track-joint (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern sparticle-turn-to-vel (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none))
+(define-extern sparticle-rotate-to-vel-3d (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d vector none))
+(define-extern birth-func-clean (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-process-clock (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-copy-rot-color (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern *global-toggle* int) ;; 
+(define-extern birth-func-copy2-rot-color (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-copy-omega-to-z (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-random-next-time (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern sparticle-respawn-heights (function sparticle-system sparticle-cpuinfo vector none))
+(define-extern sparticle-respawn-timer (function sparticle-system sparticle-cpuinfo vector none))
 (define-extern sparticle-texture-animate (function sparticle-system sparticle-cpuinfo vector none)) ;; 
-;; (define-extern sparticle-texture-day-night function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-2d none)
+(define-extern sparticle-texture-day-night (function sparticle-system sparticle-cpuinfo sprite-vec-data-2d none))
 (define-extern sparticle-motion-blur (function sparticle-system sparticle-cpuinfo vector none)) ;; 
-;; (define-extern sparticle-motion-blur-old function) ;; (function object sparticle-cpuinfo sprite-vec-data-3d object)
-;; (define-extern sparticle-set-conerot function) ;; (function sparticle-launcher vector none)
-;; (define-extern check-ground-bounce function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo float)
+(define-extern sparticle-motion-blur-old (function object sparticle-cpuinfo sprite-vec-data-3d object))
+(define-extern sparticle-set-conerot (function sparticle-launcher vector none))
+(define-extern check-ground-bounce (function sparticle-system sparticle-cpuinfo sparticle-launchinfo float))
 (define-extern check-drop-group-center (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)) ;; 
 ;; (define-extern check-drop-group-center-with-offset function)
-;; (define-extern check-bubble-height function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)
-;; (define-extern check-raise-group-center function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)
-;; (define-extern birth-func-y->userdata function) ;; (function sparticle-system sparticle-cpuinfo matrix none)
-;; (define-extern birth-func-ocean-height function) ;; (function sparticle-system sparticle-cpuinfo matrix none)
-;; (define-extern birth-func-camera-orient function) ;; (function int sparticle-cpuinfo sparticle-launchinfo none)
-;; (define-extern birth-func-set-parent-pntr function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern birth-func-get-parent-quat function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
-;; (define-extern spt-func-camera-facing-orbiter function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo quaternion)
+(define-extern check-bubble-height (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern check-raise-group-center (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern birth-func-y->userdata (function sparticle-system sparticle-cpuinfo matrix none))
+(define-extern birth-func-ocean-height (function sparticle-system sparticle-cpuinfo matrix none))
+(define-extern birth-func-camera-orient (function int sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern birth-func-set-parent-pntr (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern birth-func-get-parent-quat (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
+(define-extern spt-func-camera-facing-orbiter (function sparticle-system sparticle-cpuinfo sparticle-launchinfo quaternion))
 (define-extern *particle-birth-work* particle-birth-work)
-;; (define-extern birth-func-set-quat function) ;; (function int sparticle-cpuinfo sparticle-launchinfo none)
+(define-extern birth-func-set-quat (function int sparticle-cpuinfo sparticle-launchinfo none))
 ;; (define-extern birth-func-add-vel function)
-;; (define-extern birth-func-set-vel function) ;; (function object sparticle-cpuinfo sparticle-launchinfo none)
-;; (define-extern birth-func-set-vel-2d function) ;; (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)
+(define-extern birth-func-set-vel (function object sparticle-cpuinfo sparticle-launchinfo none))
+(define-extern birth-func-set-vel-2d (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 ;; (define-extern birth-func-set-vel-range function)
 (define-extern birth-func-texture-group (function int sparticle-cpuinfo sparticle-launchinfo none)) ;; 
 (define-extern rot-to-particle (function degrees sprite-vec-data-2d matrix none)) ;; 
@@ -37935,11 +37912,11 @@
 (define-extern sparticle-2d-spline-align (function object sparticle-cpuinfo sprite-vec-data-2d object none)) ;; 
 ;; (define-extern sparticle-2d-spline-align-no-flip function)
 (define-extern sparticle-2d-spline-align-instant (function object sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
-;; (define-extern birth-func-inherit-size function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)
+(define-extern birth-func-inherit-size (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
 (define-extern birth-func-texture-group-2d (function object sparticle-cpuinfo sparticle-launchinfo object object none)) ;; 
-;; (define-extern sparticle-3d-rotate-xz-to-camera function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none)
+(define-extern sparticle-3d-rotate-xz-to-camera (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none))
 (define-extern spt-func-relative-pos (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none)) ;; 
-;; (define-extern spt-func-turn-to-vel-radial function) ;; (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none)
+(define-extern spt-func-turn-to-vel-radial (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; sparticle-subsampler           ;;
@@ -41222,8 +41199,8 @@
     (rigid-body-control-method-28 () none) ;; 28 ;; (rigid-body-control-method-28 (_type_ vector quaternion) none)
     (rigid-body-control-method-29 () none) ;; 29 ;; (debug-print-info (_type_ object) none)
     (rigid-body-control-method-30 () none) ;; 30 ;; (debug-print-force-torque (_type_ object) none)
-    (rigid-body-control-method-31 () none) ;; 31 ;; (debug-print-pos-rot (_type_ object) none)
-    (rigid-body-control-method-32 () none) ;; 32 ;; (debug-print-momentum (_type_ object) none)
+    (rigid-body-control-method-31 (_type_ vector) none) ;; 31 ;; (debug-print-pos-rot (_type_ object) none)
+    (rigid-body-control-method-32 (_type_ vector) none) ;; 32 ;; (debug-print-momentum (_type_ object) none)
     (rigid-body-control-method-33 () none) ;; 33 ;; (debug-print-velocity (_type_ object) none)
     (rigid-body-control-method-34 () none) ;; 34
     (rigid-body-control-method-35 () none) ;; 35
@@ -43077,7 +43054,7 @@
     (net-process-mgr-method-49 () none) ;; 49
     (net-process-mgr-method-50 () none) ;; 50
     (net-process-mgr-method-51 () none) ;; 51
-    (net-process-mgr-method-52 () none) ;; 52
+    (net-process-mgr-method-52 (_type_) int) ;; 52
     (net-process-mgr-method-53 () none) ;; 53
     (net-process-mgr-method-54 () none) ;; 54
     (net-process-mgr-method-55 () none) ;; 55
@@ -43657,7 +43634,7 @@
   :flag-assert         #x1200000131
   (:methods
     (net-predictor-simple-method-9 () none) ;; 9
-    (net-predictor-simple-method-10 () none) ;; 10
+    (net-predictor-simple-method-10 (_type_) none) ;; 10
     (net-predictor-simple-method-11 () none) ;; 11
     (net-predictor-simple-method-12 () none) ;; 12
     (net-predictor-simple-method-13 () none) ;; 13
@@ -44147,7 +44124,7 @@
   :size-assert         #x9c
   :flag-assert         #xa0000009c
   (:methods
-    (vehicle-particle-common-info-method-9 () none) ;; 9 ;; (init! (_type_) none)
+    (init! (_type_) none)
     )
   )
 
@@ -44198,7 +44175,7 @@
   ((vel               vector               :inline :offset-assert 0)
    (info              vehicle-section-info         :offset-assert 16)
    (node-list         basic                        :offset-assert 20)
-   (draw              basic                        :offset-assert 24)
+   (draw              col-rend                        :offset-assert 24) ;; An absolute total guess, some basic with a float @ 40, check with the live game
    (car-info          car-info-full                :offset-assert 28)
    (debris            uint64                       :offset-assert 32)
    (damage            float                        :offset-assert 40)
@@ -44216,7 +44193,7 @@
     (vehicle-section-method-9 (_type_ rigid-body-object art-group int) none) ;; 9
     (vehicle-section-method-10 () none) ;; 10
     (vehicle-section-method-11 (_type_ wvehicle) none) ;; 11
-    (vehicle-section-method-12 () none) ;; 12
+    (vehicle-section-method-12 (_type_) none) ;; 12
     (vehicle-section-method-13 (_type_ float) none) ;; 13
     (vehicle-section-method-14 () none) ;; 14
     (vehicle-section-method-15 () none) ;; 15
@@ -44428,7 +44405,7 @@
     (vehicle-method-103 (_type_) none) ;; 103 ;; (vehicle-method-103 (_type_) none)
     (vehicle-method-104 (_type_) none) ;; 104 ;; (vehicle-method-104 (_type_) none)
     (vehicle-method-105 (_type_) none) ;; 105 ;; (vehicle-method-105 (_type_) none)
-    (vehicle-method-106 (_type_) none) ;; 106 ;; (vehicle-method-106 (_type_) none)
+    (vehicle-method-106 (_type_ int) none) ;; 106 ;; (vehicle-method-106 (_type_) none)
     (vehicle-method-107 (_type_) none) ;; 107 ;; (vehicle-method-107 (_type_ int process) none)
     (vehicle-method-108 (_type_) none) ;; 108 ;; (vehicle-method-108 (_type_ int) none)
     (vehicle-method-109 (_type_) none) ;; 109 ;; (vehicle-method-109 (_type_) none)
@@ -44459,7 +44436,7 @@
     (vehicle-method-134 (_type_) none) ;; 134 ;; (vehicle-method-134 (_type_) none)
     (vehicle-method-135 (_type_) none) ;; 135 ;; (vehicle-method-135 (_type_) none)
     (vehicle-method-136 (_type_ sphere float) none) ;; 136 ;; (vehicle-method-136 (_type_) none)
-    (vehicle-method-137 (_type_) none) ;; 137 ;; (vehicle-method-137 (_type_) none)
+    (vehicle-method-137 (_type_ float) none) ;; 137 ;; (vehicle-method-137 (_type_) none)
     (vehicle-method-138 (_type_ float) float) ;; 138 ;; (vehicle-method-138 (_type_) none)
     (vehicle-method-139 () none) ;; 139 ;; (vehicle-method-139 (_type_) none)
     (vehicle-method-140 () none) ;; 140 ;; (vehicle-method-140 (_type_) none)
@@ -44516,11 +44493,11 @@
     (vehicle-method-191 (_type_) none) ;; 191
     (vehicle-method-192 (_type_) none) ;; 192
     (vehicle-method-193 (_type_) none) ;; 193
-    (vehicle-method-194 (_type_) none) ;; 194
+    (vehicle-method-194 (_type_ mem-buffer) none) ;; 194
     (vehicle-method-195 (_type_) none) ;; 195
-    (vehicle-method-196 (_type_) none) ;; 196
-    (vehicle-method-197 (_type_) none) ;; 197
-    (vehicle-method-198 (_type_) none) ;; 198
+    (vehicle-method-196 (_type_ mem-buffer) none) ;; 196
+    (vehicle-method-197 (_type_ mem-buffer int) none) ;; 197
+    (vehicle-method-198 (_type_ mem-buffer object) none) ;; 198
     (vehicle-method-199 (_type_) none) ;; 199
     (vehicle-method-200 (_type_) none) ;; 200
     (vehicle-method-201 (_type_ driver) none) ;; 201
@@ -44650,7 +44627,7 @@
     (race-line-method-9 () none) ;; 9
     (race-line-method-10 () none) ;; 10
     (race-line-method-11 () none) ;; 11
-    (race-line-method-12 () none) ;; 12
+    (race-line-method-12 (_type_) none) ;; 12
     (race-line-method-13 () none) ;; 13
     (race-line-method-14 () none) ;; 14
     )
@@ -45631,7 +45608,7 @@
    (task-node                  uint16                  :offset-assert 1106)
    (task-info                  game-task-info                   :offset-assert 1108)
    (task-node-info             game-task-node-info                   :offset-assert 1112)
-   (player-to-vehicle-slot-map uint8         24      :offset-assert 1116)
+   (player-to-vehicle-slot-map int8         24      :offset-assert 1116)
    (vehicle-slot-to-player-map uint8         6       :offset-assert 1140)
    )
   :method-count-assert 87
@@ -45719,7 +45696,7 @@
    (index      int8    :offset-assert 24)
    (cup-mask   uint32  :offset-assert 28)
    (id-variant uint32  :offset-assert 32)
-   (ai-levels  basic   :offset-assert 36)
+   (ai-levels  (array prebuilt-ai-vehicle)   :offset-assert 36) ;; une supposition
    )
   :method-count-assert 9
   :size-assert         #x28
@@ -49179,7 +49156,7 @@
 |#
 
 ;; (define-extern *closest-player-dist-sq* object)
-;; (define-extern get-closest-human-player function)
+(define-extern get-closest-human-player (function vector int))
 ;; (define-extern get-closest-human-or-ai-player function)
 ;; (define-extern search-for-code function)
 ;; (define-extern *poop* object)
@@ -49683,13 +49660,13 @@
 ;; (define-extern *rb-line-sphere-test* object)
 ;; (define-extern rb-line-sphere-test-update function)
 ;; (define-extern rb-reset-perf-array function)
-;; (define-extern rb-reset-perf-times function)
+(define-extern rb-reset-perf-times (function none))
 ;; (define-extern rb-get-perf function)
 ;; (define-extern *rb-raw-time-val* object)
 ;; (define-extern rb-cpu-delay function)
 ;; (define-extern rigid-body-queue-manager-post function)
 ;; (define-extern rigid-body-queue-manager-init-by-other function) ;; (function rigid-body-queue object :behavior rigid-body-queue-manager)
-;; (define-extern rigid-body-queue-manager-spawn function) ;; (function rigid-body-queue process-tree process)
+(define-extern rigid-body-queue-manager-spawn (function rigid-body-queue process-tree process)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; rigid-body-object              ;;
@@ -49834,7 +49811,7 @@
 ;; (define-extern driver-anim function)
 ;; (define-extern driver-event-handler function)
 ;; (define-extern driver-init-by-other function)
-;; (define-extern driver-spawn function)
+(define-extern driver-spawn (function driver-type process int driver))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helmet                         ;;
@@ -49876,7 +49853,7 @@
 ;; (define-extern helmet-hud-init-by-other function)
 ;; (define-extern helmet-hud-spawn function)
 ;; (define-extern helmet-garage-init-by-other function)
-;; (define-extern helmet-garage-spawn function)
+(define-extern helmet-garage-spawn (function vehicle none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; driver-jak                     ;;
@@ -50384,26 +50361,23 @@
 ;; vehicle-debris                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype vehicle-debris-init-params (structure)
   ((mat           matrix                      :inline :offset-assert 0)
    (velocity      vector                      :inline :offset-assert 64)
    (ang-velocity  vector                      :inline :offset-assert 80)
    (color         rgbaf                       :inline :offset-assert 96)
    (radius        float                               :offset-assert 112)
-   (skel          basic                               :offset-assert 116)
+   (skel          skeleton-group                               :offset-assert 116)
    (info          rigid-body-object-constants         :offset-assert 120)
-   (level         basic                               :offset-assert 124)
+   (level         level                               :offset-assert 124)
    (impact-sound  uint16                              :offset-assert 128)
-   (has-particles basic                               :offset-assert 132)
+   (has-particles symbol                               :offset-assert 132)
    )
   :method-count-assert 9
   :size-assert         #x88
   :flag-assert         #x900000088
   )
-|#
 
-#|
 (deftype vehicle-debris (rigid-body-object)
   ((impact-sound uint16  :offset-assert 288)
    (camera-dist  float   :offset-assert 292)
@@ -50416,12 +50390,13 @@
     fade-out ;; 90
     die ;; 91
     )
+  (:methods
+    (rigid-body-object-method-65 (_type_ vehicle-debris-init-params) none :replace))
   )
-|#
 
-;; (define-extern *vehicle-debris-constants* object)
-;; (define-extern vehicle-debris-init-by-other function)
-;; (define-extern vehicle-debris-spawn function)
+(define-extern *vehicle-debris-constants* rigid-body-object-constants)
+(define-extern vehicle-debris-init-by-other (function vehicle-debris-init-params none :behavior vehicle-debris))
+(define-extern vehicle-debris-spawn (function process-tree vehicle-spawn-params vehicle-debris))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; vehicle-effects                ;;
@@ -50496,16 +50471,16 @@
     )
   )
 
-;; (define-extern vehicle-manager-event-handler function) ;; (function process int symbol event-message-block object :behavior vehicle-manager)
-;; (define-extern vehicle-manager-init-by-other function) ;; (function object :behavior vehicle-manager)
+(define-extern vehicle-manager-event-handler (function process int symbol event-message-block object :behavior vehicle-manager)) ;; 
+(define-extern vehicle-manager-init-by-other (function object :behavior vehicle-manager)) ;; 
 (define-extern vehicle-manager-start (function process none)) ;; 
-;; (define-extern vehicle-manager-kill function) ;; (function none)
+(define-extern vehicle-manager-kill (function none)) ;; 
 (define-extern *car-appearance-hack* int)
-(define-extern *car-info-default* (pointer uint32))
-;; (define-extern vehicle-init-by-other function) ;; (function int traffic-object-spawn-params object :behavior vehicle)
-;; (define-extern vehicle-idx-from-level-name function)
-;; (define-extern vehicle-in-level? function)
-(define-extern vehicle-spawn (function vehicle-type object process-drawable)) ;; TODO - probably vehicle-spawn-params but not big enough...
+(define-extern *car-info-default* car-info)
+(define-extern vehicle-init-by-other (function int vehicle-spawn-params object :behavior vehicle)) ;; 
+(define-extern vehicle-idx-from-level-name (function symbol int))
+(define-extern vehicle-in-level? (function vehicle-type level symbol))
+(define-extern vehicle-spawn (function vehicle-type vehicle-spawn-params vehicle))
 (define-extern find-vehicle (function int vehicle))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -50517,7 +50492,6 @@
 ;; vehicle-net                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype vehicle-net-state (structure)
   ((hit-points float  :offset-assert 0)
    (flags      uint8  :offset-assert 4)
@@ -50526,9 +50500,7 @@
   :size-assert         #x5
   :flag-assert         #x900000005
   )
-|#
 
-#|
 (deftype vehicle-net-construction (structure)
   ((vehicle-type uint8              :offset-assert 0)
    (pos          vector     :inline :offset-assert 16)
@@ -50540,10 +50512,9 @@
   :size-assert         #x40
   :flag-assert         #x900000040
   )
-|#
 
-;; (define-extern *vehicle-remote-spawn-data* object)
-;; (define-extern *last-latencies* object)
+(define-extern *vehicle-remote-spawn-data* symbol)
+(define-extern *last-latencies* (pointer int32))
 ;; (define-extern encode-vehicle-net-state function)
 ;; (define-extern decode-vehicle-net-state function)
 ;; (define-extern encode-vehicle-net-construction function)
@@ -52441,11 +52412,11 @@
 ;; wvehicle-weapons-debug         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern set-veh-weapon function)
+(define-extern set-veh-weapon (function symbol int vehicle object))
 (define-extern dm-set-veh-weapon (function symbol int none))
-;; (define-extern set-vehicle-light-eco function)
+(define-extern set-vehicle-light-eco (function float vehicle float))
 (define-extern dm-set-veh-leco (function int none))
-;; (define-extern test-vehicle-weapon function)
+(define-extern test-vehicle-weapon (function symbol none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; spartacus-editor               ;;
@@ -53094,7 +53065,7 @@
 ;; (define-extern powerup-build-static-hash function)
 ;; (define-extern powerup-build-dynamic-hash function)
 ;; (define-extern *powerup-collide-results* object)
-;; (define-extern powerup-check-collision function)
+(define-extern powerup-check-collision (function vector object integer vehicle none))
 ;; (define-extern powerup-motion-parabola function)
 ;; (define-extern net-powerup-init-by-other function)
 ;; (define-extern spawn-powerup function)
@@ -56483,7 +56454,7 @@
 
 (define-extern whoosh-shake-camera (function vector float float none))
 ;; (define-extern vehicle-respawn-invul-init-by-other function)
-;; (define-extern vehicle-respawn-invul-spawn function)
+(define-extern vehicle-respawn-invul-spawn (function vehicle none))
 ;; (define-extern vehicle-suppress-look-init-by-other function)
 ;; (define-extern suppress-look-start function)
 ;; (define-extern local-space-proc-vehicle-turbo function)
@@ -56744,6 +56715,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-race                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-extern *scratch-top* int32)
 
 (define-extern check-travel (function vector float float none))
 (define-extern *previous-angle* vector)
