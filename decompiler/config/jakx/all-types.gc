@@ -3223,7 +3223,7 @@
   )
 
 (deftype sound-handle (structure)
-  ((proc          uint64  :offset-assert 0)
+  ((proc          handle  :offset-assert 0)
    (flags         uint64  :offset-assert 8)
    (fader-cur     float   :offset-assert 16)
    (fader-targ    float   :offset-assert 20)
@@ -3300,7 +3300,7 @@
    (pad             int32           2  :offset-assert 256)
    (music-position  uint32              :offset-assert 264)
    (music-status    uint32               :offset 268)
-   (music-name string :offset 272) ;; might be wrong, used ~g
+   (music-name uint8 :offset 272) ;; might be wrong, used ~g
    (stream-position uint32            4  :offset 320) ;; guessed by decompiler
    (stream-status   stream-status     4  :offset-assert 336) ;; guessed by decompiler
    (stream-name     sound-stream-name 4 :inline :offset-assert 352) ;; guessed by decompiler
@@ -3328,14 +3328,14 @@
   :flag-assert         #x1100000068
   (:methods
     (new "Set up ambient-sound. Can use an entity-actor (grabs from lump), sound-spec, or name as a string." (symbol type basic vector float) _type_) ;; 0
-    (ambient-sound-method-9 () none) ;; 9 ;; (update! (_type_) int)
-    (ambient-sound-method-10 () none) ;; 10 ;; (change-sound! (_type_ sound-name) int)
+    (update! (_type_) int)
+    (change-sound! (_type_ sound-name) int)
     (update-trans! (_type_ vector) int)
-    (ambient-sound-method-12 () none) ;; 12 ;; (update-vol! (_type_ float) int)
-    (ambient-sound-method-13 () none) ;; 13 ;; (update-pitch-mod! (_type_ float) none)
+    (update-vol! (_type_ float) int)
+    (update-pitch-mod! (_type_ float) none)
     (set-falloff-far! (_type_ float) none)
-    (ambient-sound-method-15 () none) ;; 15 ;; (set-falloff-mode! (_type_ int) none)
-    (ambient-sound-method-16 () none) ;; 16 ;; (stop! (_type_) int)
+    (set-falloff-mode! (_type_ int) none)
+    (stop! (_type_) int)
     )
   )
 
@@ -17181,6 +17181,7 @@
    (borrow-city-count       uint32              :offset-assert 524)
    (borrow-city             pair              3 :offset-assert 528) ;; guessed by decompiler
    (unknown-usd-33             int32             28 :offset-assert 540) ;; added
+   (unknown-usd-uint32-3 uint32 :offset 636)
    (audio-language          uint8               :offset-assert 652) ;; language-enum
    (unknown-usd-34             int32             11 :offset-assert 656) ;; added
    (unknown-sym-1 symbol :offset 676) ;; display-loop-main
@@ -17192,6 +17193,7 @@
    (unknown-uint32-1 uint32 :offset 748)
    (unknown-uint32-2 uint32 :offset 752)
    (unknown-float float :offset 756)
+   (test uint32 :offset 768)
    )
   :method-count-assert 11
   :size-assert         #x304
@@ -17367,7 +17369,7 @@
     (setting-control-method-12 (_type_ int process symbol) none) ;; 12 ;; (remove-setting (_type_ process symbol) none)
     (setting-control-method-13 (_type_ process symbol object object object) none) ;; 13 ;; (kill-persister (_type_ engine-pers object) none)
     (setting-control-method-14 (_type_ symbol int symbol symbol float int) none) ;; 14 ;; (setting-control-method-14 (_type_ object) connectable)
-    (setting-control-method-15 (_type_ process symbol symbol int int) none) ;; 15 ;; (get-setting (_type_ object) connectable)
+    (setting-control-method-15 (_type_ process symbol symbol float int) none) ;; 15 ;; (get-setting (_type_ object) connectable)
     (setting-control-method-16 (_type_ process symbol) none) ;; 16 ;; (remove-setting-by-arg0 (_type_ object) none)
     (setting-control-method-17 () none) ;; 17 ;; (set-setting-by-param (_type_ symbol object object object) connection)
     (setting-control-method-18 () none) ;; 18 ;; (apply-settings (_type_) user-setting-data)
@@ -21003,7 +21005,7 @@
     (reset! (_type_) _type_)
     (load-state-method-10 () none) ;; 10 ;; (update! (_type_) int)
     (load-state-method-11 () none) ;; 11 ;; (want-levels (_type_ (pointer symbol)) int)
-    (load-state-method-12 () none) ;; 12 ;; (want-sound-banks (_type_ (pointer symbol)) none)
+    (want-sound-banks (_type_ (pointer symbol)) none)
     (load-state-method-13 () none) ;; 13 ;; (want-display-level (_type_ symbol symbol) int)
     (load-state-method-14 () none) ;; 14 ;; (want-vis-level (_type_ symbol) none)
     (load-state-method-15 () none) ;; 15 ;; (want-force-vis (_type_ symbol symbol) int)
@@ -21175,7 +21177,7 @@
    (turbo-disabled                       int8                                   :offset-assert 1472)
    (turbo-last-disabled                  int32                                  :offset-assert 1476)
    (fragile-vehicle                      basic                                  :offset-assert 1480)
-   (music-data                           uint32                         4       :offset-assert 1484)
+   (music-data                           uint8                          16       :offset-assert 1484)
    (music-info                           uint32                                 :offset 1484)
    (vehicle-sound-info (array vehicle-sound-info) :offset 1492) ;; big guess, (anon-function 163 default-menu)
    (playing-grand-prix?                  symbol                                 :offset 1496)
@@ -21202,7 +21204,7 @@
     (game-info-method-15 () none) ;; 15 ;; (copy-perms-from-level! (_type_ level) int)
     (game-info-method-16 () none) ;; 16 ;; (copy-perms-to-level! (_type_ level) int)
     (debug-inspect (_type_ symbol) _type_)
-    (game-info-method-18 () none) ;; 18 ;; (get-current-continue-forced (_type_) continue-point)
+    (game-info-method-18 (_type_ string) continue-point) ;; 18 ;; (get-current-continue-forced (_type_) continue-point)
     (game-info-method-19 () none) ;; 19 ;; (get-continue-by-name (_type_ string) continue-point)
     (game-info-method-20 () none) ;; 20 ;; (set-continue! (_type_ basic symbol) continue-point)
     (game-info-method-21 () none) ;; 21 ;; (game-info-method-21 (_type_) none)
@@ -31816,7 +31818,7 @@
     target-float ;; associated process guessed by decompiler, old: (state target)
     target-introb
     target-intro
-    target-title ;; associated process guessed by decompiler, old: (state symbol target)
+    (target-title symbol) ;; associated process guessed by decompiler, old: (state symbol target)
     target-pilot-start ;; associated process guessed by decompiler, old: (state handle symbol symbol target)
     target-load-wait
     )
@@ -35999,93 +36001,91 @@
 ;; gsound                         ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype engine-sound-pers (engine-pers)
   ()
   :method-count-assert 15
   :size-assert         #x20
   :flag-assert         #xf00000020
   )
-|#
 
-;; (define-extern sound-mp-fix-trans function)
-;; (define-extern *sound-loop-engine* object) ;; engine-sound-pers
-;; (define-extern *sound-player-rpc* object) ;; rpc-buffer-pair
-;; (define-extern *sound-loader-rpc* object) ;; rpc-buffer-pair
-;; (define-extern sound-name= function) ;; (function sound-name sound-name symbol)
-;; (define-extern str-is-playing? function) ;; (function symbol)
+(define-extern sound-mp-fix-trans (function vector vector vector))
+(define-extern *sound-loop-engine* engine-sound-pers)
+(define-extern *sound-player-rpc* rpc-buffer-pair)
+(define-extern *sound-loader-rpc* rpc-buffer-pair)
+(define-extern sound-name= (function sound-name sound-name symbol))
+(define-extern str-is-playing? (function symbol))
 (define-extern str-id-is-playing? (function sound-id symbol)) ;; 
 (define-extern current-str-pos (function sound-id int)) ;; 
-;; (define-extern current-str-status function) ;; (function sound-id stream-status)
-;; (define-extern *dnas-is-running* object)
+(define-extern current-str-status (function sound-id stream-status))
+(define-extern *dnas-is-running* symbol)
 (define-extern is-cd-in? (function symbol)) ;; 
 (define-extern new-sound-id (function sound-id)) ;; 
-;; (define-extern check-irx-version function) ;; (function int)
-;; (define-extern sound-bank-load function) ;; (function sound-name int int sound-id)
-;; (define-extern sound-bank-unload function) ;; (function sound-name int)
-;; (define-extern sound-music-load function) ;; (function sound-name int)
-;; (define-extern sound-music-unload function) ;; (function int)
-;; (define-extern set-language function) ;; (function language-enum int)
-;; (define-extern sound-set-stereo-mode function) ;; (function int none)
+(define-extern check-irx-version (function int))
+(define-extern sound-bank-load (function sound-name int int sound-id))
+(define-extern sound-bank-unload (function sound-name int))
+(define-extern sound-music-load (function sound-name int))
+(define-extern sound-music-unload (function int))
+(define-extern set-language (function language-enum int))
+(define-extern sound-set-stereo-mode (function int none))
 (define-extern list-sounds (function none)) ;;
-;; (define-extern sound-command->string function) ;; (function sound-command string)
-;; (define-extern sound-buffer-dump function) ;; (function int)
-;; (define-extern *debug-sound-info-item* object)
-;; (define-extern sound-instance-play function)
-;; (define-extern sound-instance-update function)
+(define-extern sound-command->string (function sound-command string))
+(define-extern sound-buffer-dump (function int))
+(define-extern *debug-sound-info-item* symbol)
+(define-extern sound-instance-play (function sound-instance none))
+(define-extern sound-instance-update (function sound-instance none))
 (define-extern sound-info-by-name (function string sound-info))
-;; (define-extern *sound-handles* array)
-;; (define-extern find-sound-handle function)
-;; (define-extern release-sound-handle function)
-;; (define-extern get-sound-handle function)
-;; (define-extern *sound-instances* object)
+(define-extern *sound-handles* (array (array sound-handle)))
+(define-extern find-sound-handle (function int handle sound-handle))
+(define-extern release-sound-handle (function sound-handle none))
+(define-extern get-sound-handle (function handle sound-handle :behavior process))
+(define-extern *sound-instances* (array sound-instance))
 (define-extern find-sound-instance (function object symbol sound-instance))
-;; (define-extern remove-sound-instance-by-index function)
-;; (define-extern remove-sound-instance-by-sound-id function)
+(define-extern remove-sound-instance-by-index (function int none))
+(define-extern remove-sound-instance-by-sound-id (function sound-id object))
 (define-extern make-sound-instance (function sound-info int handle sound-instance))
-;; (define-extern update-pitch-with-doppler function)
-;; (define-extern update-tracking-position function)
-;; (define-extern calculate-pan-angle function)
-;; (define-extern update-pan-angle function)
-;; (define-extern calculate-falloff-volume function)
-;; (define-extern update-volume-with-falloff function)
-;; (define-extern *sound-priority-level* object)
-;; (define-extern *sound-duck-amount* object)
-;; (define-extern *sound-priority-duck* object)
-;; (define-extern *music-ducked-last-frame?* object)
-;; (define-extern *slow-mo-last-frame?* object)
-;; (define-extern set-sound-priority-duck-amount function)
-;; (define-extern unset-sound-priority-duck-amount function)
-;; (define-extern build-sound-list function)
-;; (define-extern *sound-player-enable* object) ;; symbol
+(define-extern update-pitch-with-doppler (function sound-instance none))
+(define-extern update-tracking-position (function sound-instance symbol))
+(define-extern calculate-pan-angle (function vector symbol symbol symbol int float))
+(define-extern update-pan-angle (function sound-instance symbol float))
+(define-extern calculate-falloff-volume (function float vector float float float vector sound-instance float))
+(define-extern update-volume-with-falloff (function sound-instance float))
+(define-extern *sound-priority-level* int)
+(define-extern *sound-duck-amount* float)
+(define-extern *sound-priority-duck* float)
+(define-extern *music-ducked-last-frame?* symbol)
+(define-extern *slow-mo-last-frame?* symbol)
+(define-extern set-sound-priority-duck-amount (function float float))
+(define-extern unset-sound-priority-duck-amount (function float))
+(define-extern build-sound-list (function none))
+(define-extern *sound-player-enable* symbol) ;; symbol
 (define-extern swap-sound-buffers (function vector vector vector vector vector float int)) ;; 
 (define-extern get-sound-buffer-entry (function pointer))
-;; (define-extern free-last-sound-buffer-entry function) ;; (function none)
-;; (define-extern sound-basic-cb function) ;; (function int (pointer int32) none)
-;; (define-extern sound-trans-copy function)
+(define-extern free-last-sound-buffer-entry (function none))
+(define-extern sound-basic-cb (function int (pointer int32) none))
+(define-extern sound-trans-copy (function vector symbol none))
 (define-extern string->sound-name (function string sound-name)) ;; 
-;; (define-extern sound-name->string function) ;; (function sound-name string)
-;; (define-extern sound-set-volume function) ;; (function sound-group float int)
-;; (define-extern sound-set-reverb function) ;; (function int float float uint int)
-;; (define-extern sound-set-globals function)
+(define-extern sound-name->string (function sound-name string))
+(define-extern sound-set-volume (function sound-group float int))
+(define-extern sound-set-reverb (function int float float uint int))
+(define-extern sound-set-globals (function none))
 (define-extern sound-pause (function sound-id int)) ;; 
 (define-extern sound-stop (function sound-id symbol int)) ;; 
 (define-extern sound-continue (function sound-id int)) ;; 
 (define-extern sound-group-pause (function sound-group int)) ;; 
-;; (define-extern sound-group-stop function) ;; (function sound-group int)
+(define-extern sound-group-stop (function sound-group int))
 (define-extern sound-group-continue (function sound-group int)) ;; 
 (define-extern sound-set-fps (function int int)) ;; 
-;; (define-extern sound-volume-off function) ;; (function int)
+(define-extern sound-volume-off (function int))
 (define-extern show-iop-info (function dma-buffer int)) ;; 
 (define-extern show-iop-memory (function dma-buffer int)) ;; 
 (define-extern ear-trans (function int int vector)) ;; 
-;; (define-extern make-sqrt-table function) ;; (function none)
-;; (define-extern doppler-pitch-shift function) ;; (function vector vector float)
-;; (define-extern sound-bank-reload function) ;; (function none)
-;; (define-extern sound-bank-reload-common function)
-;; (define-extern *jukebox-onoff* object)
-;; (define-extern *last-music-position* object)
-;; (define-extern jukebox-onoff function)
+(define-extern make-sqrt-table (function none))
+(define-extern doppler-pitch-shift (function vector vector float))
+(define-extern sound-bank-reload (function none))
+(define-extern sound-bank-reload-common (function none))
+(define-extern *jukebox-onoff* symbol)
+(define-extern *last-music-position* int)
+(define-extern jukebox-onoff (function symbol none))
 (define-extern update-jukebox-music (function none))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37287,7 +37287,7 @@
 (define-extern *blit-displays-work* blit-displays-work) ;; 
 ;; (define-extern clear-zbuf function)
 (define-extern draw-color-bars (function blit-displays-work none)) ;; 
-;; (define-extern draw-raw-image function) ;; (function blit-displays-work bucket-id art-group vector vector level int none)
+(define-extern draw-raw-image (function blit-displays-work bucket-id art-group vector vector level int none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; font-data                      ;;
@@ -38150,16 +38150,21 @@
 ;; (define-extern *dma-block-lists* array)
 ;; (define-extern can-place-block? function)
 ;; (define-extern dma-try-alloc-single function)
-;; (define-extern dma-try-alloc function)
-;; (define-extern dma-release function)
+(define-extern dma-try-alloc (function int int symbol int int int symbol none))
+(define-extern dma-release (function symbol none))
 ;; (define-extern dma-dump function)
 ;; (define-extern dma-is-empty function)
-;; (define-extern dma-get-named-buffer function)
+(define-extern dma-get-named-buffer (function symbol int int dma-buffer))
 ;; (define-extern lobby-dma-reserve-hook function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; settings                       ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-extern scf-get-volume "Defined in the kernel" (function int))
+(define-extern scf-get-language "Defined in the kernel" (function language-enum))
+(define-extern scf-get-aspect "Defined in the kernel" (function uint))
+(define-extern *boot-video-mode* "Defined in the kernel" int)
 
 ;; (define-extern get-current-language function) ;; (function language-enum)
 (define-extern *setting-control* setting-control) ;; 
@@ -42158,7 +42163,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (define-extern *footstep-surface* object) ;; pat-surface
-;; (define-extern *debug-effect-control* object) ;; symbol
+(define-extern *debug-effect-control* symbol) ;; 
 ;; (define-extern sound-name-with-material function) ;; (function string pat-surface string sound-name)
 (define-extern effect-param->sound-spec (function sound-spec (pointer float) int process-focusable sound-spec)) ;; 
 
@@ -43715,6 +43720,43 @@
 ;; vehicle-h                      ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; added
+;; +++vehicle-h:vehicle-thruster-work
+(deftype vehicle-thruster-work (structure)
+  ((quat0  quaternion       :inline :offset 0)
+   (vec0   vector           :inline :offset 32)
+   (vec1   vector           :inline :offset 48)
+   (quat1  quaternion       :inline :offset 64)
+   (vec2   vector           :inline :offset 80)
+   (vec3   vector           :inline :offset 96)
+   (vec4   vector           :inline :offset 112)
+   (float0 float                    :offset 128)
+   (float1 float                    :offset 132)
+   (glow   sprite-glow-data :inline :offset 144)
+   )
+  )
+;; ---vehicle-h:vehicle-thruster-work
+
+(deftype vehicle-stack-type3 (structure)
+  ((vec0 vector :inline :offset 0)
+   (vec1 vector :inline :offset 16)
+   (vec2 vector :inline :offset 32)
+   (vec3 vector :inline :offset 48)
+   (mat0 matrix :inline :offset 64)
+   (glow sprite-glow-data :inline :offset 128)
+   (float0 float        :offset 192)
+   (float1 float        :offset 196)
+   (byte0 int8          :offset 200)
+   (float2 float :offset 200)
+   (float3 float :offset 228)
+   (float4 float :offset 228)
+   (float5 float :offset 232)
+   (float6 float :offset 236)
+   (float7 float :offset 240)
+   (byte1 int8 :offset 244)
+   )
+  )
+
 (deftype vehicle-handling-info (structure)
   ((brake-factor                float   :offset-assert 0)
    (turbo-boost-factor          float   :offset-assert 4)
@@ -44107,7 +44149,7 @@
    (part-spec2              sp-field-init-spec :offset-assert 16) ;; added
    (part-quat               quaternion        :offset-assert 20) ;; added
    (part-vel                vector            :offset-assert 24) ;; added
-   (pad uint32 2)
+   (added-vec vector 2) ;; added
    (headlight-glow-template sprite-glow-data         :offset-assert 36)
    (taillight-glow-template sprite-glow-data         :offset-assert 40)
    (thruster-glow-template  sprite-glow-data         :offset-assert 44)
@@ -44342,6 +44384,7 @@
    (pad10 uint32 7)
    (unknown-vehicle-uint16-1 uint16 :offset 848)
    (water-height                    float                                       :offset-assert 856)
+   (unknown-vehicle-float-6 float :offset 868)
    (vehicle-float-2 float :offset 908)
    (vehicle-sections vehicle-section 12 :inline :offset 1024 :score 1) ;; added, look at any of the `wcar files`
   ;;  (vehicle-section-00 vehicle-section :offset 1024 :score 999)
@@ -45855,7 +45898,7 @@
   :size-assert         #x108
   :flag-assert         #x3900800108
   (:state-methods
-    TODO)
+    idle)
   (:methods
     (powerup-draw-method-51 () none) ;; 51
     (powerup-draw-method-52 () none) ;; 52
@@ -48899,7 +48942,7 @@
 ;; (define-extern fmv-file-read function)
 ;; (define-extern fmv-fade-out function)
 ;; (define-extern fmv-player-init-by-other function)
-;; (define-extern fmv-player-run function)
+(define-extern fmv-player-run (function string process-tree symbol none))
 ;; (define-extern fmv-player-run-texture function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49022,27 +49065,29 @@
     startup ;; 15, old: (wait () _type_ :state)
     splashh-screen ;; 18, old: (control-spec (int) _type_ :state)
     thxx-dolby ;; 19
-    scrap-book ;; 20
-    control-spec ;; 21
+    (scrap-book int) ;; 20
+    (control-spec int) ;; 21
     splash-screen
     thx-dolby
     )
   )
 
-;; (define-extern title-control-init function) ;; (function object :behavior title-control)
-;; (define-extern title-control-spawn function)
-;; (define-extern title-screen-change function) ;; (function string int string int symbol symbol int :behavior title-control)
-;; (define-extern title-progress function) ;; (function symbol int)
-;; (define-extern title-fade-out function) ;; (function float int)
-;; (define-extern direction-press function) ;; (function time-frame time-frame symbol symbol)
+(define-extern *title-control* title-control)
+
+(define-extern title-control-init (function symbol object :behavior title-control)) ;; 
+(define-extern title-control-spawn (function symbol none))
+(define-extern title-screen-change (function string int string int symbol symbol int :behavior title-control)) ;; 
+(define-extern title-progress (function symbol int))
+(define-extern title-fade-out (function float int))
+(define-extern direction-press (function time-frame time-frame symbol symbol))
 (define-extern *scrap-book-3* (array int16))
 (define-extern *scrap-book-1* (array int16)) ;; (array int16)
 (define-extern *scrap-book-2* (array int16)) ;; (array int16)
 (define-extern *progress-save-info* mc-slot-info) ;; 
-;; (define-extern post-memcard function)
+(define-extern post-memcard (function none))
 (define-extern *game-name-entered* symbol)
-;; (define-extern draw-language-select function)
-;; (define-extern check-language function)
+(define-extern draw-language-select (function title-control none))
+(define-extern check-language (function none))
 (define-extern *end-credits-proc* (pointer handle))
 (define-extern end-end-credits (function none))
 (define-extern start-end-credits (function none))
@@ -49126,7 +49171,7 @@
 ;; (define-extern all-players-spawned-vehicles? function)
 ;; (define-extern local-human-player-above-height? function)
 ;; (define-extern find-ground-info function)
-;; (define-extern get-player-pos function)
+(define-extern get-player-pos (function int vector))
 ;; (define-extern vehicle-rev-manager-init-by-other function)
 ;; (define-extern vehicle-rev-manager-spawn function)
 
@@ -50263,7 +50308,7 @@
 ;; (define-extern *crash-camera-array* array)
 ;; (define-extern *crash-camera-force-position* object)
 ;; (define-extern *crash-camera-force-position-valid* object)
-;; (define-extern *target-time-speed* object)
+(define-extern *target-time-speed* float)
 ;; (define-extern target-time-go-slow function)
 ;; (define-extern target-time-go-normal function)
 ;; (define-extern *plow-camera* array)
@@ -50402,22 +50447,22 @@
 ;; vehicle-effects                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern calc-fade-vals function) ;; (function float none)
-;; (define-extern *vehicle-headlight-glow-template* object) ;; sprite-glow-data
-;; (define-extern *vehicle-taillight-glow-template* object) ;; sprite-glow-data
-;; (define-extern *vehicle-thruster-glow-template* object) ;; sprite-glow-data
+(define-extern calc-fade-vals (function float none)) ;; 
+(define-extern *vehicle-headlight-glow-template* sprite-glow-data) ;; 
+(define-extern *vehicle-taillight-glow-template* sprite-glow-data) ;; 
+(define-extern *vehicle-thruster-glow-template* sprite-glow-data) ;; sprite-glow-data
 (define-extern *vehicle-particle-common-info* vehicle-particle-common-info) ;; 
-;; (define-extern vehicle-draw-thruster function) ;; (function vehicle-particle-common-info vehicle-draw-thruster-params none)
+(define-extern vehicle-draw-thruster (function vehicle-particle-common-info vehicle-draw-thruster-params none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; vehicle                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *debug-vehicle-work* debug-vehicle-work) ;; debug-vehicle-work
-;; (define-extern *tmp-vehicle-info* object)
-;; (define-extern *tmp-rigid-body-control* object)
-;; (define-extern *vehicle-shadow-control* shadow-control) ;; shadow-control
-;; (define-extern *vehicle-shadow-control-disabled* shadow-control) ;; shadow-control
+(define-extern *debug-vehicle-work* debug-vehicle-work) ;; debug-vehicle-work
+(define-extern *tmp-vehicle-info* structure) ;; there are like a million different vehicle info structs, can this be any of them?
+(define-extern *tmp-rigid-body-control* rigid-body-control)
+(define-extern *vehicle-shadow-control* shadow-control) ;; shadow-control
+(define-extern *vehicle-shadow-control-disabled* shadow-control) ;; shadow-control
 (define-extern vehicle-event-handler (function process int symbol event-message-block object :behavior vehicle)) ;; 
 ;; (define-extern get-player-id function)
 ;; (define-extern twiddle-collision-cache-verts function)
@@ -50436,8 +50481,8 @@
 ;; vehicle-util                   ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern *car-part-art-group-names* array)
-;; (define-extern *v-tmp-str* string)
+(define-extern *car-part-art-group-names* (array string))
+(define-extern *v-tmp-str* string)
 ;; (define-extern debug-draw-merc function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -56463,7 +56508,6 @@
 ;; wvehicle-ai                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype spring-tracker (structure)
   ((speed           float  :offset-assert 0)
    (spring-constant float  :offset-assert 4)
@@ -56475,11 +56519,10 @@
     (spring-tracker-method-9 () none) ;; 9
     )
   )
-|#
 
 ;; (define-extern get-portal-corner-point function)
 ;; (define-extern consider-attacking function)
-;; (define-extern *wvehicle-ai-steering-params* array)
+(define-extern *wvehicle-ai-steering-params* (array vector))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wvehicle-states                ;;
@@ -59663,20 +59706,14 @@
 ;; net-collectable-game           ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 (deftype collectoid-draw (powerup-draw)
   ((base-y float  :offset-assert 264)
    )
   :method-count-assert 57
   :size-assert         #x10c
   :flag-assert         #x390080010c
-  (:state-methods
-    idle ;; 50
-    )
   )
-|#
 
-#|
 (deftype collectoid (net-powerup)
   ((controlled-by int8   :offset-assert 244)
    (part-time     int32  :offset-assert 248)
@@ -59688,18 +59725,17 @@
     (collectoid-method-56 () none) ;; 56
     )
   )
-|#
 
 ;; (define-extern collectoid-draw-init-remote function)
-;; (define-extern *msg-map-collectoid-draw* array)
-;; (define-extern *net-process-class-info-collectoid-draw* net-process-class-info)
-;; (define-extern *steal-mode* object)
+(define-extern *msg-map-collectoid-draw* (array symbol))
+(define-extern *net-process-class-info-collectoid-draw* net-process-class-info)
+(define-extern *steal-mode* symbol)
 ;; (define-extern drop-collectoids function)
-;; (define-extern *collectoid-debris-params* debris-static-params)
+(define-extern *collectoid-debris-params* debris-static-params)
 ;; (define-extern collectoid-init-remote function)
-;; (define-extern *msg-map-collectoid* array)
-;; (define-extern *net-process-class-info-collectoid* net-process-class-info)
-;; (define-extern *desclct-pris-texture-anim-array* texture-anim-array)
+(define-extern *msg-map-collectoid* (array symbol))
+(define-extern *net-process-class-info-collectoid* net-process-class-info)
+(define-extern *desclct-pris-texture-anim-array* texture-anim-array)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; credits-h                      ;;
@@ -61025,7 +61061,7 @@
 ;; (define-extern jak-owner function)
 ;; (define-extern *timetrial-ghost-time-string* string)
 ;; (define-extern lobby-menu-manager-init-by-other function)
-;; (define-extern lobby-start function)
+(define-extern lobby-start (function none))
 ;; (define-extern flash-game-started function)
 ;; (define-extern update-lobby-camera function)
 ;; (define-extern cam-lobby state)

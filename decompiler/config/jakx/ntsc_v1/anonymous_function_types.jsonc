@@ -33,6 +33,26 @@
       "(function collide-shape-prim none)"
     ]
   ],
+  "title-obs": [
+    [
+      7,
+      "(function process-tree symbol)"
+    ],
+    [
+      30,
+      "(function external-art-buffer none)"
+    ]
+  ],
+  "gsound": [
+    [
+      3,
+      "(function sound-id)"
+    ],
+    [
+      5,
+      "(function none)"
+    ]
+  ],
   "pov-camera": [
     [
       7,

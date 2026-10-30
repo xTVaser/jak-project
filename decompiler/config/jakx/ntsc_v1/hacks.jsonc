@@ -102,7 +102,18 @@
     "~0kfrags    = ~d~256hfrags/call   = ~f~%": 2,
     "~0ktris     = ~d~256htris/frag    = ~f~%": 2,
     "~0koutput   = ~d~256houtput/call  = ~f~%": 2,
-    "~0knodes    = ~d~256hnodes/call   = ~f~%": 2
+    "~0knodes    = ~d~256hnodes/call   = ~f~%": 2,
+    "~0K~Name~130HID~+50HVol~+15HPitch~+24HPan~+18HEar~+24HDist~%": 0,
+    "~130H~5D  ~4D  ~5D  ~4D  ~3D  ~5,,0M~%": 6,
+    "music-volume=~220h~f~%": 1,
+    "dialog-volume=~220h~f~%": 1,
+    "music-volume-during-speech=~220h~f~%": 1,
+    "sfx-volume-during-speech=~220h~f~%": 1,
+    "music-volume-ducked-by-sound=~220h~f~%": 1,
+    "music-seek-speed=~220h~f~%": 1,
+    "~%final music-volume: ~220h~f~%": 1,
+    "final sfx-volume: ~220h~f~%": 1,
+    "sfx-volume=~220h~f~%": 1
   },
   "blocks_ending_in_asm_branch": {
     "upload-vis-bits": [

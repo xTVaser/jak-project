@@ -3060,5 +3060,71 @@
       16,
       "event-message-block"
     ]
+  ],
+  "sound-name->string": [
+    [
+      16,
+      [
+        "array",
+        "uint8",
+        16
+      ]
+    ]
+  ],
+  "string->sound-name": [
+    [
+      16,
+      [
+        "array",
+        "sound-name",
+        1
+      ]
+    ]
+  ],
+  "vehicle-draw-thruster": [
+    [
+      16,
+      "vehicle-thruster-work"
+    ]
+  ],
+  "(anon-function 5 gsound)": [
+    [
+      16,
+      [
+        "array",
+        "symbol",
+        4
+      ]
+    ],
+    [
+      32,
+      [
+        "array",
+        "symbol",
+        4
+      ]
+    ]
+  ],
+  "doppler-pitch-shift": [
+    [
+      16,
+      [
+        "inline-array",
+        "vector",
+        2
+      ]
+    ]
+  ],
+  "(method 113 vehicle)": [
+    [
+      16,
+      "vehicle-stack-type3"
+    ]
+  ],
+  "(code target-intro)": [
+    [
+      16,
+      "vector"
+    ]
   ]
 }
