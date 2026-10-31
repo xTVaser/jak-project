@@ -5104,7 +5104,7 @@
 (define-extern *view-assert* symbol)
 (define-extern *views* "Length of 2, initialized empty" (array view))
 (define-extern *view-context-stack* (array int32))
-(define-extern *view-context-stack-ptr* (pointer int32))
+(define-extern *view-context-stack-ptr* int32)
 (define-extern *view-default* int)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17166,7 +17166,7 @@
    (unknown-usd-20             int32              :offset-assert 464) ;; added
    (unknown-usd-21             int32              :offset-assert 468) ;; added
    (unknown-usd-22             int32              :offset-assert 472) ;; added
-   (unknown-usd-23             int32              :offset-assert 476) ;; added
+   (unknown-usd-23             uint32              :offset-assert 476) ;; added
    (letterbox               float               :offset-assert 480)
    (letterbox-speed         float               :offset-assert 484)
    (unknown-usd-24             int32              :offset-assert 488) ;; added
@@ -17181,7 +17181,7 @@
    (borrow-city-count       uint32              :offset-assert 524)
    (borrow-city             pair              3 :offset-assert 528) ;; guessed by decompiler
    (unknown-usd-33             int32             28 :offset-assert 540) ;; added
-   (unknown-usd-uint32-3 uint32 :offset 636)
+   (unknown-usd-symbol-3 symbol :offset 636)
    (audio-language          uint8               :offset-assert 652) ;; language-enum
    (unknown-usd-34             int32             11 :offset-assert 656) ;; added
    (unknown-sym-1 symbol :offset 676) ;; display-loop-main
@@ -17636,32 +17636,32 @@
   (:methods
     (init-sun-data! (_type_ int float float float) none)
     (init-orbit-settings! (_type_ int float float float float float float) none)
-    (update-colors-for-time (_type_ float) none)
-    (update-time-and-speed (_type_ float float) none)
-    (sky-work-method-13 () none) ;; 13 ;; (draw-erase (_type_ dma-buffer vector) none)
-    (sky-work-method-14 () none) ;; 14 ;; (draw (_type_) none)
-    (sky-work-method-15 () none) ;; 15 ;; (update-camera-matrix (_type_ matrix) none)
-    (sky-work-method-16 () none) ;; 16 ;; (update-template-colors (_type_) none)
-    (sky-work-method-17 () none) ;; 17 ;; (init-regs-for-large-polygon-draw (_type_) none)
-    (sky-work-method-18 () none) ;; 18 ;; (init-regs-for-sky-asm (_type_) none)
-    (sky-work-method-19 () none) ;; 19 ;; (cloud-vtx-light-update (_type_ vector vector cloud-lights vector vector) none)
-    (sky-work-method-20 () none) ;; 20 ;; (cloud-vtx-tex-update (_type_ vector vector vector cloud-lights) none)
-    (sky-work-method-21 () none) ;; 21 ;; (adjust-cloud-lighting (_type_) none)
-    (sky-work-method-22 () none) ;; 22 ;; (cloud-vtx1-to-sky (_type_ sky-vertex cloud-vertex) none)
-    (sky-work-method-23 () none) ;; 23 ;; (cloud-vtx2-to-sky (_type_ sky-vertex cloud-vertex) none)
-    (sky-work-method-24 () none) ;; 24 ;; (draw-clouds (_type_ dma-buffer) none)
-    (sky-work-method-25 () none) ;; 25 ;; (apply-haze-light (_type_ vector vector haze-lights float) none)
-    (sky-work-method-26 () none) ;; 26 ;; (adjust-haze-lighting (_type_) none)
-    (sky-work-method-27 () none) ;; 27 ;; (haze-vtx-to-sky (_type_ sky-vertex sky-vertex haze-vertex) none)
-    (sky-work-method-28 () none) ;; 28 ;; (draw-haze (_type_ dma-buffer) none)
-    (sky-work-method-29 () none) ;; 29 ;; (sun-dma (_type_ dma-buffer) none)
-    (sky-work-method-30 () none) ;; 30 ;; (green-sun-dma (_type_ dma-buffer) none)
-    (sky-work-method-31 () none) ;; 31 ;; (moon-dma (_type_ dma-buffer) none)
-    (sky-work-method-32 () none) ;; 32 ;; (day-star-dma (_type_ dma-buffer) none)
-    (sky-work-method-33 () none) ;; 33 ;; (setup-stars (_type_ matrix sky-upload-data) none)
-    (sky-work-method-34 () none) ;; 34 ;; (stars-transform-asm (_type_) none)
-    (sky-work-method-35 () none) ;; 35 ;; (stars-dma (_type_ dma-buffer) none)
-    (sky-work-method-36 () none) ;; 36 ;; (draw-roof (_type_ dma-buffer) none)
+    (OK-update-colors-for-time (_type_ float) none)
+    (OK-update-time-and-speed (_type_ float float) none)
+    (draw-erase (_type_ dma-buffer vector) none)
+    (sky-work-method-14 (_type_ viewport) none) ;; 14 ;; (draw (_type_) none)
+    (OK-update-template-colors (_type_) none) ;; 15 ;; (update-camera-matrix (_type_ matrix) none)
+    (OK-init-regs-for-large-polygon-draw (_type_ viewport) none) ;; 16 ;; 
+    (OK-init-regs-for-sky-asm (_type_ viewport) none) ;; 17 ;; 
+    (OK-cloud-vtx-light-update (_type_ vector vector cloud-lights vector vector) none) ;; 18 ;; 
+    (OK-cloud-vtx-tex-update (_type_ vector vector vector cloud-lights) none) ;; 19 ;; 
+    (OK-adjust-cloud-lighting (_type_) none) ;; 20 ;; 
+    (OK-cloud-vtx1-to-sky (_type_ sky-vertex cloud-vertex) none) ;; 21 ;; 
+    (OK-cloud-vtx2-to-sky (_type_ sky-vertex cloud-vertex) none) ;; 22 ;; 
+    (OK-draw-clouds (_type_ dma-buffer viewport) none) ;; 23 ;; 
+    (OK-apply-haze-light (_type_ vector vector haze-lights float) none) ;; 24 ;; 
+    (OK-adjust-haze-lighting (_type_) none) ;; 25 ;; 
+    (OK-haze-vtx-to-sky (_type_ sky-vertex sky-vertex haze-vertex) none) ;; 26 ;; 
+    (OK-draw-haze (_type_ dma-buffer viewport) none) ;; 27
+    (OK-sun-dma (_type_ dma-buffer viewport) none) ;; 28 ;; 
+    (OK-green-sun-dma (_type_ dma-buffer viewport) none) ;; 29 ;; 
+    (OK-moon-dma (_type_ dma-buffer viewport) none) ;; 30 ;; 
+    (OK-setup-stars (_type_ matrix sky-upload-data) none) ;; 31 ;; 
+    (OK-stars-transform-asm (_type_) none) ;; 32 ;; (day-star-dma (_type_ dma-buffer) none)
+    (OK-stars-dma (_type_ dma-buffer viewport) none) ;; 33 ;; 
+    (OK-draw-roof (_type_ dma-buffer viewport) none) ;; 34 ;; 
+    (OK-draw-base (_type_ dma-buffer) none) ;; 35 ;; 
+    (OK-draw-fog (_type_ dma-buffer viewport) none) ;; 36 ;; 
     )
   )
 
@@ -29943,7 +29943,7 @@
   :size-assert         #xbb90
   :flag-assert         #xd0000bb90
   (:methods
-    (populate-for-prim-mesh (_type_ collide-shape-prim-mesh object vector float) collide-mesh-cache-entry) ;; 9
+    (OK-populate-for-prim-mesh (_type_ collide-shape-prim-mesh) collide-mesh-cache-entry) ;; 9
     (is-id? "Does this cache have the given ID?" (_type_ int) symbol) ;; 10
     (next-id!
       "Reset all used entries in the cache and increment the ID.
@@ -30114,14 +30114,14 @@
     (debug-draw (_type_) none) ;; 9
     (add-fg-prim-using-box (_type_ collide-cache) none) ;; 10
     (add-fg-prim-using-line-sphere (_type_ collide-cache object) none) ;; 11
-    (overlaps-others-test (_type_ overlaps-others-params collide-shape-prim) symbol) ;; 12
-    (overlaps-others-group (_type_ overlaps-others-params collide-shape-prim-group) symbol) ;; 13
+    (OK-overlaps-others-test (_type_ overlaps-others-params collide-shape-prim) symbol) ;; 12
+    (OK-overlaps-others-group (_type_ overlaps-others-params collide-shape-prim-group) symbol) ;; 13
     (collide-shape-prim-method-14 () none) ;; 14 ;; (collide-shape-prim-method-14 () none)
-    (collide-with-collide-cache-prim-mesh (_type_ collide-query collide-cache-prim) none) ;; 15
-    (collide-with-collide-cache-prim-sphere (_type_ collide-query collide-cache-prim) none) ;; 16
+    (OK-collide-with-collide-cache-prim-mesh (_type_ collide-query collide-cache-prim) none) ;; 15
+    (OK-collide-with-collide-cache-prim-sphere (_type_ collide-query collide-cache-prim) none) ;; 16
     (on-platform-test (_type_ collide-shape-prim collide-query float) none) ;; 17
-    (should-push-away-test (_type_ collide-shape-prim collide-query) none) ;; 18
-    (should-push-away-a-group-test (_type_ collide-shape-prim-group collide-query) none) ;; 19
+    (OK-should-push-away-test (_type_ collide-shape-prim collide-query) none) ;; 18
+    (OK-should-push-away-a-group-test (_type_ collide-shape-prim-group collide-query) none) ;; 19
     )
   )
 
@@ -30218,35 +30218,75 @@
   ;; field penetrate is likely a value type. field penetrate is likely a value type.
   (:methods
     (new (symbol type process-drawable collide-list-enum) _type_) ;; 0
-    (move-by-vector! (_type_ vector) none) ;; 28
-    (move-to-point! (_type_ vector) none) ;; 29
-    (debug-draw (_type_) none) ;; 30
-    (fill-cache-for-shape (_type_ float collide-query) none) ;; 31
-    (fill-cache-integrate-and-collide (_type_ vector collide-query meters) none) ;; 32
-    (find-prim-by-id (_type_ uint) collide-shape-prim) ;; 33
-    (find-prim-by-id-logtest (_type_ uint) collide-shape-prim) ;; 34
+    (OK-move-by-vector! (_type_ vector) none) ;; 28
+    (OK-move-to-point! (_type_ vector) none) ;; 29
+    (OK-debug-draw (_type_) none) ;; 30
+    (OK-fill-cache-for-shape (_type_ float collide-query) none) ;; 31
+    (OK-fill-cache-integrate-and-collide (_type_ vector collide-query meters) none) ;; 32
+    (OK-find-prim-by-id (_type_ uint) collide-shape-prim) ;; 33
+    (OK-find-prim-by-id-logtest (_type_ uint) collide-shape-prim) ;; 34
     (detect-riders! (_type_) symbol) ;; 35
-    (build-bounding-box-for-shape (_type_ bounding-box float collide-spec) symbol) ;; 36
-    (integrate-and-collide! (_type_ vector) none) ;; 37
-    (find-collision-meshes (_type_) none) ;; 38
+    (OK-build-bounding-box-for-shape (_type_ bounding-box float collide-spec) symbol) ;; 36
+    (OK-integrate-and-collide! (_type_ vector) none) ;; 37
+    (OK-find-collision-meshes (_type_) none) ;; 38
     (on-platform (_type_ collide-shape collide-query) symbol) ;; 39
-    (find-overlapping-shapes (_type_ overlaps-others-params) symbol) ;; 40
-    (shove-to-closest-point-on-path (_type_ attack-info float) vector) ;; 41
-    (should-push-away (_type_ collide-shape collide-query) symbol) ;; 42
+    (OK-find-overlapping-shapes (_type_ overlaps-others-params) symbol) ;; 40
+    (OK-shove-to-closest-point-on-path (_type_ attack-info float) vector) ;; 41
+    (OK-should-push-away (_type_ collide-shape collide-query) symbol) ;; 42
     (pull-rider! (_type_ pull-rider-info) none) ;; 43
     (pull-riders! (_type_) symbol) ;; 44
-    (do-push-aways (_type_) collide-spec) ;; 45
-    (update-transforms (_type_) none) ;; 46
-    (set-collide-with! (_type_ collide-spec) none) ;; 47
-    (set-collide-as! (_type_ collide-spec) none) ;; 48
-    (modify-collide-as! (_type_ int collide-spec collide-spec) none) ;; 49
-    (send-shoves (_type_ process touching-shapes-entry float float float) symbol) ;; 50
-    (above-ground? (_type_ collide-query vector collide-spec float float float) symbol) ;; 51
+    (OK-do-push-aways (_type_) collide-spec) ;; 45
+    (OK-update-transforms (_type_) none) ;; 46
+    (OK-set-collide-with! (_type_ collide-spec) none) ;; 47
+    (OK-set-collide-as! (_type_ collide-spec) none) ;; 48
+    (OK-modify-collide-as! (_type_ int collide-spec collide-spec) none) ;; 49
+    (OK-send-shoves (_type_ process touching-shapes-entry float float float) symbol) ;; 50
+    (OK-above-ground? (_type_ collide-query vector collide-spec float float float) symbol) ;; 51
     (water-info-init! (_type_ water-info collide-action) water-info) ;; 52
-    (iterate-prims (_type_ (function collide-shape-prim none)) none) ;; 53
-    (pusher-init (_type_) none) ;; 54
+    (OK-iterate-prims (_type_ (function collide-shape-prim none)) none) ;; 53
+    (OK-pusher-init (_type_) none) ;; 54
     )
   )
+
+
+;; +++collide-shape-h:cshape-reaction-flags
+(defenum cshape-reaction-flags
+  :bitfield #t
+  :type uint32
+  (csrf00)
+  (csrf01)
+  (csrf02)
+  (csrf03)
+  (csrf04)
+  (csrf05)
+  (csrf06)
+  (csrf07)
+  (csrf08)
+  (csrf09)
+  (csrf10)
+  (csrf11)
+  (csrf12)
+  (csrf13)
+  (csrf14)
+  (csrf15)
+  (csrf16)
+  (csrf17)
+  (csrf18)
+  (csrf19)
+  (csrf20)
+  (csrf21)
+  (csrf22)
+  (csrf23)
+  (csrf24)
+  (csrf25)
+  (csrf26)
+  (csrf27)
+  (csrf28)
+  (csrf29)
+  (csrf30)
+  (csrf31)
+  )
+;; ---collide-shape-h:cshape-reaction-flags
 
 ;; +++collide-shape-h:collide-status
 (defenum collide-status
@@ -30277,12 +30317,14 @@
   ((rider-time         uint64                                                                     :offset-assert 200) ;; time-frame
    (rider-last-move    vector                                                             :inline :offset-assert 208)
    (trans-old          vector                                                             :inline :offset-assert 224)
-   (unknown-csm-vec-1 vector :inline)
+   (trans-old-old      vector :inline :offset 240) ;; added
+   (trans-old-old-old  vector :inline :offset 256) ;; added
    (poly-pat           pat-surface                                                                :offset 272) ;; guessed by decompiler
    (cur-pat            pat-surface                                                                :offset-assert 276) ;; guessed by decompiler
    (ground-pat         pat-surface                                                                :offset-assert 280) ;; guessed by decompiler
    (status             uint64                                                                     :offset-assert 288) ;; collide-status
    (unknown-csm-uint64-1 uint64  :offset 304)
+   (reaction-flag      cshape-reaction-flags                                                      :offset-assert 312) ;; added
    (reaction           (function collide-shape-moving collide-query vector vector collide-status)         :offset 316) ;; guessed by decompiler
    (no-reaction        (function collide-shape-moving collide-query vector vector object)         :offset-assert 320) ;; guessed by decompiler
    (local-normal       vector                                                             :inline :offset-assert 336)
@@ -30305,17 +30347,17 @@
   ;; field penetrate is likely a value type. field penetrate is likely a value type.
   (:methods
     (new (symbol type process-drawable collide-list-enum) _type_) ;; 0
-    (find-ground (_type_ collide-query collide-spec float float float process) symbol)
-    (collide-shape-moving-method-56 () none) ;; 56 ;; (react-to-pat! (_type_ pat-surface) cshape-reaction-flags)
-    (integrate-for-enemy-no-mtg (_type_ vector overlaps-others-params) symbol) ;; 57 ;; (integrate-no-collide! (_type_ vector) none)
-    (move-above-ground (_type_ vector move-above-ground-params) none) ;; 58 ;; 
-    (move-to-ground (_type_ float float symbol collide-spec) none) ;; 59 ;; 
-    (move-to-ground-point (_type_ vector vector vector) none) ;; 60 ;; 
-    (collide-shape-moving-method-61 (_type_ vector int) vector) ;; 61 ;; 
-    (rbody-collision (_type_ rigid-body-control float) none) ;; 62 ;; (compute-acc-due-to-gravity (_type_ vector float) vector)
-    (try-snap-to-surface (_type_ vector float float float) symbol) ;; 63 ;; 
-    (fill-and-try-snap-to-surface (_type_ vector float float float collide-query) symbol)
-    (step-collision! (_type_ vector vector float int) float) ;; 65 ;; 
+    (OK-find-ground (_type_ collide-query collide-spec float float float process) symbol)
+    (OK-integrate-no-collide! (_type_ vector) none) ;; 56 ;; (react-to-pat! (_type_ pat-surface) cshape-reaction-flags)
+    (OK-integrate-for-enemy-no-mtg (_type_ vector overlaps-others-params) symbol) ;; 57 ;; 
+    (OK-move-above-ground (_type_ vector move-above-ground-params) none) ;; 58 ;; 
+    (OK-move-to-ground (_type_ float float symbol collide-spec) none) ;; 59 ;; 
+    (OK-move-to-ground-point (_type_ vector vector vector) none) ;; 60 ;; 
+    (OK-compute-acc-due-to-gravity (_type_ vector float) vector) ;; 61 ;; 
+    (rbody-collision (_type_ rigid-body-control float) none) ;; 62 ;; 
+    (OK-try-snap-to-surface (_type_ vector float float float) symbol) ;; 63 ;; 
+    (OK-fill-and-try-snap-to-surface (_type_ vector float float float collide-query) symbol)
+    (OK-step-collision! (_type_ vector vector float int) float) ;; 65 ;; 
     (collide-shape-moving-method-66 () none) ;; 66 ;; 
     )
   )
@@ -32216,7 +32258,7 @@
   :flag-assert         #xb00000030
   (:methods
     (resolve-moving-sphere-tri (_type_ collide-query sphere vector float collide-action) float) ;; 9
-    (resolve-moving-sphere-sphere (_type_ collide-query sphere vector float collide-action) float) ;; 10
+    (OK-resolve-moving-sphere-sphere (_type_ collide-query sphere vector float collide-action) float) ;; 10
     )
   )
 
@@ -32247,10 +32289,10 @@
   (:methods
     (new (symbol type int int) _type_)
     (debug-draw (_type_) none)
-    (fill-and-probe-using-line-sphere (_type_ collide-query) float)
+    (OK-fill-and-probe-using-line-sphere (_type_ collide-query) float)
     (fill-and-probe-using-spheres (_type_ collide-query) symbol)
-    (fill-using-bounding-box (_type_ collide-query) none)
-    (collide-cache-method-13 (_type_ collide-query) none) ;; 13 ;; (fill-using-line-sphere (_type_ collide-query) none)
+    (OK-fill-using-bounding-box (_type_ collide-query) none)
+    (OK-fill-using-line-sphere (_type_ collide-query) none)
     (fill-using-spheres (_type_ collide-query) none)
     (OK-reset (_type_) none)
     (collide-cache-method-16 (_type_ collide-query) float) ;; 16 ;; (probe-using-line-sphere (_type_ collide-query) float)
@@ -32347,6 +32389,17 @@
   )
 
 (define-extern *collide-test-flag* symbol) ;; 
+
+;; +++collide-h:do-push-aways-work
+(deftype do-push-aways-work (structure)
+  "Added"
+  ((cquery collide-query :inline)
+   (push-vel   vector :inline)
+   (vec33    vector :inline :offset 560)
+   (cspec  collide-spec :offset 576)
+   )
+  )
+;; ---collide-h:do-push-aways-work
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; shrubbery-h                    ;;
@@ -34387,7 +34440,7 @@
   :flag-assert         #xb00000010
   (:methods
     (get-field-spec-by-id (_type_ sp-field-id) sp-field-init-spec)
-    (sparticle-launcher-method-10 () none) ;; 10 ;; (setup-special-textures (_type_ string) none)
+    (setup-special-textures (_type_ string) none)
     )
   )
 
@@ -34465,7 +34518,7 @@
    (local-clock         int32                              :offset-assert 24)
    (local-space-binding particle-local-space-info          :offset 28 :score 18)
    (matrix              int8                               :offset-assert 32)
-   (pointer-control     uint32                             :offset-assert 36)
+   (pointer-control     (pointer sparticle-launch-control)                             :offset-assert 36)
    (last-spawn-frame    int32                              :offset-assert 40)
    (last-spawn-time     int32                              :offset-assert 44)
    (origin              matrix                    :inline  :offset-assert 48)
@@ -34476,13 +34529,13 @@
   :size-assert         #x70
   :flag-assert         #x1600000070
   (:methods
-    (sparticle-launch-control-method-14 () none) ;; 14 ;; (initialize (_type_ sparticle-launch-group process-drawable) none)
-    (sparticle-launch-control-method-15 () none) ;; 15 ;; (is-visible? (_type_ vector) symbol)
+    (initialize (_type_ sparticle-launch-group process-drawable) none)
+    (is-visible? (_type_ vector) symbol)
     (sparticle-launch-control-method-16 (_type_ vector) none) ;; 16 ;; (spawn (_type_ vector) object)
     (spawn-from-mat (_type_ matrix) none)
-    (sparticle-launch-control-method-18 () none) ;; 18 ;; (spawn-from-cspace (_type_ cspace) none)
+    (spawn-from-cspace (_type_ cspace) none)
     (sparticle-launch-control-method-19 (_type_) none) ;; 19 ;; (kill-particles (_type_) none)
-    (sparticle-launch-control-method-20 () none) ;; 20 ;; (set-local-space-info (_type_ particle-local-space-info) none)
+    (set-local-space-info (_type_ particle-local-space-info) none)
     (sparticle-launch-control-method-21 (_type_) none) ;; 21
     )
   )
@@ -35017,7 +35070,7 @@
   (:methods
     (new (symbol type process symbol float entity symbol) _type_) ;; 0 ;; 
     (path-control-method-9 () none) ;; 9 ;; (debug-draw (_type_) none)
-    (path-control-method-10 () none) ;; 10 ;; (get-point-in-path! (_type_ vector float symbol) vector)
+    (OK-get-point-in-path! (_type_ vector float symbol) vector)
     (path-control-method-11 () none) ;; 11 ;; (get-random-point (_type_ vector) vector)
     (path-control-method-12 () none) ;; 12 ;; (path-control-method-12 (_type_ vector float float) vector)
     (path-control-method-13 () none) ;; 13 ;; (displacement-between-two-points-normalized! (_type_ vector float) vector)
@@ -35750,7 +35803,7 @@
     (new (symbol type int int) _type_)
     (add-an-object (_type_ bounding-box (pointer collide-shape) int) int) ;; 36 ;; (fill-actor-list-for-sphere (_type_ vector vector float (pointer collide-shape) int int) int)
     (WRONG-add-an-object (_type_ bounding-box (pointer collide-shape) int) int) ;; 37 ;; (fill-actor-list-for-line-sphere (_type_ vector vector float (pointer collide-shape) int int) int)
-    (fill-actor-list-for-box (_type_ vector (pointer collide-shape) int) int) ;; 38 ;; (fill-actor-list-for-vec+r (_type_ vector (pointer collide-shape)) int)
+    (OK-fill-actor-list-for-box (_type_ vector (pointer collide-shape) int) int) ;; 38 ;; (fill-actor-list-for-vec+r (_type_ vector (pointer collide-shape)) int)
     (fill-actor-list-for-line-sphere (_type_ vector vector float (pointer collide-shape) int int) int) ;; 39 ;; (spatial-hash-method-39 (_type_ object hash-object-info) int)
     (fill-actor-list-for-vec+r (_type_ vector (pointer collide-shape)) int) ;; 40
     (spatial-hash-method-39 (_type_ object hash-object-info) int) ;; 41
@@ -37835,7 +37888,7 @@
 (define-extern *part-group-id-table* (array sparticle-launch-group)) ;; 
 (define-extern *launch-control-table* (array sparticle-launch-control)) ;; 512 items
 (define-extern *sp-temp* float) ;; 
-;; (define-extern count-launch-controls-in-table function)
+(define-extern count-launch-controls-in-table (function int))
 (define-extern lookup-part-group-by-name (function string sparticle-launch-group)) ;; 
 (define-extern lookup-part-group-pointer-by-name (function string (pointer object))) ;; 
 (define-extern part-group-pointer? (function pointer symbol)) ;; 
@@ -37860,15 +37913,15 @@
 (define-extern sp-relaunch-setup-fields (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)) ;; 
 (define-extern sp-relaunch-particle-2d (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
 (define-extern sp-relaunch-particle-3d (function object sparticle-launcher sparticle-cpuinfo sprite-vec-data-3d none)) ;; 
-;; (define-extern get-matching-control-table-index function)
-;; (define-extern kill-all-particles-with-control function)
+(define-extern get-matching-control-table-index (function sparticle-launch-group process int))
+(define-extern kill-all-particles-with-control (function sparticle-launch-control none))
 (define-extern execute-particle-local-space-engine (function int none)) ;; 
 (define-extern local-space-camera (function particle-local-space-info none))
 (define-extern local-space-proc-joint (function particle-local-space-info none))
-;; (define-extern local-space-proc-root function)
-;; (define-extern spawn-level-particles-for-camera function)
+(define-extern local-space-proc-root (function particle-local-space-info none))
+(define-extern spawn-level-particles-for-camera (function vector matrix int none))
 (define-extern execute-part-engine (function none)) ;;
-;; (define-extern check-particles function)
+(define-extern check-particles (function none))
 (define-extern sparticle-track-root (function object sparticle-cpuinfo vector none))
 (define-extern sparticle-track-root-prim (function object sparticle-cpuinfo vector none))
 (define-extern sparticle-track-joint (function sparticle-system sparticle-cpuinfo vector none))
@@ -37890,7 +37943,7 @@
 (define-extern sparticle-set-conerot (function sparticle-launcher vector none))
 (define-extern check-ground-bounce (function sparticle-system sparticle-cpuinfo sparticle-launchinfo float))
 (define-extern check-drop-group-center (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none)) ;; 
-;; (define-extern check-drop-group-center-with-offset function)
+(define-extern check-drop-group-center-with-offset (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern check-bubble-height (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern check-raise-group-center (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern birth-func-y->userdata (function sparticle-system sparticle-cpuinfo matrix none))
@@ -37901,16 +37954,16 @@
 (define-extern spt-func-camera-facing-orbiter (function sparticle-system sparticle-cpuinfo sparticle-launchinfo quaternion))
 (define-extern *particle-birth-work* particle-birth-work)
 (define-extern birth-func-set-quat (function int sparticle-cpuinfo sparticle-launchinfo none))
-;; (define-extern birth-func-add-vel function)
+(define-extern birth-func-add-vel (function int sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern birth-func-set-vel (function object sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern birth-func-set-vel-2d (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
-;; (define-extern birth-func-set-vel-range function)
+(define-extern birth-func-set-vel-range (function sparticle-system sparticle-cpuinfo sparticle-launchinfo none))
 (define-extern birth-func-texture-group (function int sparticle-cpuinfo sparticle-launchinfo none)) ;; 
 (define-extern rot-to-particle (function degrees sprite-vec-data-2d matrix none)) ;; 
-;; (define-extern rot-to-particle-no-flip function)
+(define-extern rot-to-particle-no-flip (function degrees sprite-vec-data-2d matrix none))
 (define-extern birth-func-flip-based-on-scale (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none)) ;; 
 (define-extern sparticle-2d-spline-align (function object sparticle-cpuinfo sprite-vec-data-2d object none)) ;; 
-;; (define-extern sparticle-2d-spline-align-no-flip function)
+(define-extern sparticle-2d-spline-align-no-flip (function object sparticle-cpuinfo sprite-vec-data-2d object none))
 (define-extern sparticle-2d-spline-align-instant (function object sparticle-cpuinfo sprite-vec-data-2d none)) ;; 
 (define-extern birth-func-inherit-size (function sparticle-system sparticle-cpuinfo sprite-vec-data-3d sparticle-launcher sparticle-launch-state none))
 (define-extern birth-func-texture-group-2d (function object sparticle-cpuinfo sparticle-launchinfo object object none)) ;; 
@@ -38414,12 +38467,12 @@
 ;; sky-tng                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (define-extern set-tex-offset function) ;; (function int int none)
+(define-extern set-tex-offset (function int int none)) ;; 
 ;; (define-extern draw-large-polygon function)
 ;; (define-extern clip-polygon-against-positive-hyperplane function)
 ;; (define-extern clip-polygon-against-negative-hyperplane function)
-;; (define-extern render-sky-quad function) ;; (function (inline-array sky-vertex) dma-buffer none)
-;; (define-extern render-sky-tri function) ;; (function (inline-array sky-vertex) dma-buffer none)
+(define-extern render-sky-quad (function (inline-array sky-vertex) dma-buffer math-camera none)) ;; 
+(define-extern render-sky-tri (function (inline-array sky-vertex) dma-buffer none)) ;; 
 (define-extern close-sky-buffer (function dma-buffer none)) ;; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41647,7 +41700,7 @@
 ;; (define-extern guard-band-cull function) ;; (function vector symbol)
 (define-extern sphere-in-view-frustum? (function sphere symbol)) ;; 
 ;; (define-extern line-in-view-frustum? function) ;; (function vector vector symbol)
-;; (define-extern sphere-in-view-frustum-any? function)
+(define-extern sphere-in-view-frustum-any? (function sphere symbol))
 ;; (define-extern line-in-view-frustum-any? function)
 (define-extern find-nearest-camera-distance (function vector float))
 (define-extern vis-cull (function int symbol)) ;; 
@@ -41672,7 +41725,7 @@
 ;; (define-extern calc-shadow-masks function) ;; (function light-group draw-control uint none)
 ;; (define-extern calc-realtime-lights function) ;; (function light-group draw-control uint none)
 ;; (define-extern calc-vu1-lights function) ;; (function vu-lights draw-control symbol none)
-;; (define-extern calc-particle-average-color function)
+(define-extern calc-particle-average-color (function rgbaf int none))
 (define-extern calc-particle-directional-color (function (pointer float) vu-lights vector none))
 ;; (define-extern real-dma-add-process-drawable function)
 (define-extern dma-add-process-drawable (function process-drawable draw-control symbol dma-buffer none)) ;; 
@@ -45213,6 +45266,7 @@
 
 (declare-type wvehicle-probe-work structure)
 (declare-type wvehicle-physics-work structure)
+(declare-type wvehicle-part-work structure)
 (deftype wvehicle (vehicle)
   ((net-extra                      wvehicle-net-extra        :inline :offset-assert 2140)
    (antenna                        handle                            :offset-assert 2152)
@@ -45388,7 +45442,7 @@
     (wvehicle-method-251 (_type_ vector vector) none) ;; 251
     (wvehicle-method-252 (_type_) none) ;; 252
     (wvehicle-method-253 (_type_) none) ;; 253
-    (wvehicle-method-254 (_type_) none) ;; 254
+    (wvehicle-method-254 (_type_ wvehicle-part-work) none) ;; 254
     (wvehicle-method-255 (_type_) none) ;; 255
     (wvehicle-method-256 (_type_) none) ;; 256
     (wvehicle-method-257 (_type_) none) ;; 257
@@ -45499,7 +45553,7 @@
     (net-player-method-45 () none) ;; 45
     (net-player-method-46 () none) ;; 46
     (net-player-method-47 () none) ;; 47
-    (net-player-method-48 () none) ;; 48
+    (net-player-method-48 (_type_ object object symbol event-message-block) none) ;; 48 event handler
     (net-player-method-49 (_type_) process-drawable) ;; 49
     (net-player-method-50 () none) ;; 50
     (net-player-method-51 () none) ;; 51
@@ -45859,7 +45913,7 @@
   )
 
 (deftype net-powerup (process-nettable)
-  ((child-proc          uint64         :offset-assert 192)
+  ((child-proc          handle         :offset-assert 192)
    (die-or-respawn-time int32          :offset-assert 200)
    (touched-time        int32          :offset-assert 204)
    (touched-by          int8           :offset-assert 208)
@@ -45871,26 +45925,27 @@
   :method-count-assert 56
   :size-assert         #xf4
   :flag-assert         #x38007000f4
+  (:state-methods
+    net-powerup-s1
+    net-powerup-s2)
   (:methods
-    (net-powerup-method-42 () none) ;; 42
-    (net-powerup-method-43 () none) ;; 43
     (net-powerup-method-44 () none) ;; 44
     (net-powerup-method-45 () none) ;; 45
-    (net-powerup-method-46 () none) ;; 46
-    (net-powerup-method-47 () none) ;; 47
-    (net-powerup-method-48 () none) ;; 48
-    (net-powerup-method-49 () none) ;; 49
-    (net-powerup-method-50 () none) ;; 50
-    (net-powerup-method-51 () none) ;; 51
-    (net-powerup-method-52 () none) ;; 52
-    (net-powerup-method-53 () none) ;; 53
-    (net-powerup-method-54 () none) ;; 54
+    (net-powerup-method-46 (_type_ object object) none) ;; 46
+    (net-powerup-method-47 (_type_) none) ;; 47
+    (net-powerup-method-48 (_type_) none) ;; 48
+    (net-powerup-method-49 (_type_) none) ;; 49
+    (net-powerup-method-50 (_type_) none) ;; 50
+    (net-powerup-method-51 (_type_) none) ;; 51
+    (net-powerup-method-52 (_type_ process) none) ;; 52
+    (net-powerup-method-53 (_type_) none) ;; 53
+    (net-powerup-method-54 (_type_) none) ;; 54
     (net-powerup-method-55 () none) ;; 55
     )
   )
 
 (deftype powerup-draw (process-drawable)
-  ((parent-proc uint64  :offset-assert 248)
+  ((parent-proc handle  :offset-assert 248)
    (glow-sound  basic   :offset-assert 256)
    (part-time   int32   :offset-assert 260)
    )
@@ -45901,11 +45956,11 @@
     idle)
   (:methods
     (powerup-draw-method-51 () none) ;; 51
-    (powerup-draw-method-52 () none) ;; 52
-    (powerup-draw-method-53 () none) ;; 53
-    (powerup-draw-method-54 () none) ;; 54
-    (powerup-draw-method-55 () none) ;; 55
-    (powerup-draw-method-56 () none) ;; 56
+    (powerup-draw-method-52 (_type_ float) none) ;; 52
+    (powerup-draw-method-53 (_type_ object vector) none) ;; 53
+    (powerup-draw-method-54 (_type_ process-drawable) none) ;; 54
+    (powerup-draw-method-55 (_type_) none) ;; 55
+    (powerup-draw-method-56 (_type_) none) ;; 56
     )
   )
 
@@ -45943,7 +45998,7 @@
    (sorted-ids            uint8 24 :offset-assert 198)
    (intro-end-time        int32      :offset-assert 224)
    (hud-player-indicators handle 2  :offset-assert 232)
-   (net-players           basic      :offset-assert 248)
+   (net-players           (array net-player)      :offset-assert 248)
    (stats-hud             handle 2  :offset-assert 256)
    (intro-handle          handle 2  :offset-assert 272)
    (cheats                uint16 4  :offset-assert 288)
@@ -45963,11 +46018,11 @@
     (net-game-mgr-method-49 () none) ;; 49
     (net-game-mgr-method-50 () none) ;; 50
     (net-game-mgr-method-51 () none) ;; 51
-    (net-game-mgr-method-52 () none) ;; 52
+    (net-game-mgr-method-52 (_type_ object) none) ;; 52
     (net-game-mgr-method-53 () none) ;; 53
     (net-game-mgr-method-54 () none) ;; 54
     (net-game-mgr-method-55 () none) ;; 55
-    (net-game-mgr-method-56 () none) ;; 56
+    (net-game-mgr-method-56 (_type_) none) ;; 56
     (net-game-mgr-method-57 () none) ;; 57
     (net-game-mgr-method-58 () none) ;; 58
     (net-game-mgr-method-59 () none) ;; 59
@@ -46050,6 +46105,7 @@
   ((lap-count       int8       :offset-assert 304)
    (racer-ct        int8       :offset-assert 305)
    (racer-ids       int8    24 :offset-assert 306)
+   (ngmr-1 uint32 :offset 312)
    (race-count-down int8       :offset-assert 330)
    (unknown-uint32-1  uint32     :offset-assert 332)
    (unknown-uint32-2  uint32     :offset-assert 336)
@@ -46304,7 +46360,7 @@
   )
 
 (deftype net-game-mgr-collectable (net-game-mgr-deathmatch)
-  ((steal-mode basic  :offset-assert 312)
+  ((steal-mode symbol  :offset-assert 312)
    )
   :method-count-assert 84
   :size-assert         #x13c
@@ -49165,7 +49221,7 @@
 ;; (define-extern update-active-net-players function)
 ;; (define-extern net-player-default-handler function)
 ;; (define-extern use-target-cam-base-helper function)
-;; (define-extern net-player-init-local function)
+(define-extern net-player-init-local (function object none :behavior net-player))
 ;; (define-extern clear-local-players function)
 ;; (define-extern playback-cam function)
 ;; (define-extern all-players-spawned-vehicles? function)
@@ -50464,11 +50520,11 @@
 (define-extern *vehicle-shadow-control* shadow-control) ;; shadow-control
 (define-extern *vehicle-shadow-control-disabled* shadow-control) ;; shadow-control
 (define-extern vehicle-event-handler (function process int symbol event-message-block object :behavior vehicle)) ;; 
-;; (define-extern get-player-id function)
+(define-extern get-player-id (function vehicle int))
 ;; (define-extern twiddle-collision-cache-verts function)
 ;; (define-extern vehicle-damage-local-space-0 function)
 ;; (define-extern vehicle-damage-local-space-1 function)
-;; (define-extern get-vehicle-player-id function)
+(define-extern get-vehicle-player-id (function vehicle int))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wcar-skel-template             ;;
@@ -53114,7 +53170,7 @@
 ;; (define-extern powerup-motion-parabola function)
 ;; (define-extern net-powerup-init-by-other function)
 ;; (define-extern spawn-powerup function)
-;; (define-extern eject-powerup function)
+(define-extern eject-powerup (function vector object int float none))
 ;; (define-extern eject-test function)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -56272,7 +56328,7 @@
   :size-assert         #x80
   :flag-assert         #x1900000080
   (:methods
-    (tire-trail-method-23 () none) ;; 23 ;; (tire-trail-method-23 (_type_ vector vector float) none)
+    (tire-trail-method-23 (_type_) none) ;; 23 ;; (tire-trail-method-23 (_type_ vector vector float) none)
     (tire-trail-method-24 () none) ;; 24
     )
   )
@@ -59722,17 +59778,17 @@
   :size-assert         #xfc
   :flag-assert         #x39007000fc
   (:methods
-    (collectoid-method-56 () none) ;; 56
+    (collectoid-method-56 (_type_ int int) none) ;; 56
     )
   )
 
-;; (define-extern collectoid-draw-init-remote function)
+(define-extern collectoid-draw-init-remote (function int collectoid-draw :behavior collectoid-draw))
 (define-extern *msg-map-collectoid-draw* (array symbol))
 (define-extern *net-process-class-info-collectoid-draw* net-process-class-info)
 (define-extern *steal-mode* symbol)
-;; (define-extern drop-collectoids function)
+(define-extern drop-collectoids (function object int int none))
 (define-extern *collectoid-debris-params* debris-static-params)
-;; (define-extern collectoid-init-remote function)
+(define-extern collectoid-init-remote (function int collectoid :behavior collectoid))
 (define-extern *msg-map-collectoid* (array symbol))
 (define-extern *net-process-class-info-collectoid* net-process-class-info)
 (define-extern *desclct-pris-texture-anim-array* texture-anim-array)

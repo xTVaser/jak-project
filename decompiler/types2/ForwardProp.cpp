@@ -1964,9 +1964,8 @@ bool load_var_op_determine_type(types2::Type& type_out,
         return true;
       } else if (input_type.kind == TP_Type::Kind::TYPE_OF_TYPE_NO_VIRTUAL) {
         // normal non-virtual method access
-        type_out.type =
-            TP_Type::make_non_virtual_method(method_type, TypeSpec(type_name), method_id,
-                                             method_info.name);
+        type_out.type = TP_Type::make_non_virtual_method(method_type, TypeSpec(type_name),
+                                                         method_id, method_info.name);
         return true;
       } else {
         // normal virtual method access.
@@ -1993,7 +1992,7 @@ bool load_var_op_determine_type(types2::Type& type_out,
         }
         // nope
         type_out.type = TP_Type::make_virtual_method(method_type, TypeSpec(type_name), method_id,
-                                                    method_info.name);
+                                                     method_info.name);
         return true;
       }
     }
